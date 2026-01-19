@@ -1,0 +1,147 @@
+{
+  "hero": {
+    "title": "The easiest way to do your laundry",
+    "subtitle": "About Laundromat",
+    "description": "Looking for a <span>fast, easy, and affordable way</span> to do your laundry?",
+    "cta": "Visit Laundromat self-service laundry and enjoy modern and efficient laundry solutions",
+    "locations": "Locations"
+  },
+  "features": {
+    "openAllYear": {
+      "title": "Open 365 days, 07:00–00:00",
+      "description": "Laundry that fits your life, not the other way around"
+    },
+    "quickService": {
+      "title": "Wash & Dry in under 60min",
+      "description": "Less time washing, more time living"
+    },
+    "affordablePrices": {
+      "title": "Premium services, affordable prices",
+      "description": "High-quality washing and drying starting from X€"
+    },
+    "centralLocation": {
+      "title": "Conveniently located in central Athens",
+      "description": "Easy to reach, right in the heart of the city"
+    }
+  },
+  "experience": {
+    "title": "360° Laundry Experience",
+    "wash": {
+      "title": "Wash",
+      "description": "Our advanced, high-capacity machines get your laundry done faster and perfectly fresh every time.",
+      "quickWash": "Quick wash 30'"
+    },
+    "dry": {
+      "title": "Dry",
+      "description": "Dry your laundry in record time with our fast, high-efficiency dryers",
+      "quickDry": "Quick dry 30'"
+    },
+    "fold": {
+      "title": "Fold",
+      "description": "Fold your clothes comfortably in our dedicated folding area. Spacious counters and a clean setup make it easy to organize, pack, and prepare your laundry before you head out"
+    },
+    "relax": {
+      "title": "Relax",
+      "description": "Grab a snack or a soda from the vending machine, sit back in our lounge, and enjoy some TV while your clothes get fresh and clean"
+    },
+    "specialCleaning": {
+      "title": "Special cleaning",
+      "description": "From bulky duvets to delicate pillows, we handle special items with care and efficiency"
+    },
+    "allServices": "All services",
+    "card": {
+      "priceFrom": "Price from",
+      "timeFrom": "Time from",
+      "learnMore": "Learn more"
+    }
+  },
+  "serviceSectionCards": {
+    "wash": {
+      "title": "Laundry service",
+      "description": "Wash your clothes quickly and efficiently, 365 days a year, with our technologically advanced washing machines"
+    },
+    "dry": {
+      "title": "Drying service",
+      "description": "Dry your clothes quickly and efficiently, 365 days a year, with our technologically advanced dryers"
+    },
+    "specialCleaning": {
+      "title": "Special cleaning",
+      "description": "Our machines handle large or delicate items like duvets, blankets, and pillows — please follow instructions for best results"
+    }
+  },
+  "instructions": {
+    "title": "Instructions"
+  },
+  "location": {
+    "title": "Conveniently located <span>in central Athens</span>",
+    "viewOnGoogleMaps": "View on Google maps",
+    "ourLocation": "Our location"
+  },
+  "laundryStories": {
+    "title": "Laundry stories"
+  },
+  "aboutCards": {
+    "allYear": {
+      "title": "365 days",
+      "subtitle": "Open 365 days, 07:00–00:00",
+      "description": "Laundry that fits your life, not the other way around"
+    },
+    "quickService": {
+      "title": ">60 min",
+      "subtitle": "Wash & Dry in under 60min ",
+      "description": "Less time washing, more time living"
+    },
+    "lowPrices": {
+      "title": "low prices",
+      "subtitle": "Premium services, affordable prices",
+      "description": "High-quality washing and drying starting from X€"
+    },
+    "always": {
+      "title": "always there",
+      "subtitle": "Conveniently located in central Athens",
+      "description": "Easy to reach, right in the heart of the city"
+    }
+  },
+  "reviews": {
+    "title": "Laundry <span>stories</span>",
+    "allReviews": "All reviews",
+    "ratingGoogle": "Rating Google",
+    "ratingGoogleDescription": "233 reviews <span>(4.8)</span>",
+    "readMore": "Read more",
+    "items": {
+      "review-1": {
+        "name": "Andrey",
+        "description": "Our washing machine and dryer broke down during the renovation in the basement, and we've been helped with laundry the whole time! Our laundress was great - everything was returned to us neatly folded, organized and perfectly clean. We are very grateful for this service!"
+      },
+      "review-2": {
+        "name": "Ekaterina",
+        "description": "Our washing machine and dryer broke down during the renovation in the basement, and we've been helped with laundry the whole time! Our laundress was great - everything was returned to us neatly folded, organized and perfectly clean. We are very grateful for this service!"
+      },
+      "review-3": {
+        "name": "Aleksandra",
+        "description": "Our washing machine and dryer broke down during the renovation in the basement, and we've been helped with laundry the whole time! Our laundress was great - everything was returned to us neatly folded, organized and perfectly clean. We are very grateful for this service!"
+      }
+    }
+  },
+  "tips": {
+    "title": "Laundry tips",
+    "allTips": "All tips",
+    "items": {
+      "tip-1": {
+        "title": "Our washing machine and dryer broke down during the renovation in the basemen  renovation in the basemen",
+        "category": "Tips and tricks",
+        "date": "April 29, 2025"
+      },
+      "tip-2": {
+        "title": "10 Best Charlotte NC House Cleaning Services",
+        "category": "Useful resources",
+        "date": "April 26, 2025"
+      },
+      "tip-3": {
+        "title": "Laundry Bleach vs Laundry Whitener: Which Is Better For Your Clothes?",
+        "category": "Tips and tricks",
+        "date": "April 24, 2025"
+      }
+    }
+  }
+}

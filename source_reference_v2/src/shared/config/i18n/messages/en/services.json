@@ -1,0 +1,34 @@
+{
+  "title": "All your laundry needs, <span>handled quickly and conveniently</span>",
+  "items": {
+    "laundry": {
+      "title": "Laundry services",
+      "cardTitle": "Laundry service",
+      "description": "Our advanced, high-capacity machines get your laundry done faster and perfectly fresh every time.",
+      "instructions": "How to use the washing machines"
+    },
+    "drying": {
+      "title": "Drying services",
+      "cardTitle": "Drying service",
+      "description": "Dry your laundry in record time with our fast, high-efficiency dryers",
+      "instructions": "How to use the drying machines"
+    },
+    "specialCleaning": {
+      "title": "Special cleaning",
+      "cardTitle": "Special cleaning",
+      "description": "From bulky duvets to delicate pillows, we handle special items with care and efficiency",
+      "instructions": "Find a location"
+    }
+  },
+  "card": {
+    "pricesLabel": "Prices",
+    "allPrices": "All prices"
+  },
+  "features": {
+    "detergentIncluded": "Detergent included",
+    "quickWashes": "30 minute washes",
+    "performance": "A++ performance",
+    "longHours": "Long opening hours",
+    "cardPayments": "Card only payments"
+  }
+}

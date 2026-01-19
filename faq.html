@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Laundromat - The easiest way to do your laundry</title>
+    <title>Laundromat - FAQ</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,8 +12,10 @@
     <link href="./assets/css/output.css" rel="stylesheet" />
   </head>
   <body>
+    <!-- HEADER CONTENT ... -->
     <header
       id="header"
+      data-theme="light"
       class="px-container-mobile min-[1120px]:px-container-tablet 2xl:px-container-desktop fixed top-0 right-0 left-0 z-50 pt-4 pb-4 transition-all duration-500 min-[1366px]:pt-[11px] min-[1366px]:pb-[11px] md:pt-[18px] md:pb-[18px] 2xl:pt-[22px] 2xl:pb-[22px]"
     >
       <div class="flex items-center justify-between">
@@ -299,79 +301,58 @@
       </div>
     </div>
 
-    <main>
-      <section
-        id="hero-section"
-        class="fixed top-0 left-0 -z-10 w-full overflow-hidden"
-        style="
-          height: 100vh;
-          transform: translateZ(0);
-          will-change: transform;
-          -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
-        "
-      >
-        <img
-          alt="Laundromat hero background"
-          class="absolute inset-0 h-full w-full object-cover object-top"
-          src="./assets/images/hero-background.png"
-          style="transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden"
-        />
-
-        <div
-          class="p-container-mobile xl:p-container-tablet 2xl:p-container-desktop relative z-10 flex h-full items-end pb-[60px] text-white md:pb-[35px] xl:pb-[38px] 2xl:pb-[46px]"
+    <main class="min-h-screen">
+      <div class="mx-container-mobile md:mx-container-mobile pt-[124px] md:pt-[136px] xl:pt-[147px] 2xl:pt-[208px]">
+        <!-- Title -->
+        <h1
+          id="faq-title"
+          class="paragraph-heading-md text-text mb-[56px] translate-y-[100px] text-left uppercase opacity-0 transition-all duration-700 ease-out md:text-center md:text-[64px] md:leading-[110%] xl:text-[45px] 2xl:text-[64px]"
         >
-          <div class="flex flex-col gap-8 md:w-full md:flex-row md:items-end md:justify-between">
-            <h1
-              id="hero-title"
-              class="max-w-[317px] text-left text-5xl leading-[106%] font-normal tracking-[-0.04em] md:max-w-[550px] md:text-[66px] md:leading-[96%] md:tracking-[-0.05em] xl:max-w-[800px] xl:text-[96px] xl:leading-[96%] xl:tracking-[-0.05em] 2xl:max-w-[1126px] 2xl:text-[136px]"
-            >
-              The easiest way to do your laundry
-            </h1>
+          Faq
+        </h1>
 
+        <!-- Categories Wrapper -->
+        <div
+          id="categories-wrapper"
+          class="translate-y-[80px] opacity-0 transition-all delay-100 duration-700 ease-out md:flex md:flex-col md:items-center md:justify-center"
+        >
+          <!-- Mobile Categories Slider -->
+          <div class="-mx-container-mobile mb-[56px] md:hidden">
             <div
-              id="hero-map"
-              class="rounded-card relative h-[83px] w-full max-w-[187px] overflow-hidden bg-[#F6FBFD] md:h-[147px] md:max-w-[157px] lg:h-[147px] lg:max-w-[210px] xl:h-[147px] xl:max-w-[210px] 2xl:h-[206px] 2xl:max-w-[294px]"
+              id="mobile-categories-slider"
+              class="keen-slider pl-container-mobile no-scrollbar flex gap-2 overflow-x-auto pb-4"
             >
-              <img
-                alt="Map preview"
-                class="absolute inset-0 h-full w-full object-cover md:hidden"
-                src="./assets/images/mobile-map-preview.png"
-              />
-              <img
-                alt="Map preview"
-                class="absolute inset-0 hidden h-full w-full object-contain md:block"
-                src="./assets/images/map-preview.png"
-              />
-              <a
-                aria-label="View our location on map"
-                class="rounded-card focus-brand relative z-10 mt-auto flex h-full w-full items-end justify-between px-[10px] pb-[8px] md:px-[14px] md:pb-[10px]"
-                href="location.html"
-              >
-                <p class="text-brand paragraph-sm-default md:font-medium 2xl:text-lg">Locations</p>
-                <span
-                  class="bg-brand flex h-[18px] w-[18px] items-center justify-center rounded-full 2xl:h-[22px] 2xl:w-[22px]"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="h-[6px] w-[6px] text-white 2xl:h-[7px] 2xl:w-[7px]"
-                    viewBox="0 0 6 6"
-                    fill="currentColor"
-                  >
-                    <path
-                      d="M1 5L5 1M5 1H1M5 1V5"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </span>
-              </a>
+              <!-- Injected by JS -->
             </div>
           </div>
+
+          <!-- Desktop Categories -->
+          <div id="desktop-categories" class="mb-[56px] hidden gap-2 md:flex">
+            <!-- Injected by JS -->
+          </div>
         </div>
-      </section>
+
+        <!-- Accordion Wrapper -->
+        <div
+          id="accordion-container-wrapper"
+          class="translate-y-[150px] opacity-0 transition-all delay-200 duration-700 ease-out"
+        >
+          <div
+            id="faq-accordion"
+            class="mx-auto mb-[56px] space-y-4 md:mb-[86px] xl:mb-[86px] xl:w-[1067px] 2xl:mb-[116px] 2xl:w-[1091px]"
+          >
+            <!-- Injected by JS -->
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <p
+          id="empty-message"
+          class="text-text/60 mb-[56px] hidden translate-y-[100px] text-center text-lg opacity-0 transition-all duration-700 ease-out"
+        >
+          No questions found in this category.
+        </p>
+      </div>
     </main>
 
     <footer
@@ -435,9 +416,11 @@
 
           <!-- Desktop Lang Switcher -->
           <div class="hidden md:block">
-            <div class="group relative">
+            <div class="relative" id="lang-switcher-footer">
               <button
+                id="lang-button-footer"
                 class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
+                type="button"
               >
                 <span class="leading-[132%] tracking-[-0.01em] text-white">En</span>
                 <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
@@ -446,6 +429,28 @@
                   </svg>
                 </span>
               </button>
+
+              <ul
+                id="lang-dropdown-footer"
+                class="absolute top-full right-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white/90 text-center shadow-xl backdrop-blur"
+              >
+                <li>
+                  <button
+                    class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 font-semibold transition"
+                    type="button"
+                  >
+                    En
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                    type="button"
+                  >
+                    Gr
+                  </button>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -487,16 +492,42 @@
 
         <!-- Mobile Lang Switcher -->
         <div class="mb-[29px] block md:hidden">
-          <button
-            class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em]"
-          >
-            <span class="leading-[132%] tracking-[-0.01em] text-white">En</span>
-            <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-              <svg class="h-[3px] w-[5px] text-white" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.5 0.5L2.9901 2.63438L5.48021 0.5" stroke="currentColor" stroke-linecap="round" />
-              </svg>
-            </span>
-          </button>
+          <div class="relative" id="lang-switcher-footer-mobile">
+            <button
+              id="lang-button-footer-mobile"
+              class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em]"
+              type="button"
+            >
+              <span class="leading-[132%] tracking-[-0.01em] text-white">En</span>
+              <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
+                <svg class="h-[3px] w-[5px] text-white" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0.5 0.5L2.9901 2.63438L5.48021 0.5" stroke="currentColor" stroke-linecap="round" />
+                </svg>
+              </span>
+            </button>
+
+            <ul
+              id="lang-dropdown-footer-mobile"
+              class="absolute top-full left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white/90 text-center shadow-xl backdrop-blur"
+            >
+              <li>
+                <button
+                  class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 font-semibold transition"
+                  type="button"
+                >
+                  En
+                </button>
+              </li>
+              <li>
+                <button
+                  class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                  type="button"
+                >
+                  Gr
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <!-- Newsletter Form -->
@@ -566,7 +597,7 @@
 
     <script src="./assets/js/header.js"></script>
     <script src="./assets/js/mobile-menu.js"></script>
-    <script src="./assets/js/hero.js"></script>
+    <script src="./assets/js/faq.js"></script>
     <script src="./assets/js/footer.js"></script>
   </body>
 </html>

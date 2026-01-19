@@ -1,0 +1,18 @@
+export const PATHS = {
+  home: '/',
+  blog: '/blog',
+  contact: '/contact',
+  faq: '/faq',
+  location: '/location',
+  services: '/services',
+  tips: '/tips',
+  tipsDetail: '/tips/:id',
+  instructions: '/instructions',
+  laundryTips: '/laundry-tips',
+  contacts: '/contacts',
+  laundry: '/laundry',
+  drying: '/drying',
+  specialCleaning: '/special-cleaning',
+  privacyPolicy: '/privacy-policy',
+  reviews: '/reviews',
+} as const;

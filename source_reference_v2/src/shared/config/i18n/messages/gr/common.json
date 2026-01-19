@@ -1,0 +1,39 @@
+{
+  "nav": {
+    "location": "Τοποθεσίες",
+    "services": "Υπηρεσίες",
+    "instructions": "Οδηγίες πλυσίματος",
+    "laundryTips": "Laundry tips",
+    "contact": "Επικοινωνία",
+    "languages": "Languages",
+    "menu": "Μενού"
+  },
+  "footer": {
+    "company": "Εταιρία",
+    "services": "Υπηρεσίες",
+    "location": "Τοποθεσίες",
+    "laundryTips": "Laundry tips",
+    "contact": "Επικοινωνία",
+    "laundry": "Πλύσιμο ρούχων",
+    "drying": "τέγνωμα ρούχων",
+    "specialCleaning": "Ειδικοί καθαρισμοί",
+    "faq": "FAQ",
+    "subscribePlaceholder": "Εγγραφή στο newsletter",
+    "privacyPolicy": "Privacy Policy",
+    "websiteBy": "Website by",
+    "copyright": "© 2025 Laundromat. Με επιφύλαξη παντός δικαιώματος"
+  },
+  "buttons": {
+    "learnMore": "Μάθετε περισσότερα",
+    "viewOnMaps": "Google maps",
+    "returnHome": "Επιστροφή στο μενού"
+  },
+  "general": {
+    "open": "Ωράριο",
+    "price": "Τιμή από",
+    "ourLocation": "Οι τοποθεσίες μας",
+    "address": "Ιουλιανού 50, Αθήνα 104 34, Ελλάδα",
+    "schedule": "Δευτέρα-Κυριακή 07:00–00:00",
+    "contact": "Επικοινωνία"
+  }
+}

@@ -4,6 +4,12 @@
 
   // Header scroll effect
   function handleScroll() {
+    // Check if header is forced dark (for non-hero pages like FAQ)
+    if (header.getAttribute('data-header-style') === 'dark') {
+      header.classList.add('bg-white/30', 'backdrop-blur-sm');
+      return;
+    }
+
     const scrollThreshold = window.innerHeight * 0.9;
     const isScrolled = window.scrollY > scrollThreshold;
 
@@ -25,22 +31,25 @@
       }
     } else {
       header.classList.remove('bg-white/30', 'backdrop-blur-sm');
-      // Change text color back to white
-      header.querySelectorAll('.text-text').forEach((el) => {
-        el.classList.remove('text-text');
-        el.classList.add('text-white');
+
+      const isLight = header.dataset.theme === 'light';
+
+      // Change text color back
+      header.querySelectorAll(isLight ? '.text-white' : '.text-text').forEach((el) => {
+        el.classList.remove(isLight ? 'text-white' : 'text-text');
+        el.classList.add(isLight ? 'text-text' : 'text-white');
       });
       // Change logo color back
       const logo = header.querySelector('svg');
-      if (logo.classList.contains('text-brand')) {
-        logo.classList.remove('text-brand');
-        logo.classList.add('text-white');
+      if (logo) {
+        logo.classList.remove(isLight ? 'text-white' : 'text-brand');
+        logo.classList.add(isLight ? 'text-brand' : 'text-white');
       }
       // Change burger icon back
       const burgerIcon = header.querySelector('#mobile-menu-btn svg');
-      if (burgerIcon && burgerIcon.classList.contains('text-text')) {
-        burgerIcon.classList.remove('text-text');
-        burgerIcon.classList.add('text-white');
+      if (burgerIcon) {
+        burgerIcon.classList.remove(isLight ? 'text-white' : 'text-text');
+        burgerIcon.classList.add(isLight ? 'text-text' : 'text-white');
       }
     }
   }
@@ -48,21 +57,32 @@
   window.addEventListener('scroll', handleScroll);
   handleScroll();
 
-  // Language switcher
-  const langButton = document.getElementById('lang-button');
-  const langDropdown = document.getElementById('lang-dropdown');
-  const langSwitcher = document.getElementById('lang-switcher');
+  // Language switcher setup
+  function setupLangSwitcher(switcherId, buttonId, dropdownId) {
+    const switcher = document.getElementById(switcherId);
+    const button = document.getElementById(buttonId);
+    const dropdown = document.getElementById(dropdownId);
 
-  if (langButton && langDropdown) {
-    langButton.addEventListener('click', () => {
-      langDropdown.classList.toggle('hidden');
-    });
+    if (switcher && button && dropdown) {
+      // Toggle
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('hidden');
+      });
 
-    // Close on outside click
-    document.addEventListener('click', (e) => {
-      if (!langSwitcher.contains(e.target)) {
-        langDropdown.classList.add('hidden');
-      }
-    });
+      // Close on outside click
+      document.addEventListener('click', (e) => {
+        if (!switcher.contains(e.target)) {
+          dropdown.classList.add('hidden');
+        }
+      });
+    }
   }
+
+  // Init Header Switcher
+  setupLangSwitcher('lang-switcher', 'lang-button', 'lang-dropdown');
+  // Init Footer Switcher
+  setupLangSwitcher('lang-switcher-footer', 'lang-button-footer', 'lang-dropdown-footer');
+  // Init Mobile Footer Switcher
+  setupLangSwitcher('lang-switcher-footer-mobile', 'lang-button-footer-mobile', 'lang-dropdown-footer-mobile');
 })();

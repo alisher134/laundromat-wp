@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Laundromat - The easiest way to do your laundry</title>
+    <title>Laundromat - Contact</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -12,6 +12,7 @@
     <link href="./assets/css/output.css" rel="stylesheet" />
   </head>
   <body>
+    <!-- HEADER CONTENT ... -->
     <header
       id="header"
       class="px-container-mobile min-[1120px]:px-container-tablet 2xl:px-container-desktop fixed top-0 right-0 left-0 z-50 pt-4 pb-4 transition-all duration-500 min-[1366px]:pt-[11px] min-[1366px]:pb-[11px] md:pt-[18px] md:pb-[18px] 2xl:pt-[22px] 2xl:pb-[22px]"
@@ -300,75 +301,228 @@
     </div>
 
     <main>
-      <section
-        id="hero-section"
-        class="fixed top-0 left-0 -z-10 w-full overflow-hidden"
-        style="
-          height: 100vh;
-          transform: translateZ(0);
-          will-change: transform;
-          -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
-        "
-      >
-        <img
-          alt="Laundromat hero background"
-          class="absolute inset-0 h-full w-full object-cover object-top"
-          src="./assets/images/hero-background.png"
-          style="transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden"
-        />
+      <section class="relative min-h-screen w-full">
+        <div class="relative">
+          <div
+            class="absolute inset-x-0 -top-[141px] bottom-0 -z-10 bg-cover bg-left md:bg-center"
+            style="background-image: url('assets/images/contact-background.png')"
+          ></div>
 
-        <div
-          class="p-container-mobile xl:p-container-tablet 2xl:p-container-desktop relative z-10 flex h-full items-end pb-[60px] text-white md:pb-[35px] xl:pb-[38px] 2xl:pb-[46px]"
-        >
-          <div class="flex flex-col gap-8 md:w-full md:flex-row md:items-end md:justify-between">
+          <div class="relative z-10">
             <h1
-              id="hero-title"
-              class="max-w-[317px] text-left text-5xl leading-[106%] font-normal tracking-[-0.04em] md:max-w-[550px] md:text-[66px] md:leading-[96%] md:tracking-[-0.05em] xl:max-w-[800px] xl:text-[96px] xl:leading-[96%] xl:tracking-[-0.05em] 2xl:max-w-[1126px] 2xl:text-[136px]"
+              class="animate-on-scroll hidden translate-y-[100px] leading-[110%] font-normal tracking-[-0.04em] text-white opacity-0 transition-all duration-[800px] ease-[cubic-bezier(0.25,0.1,0.25,1)] md:ml-4 md:block md:pt-[136px] md:text-[45px] xl:ml-6 xl:pt-[147px] 2xl:ml-9 2xl:pt-[208px] 2xl:text-[64px]"
+              data-delay="200"
             >
-              The easiest way to do your laundry
+              Contact
             </h1>
 
             <div
-              id="hero-map"
-              class="rounded-card relative h-[83px] w-full max-w-[187px] overflow-hidden bg-[#F6FBFD] md:h-[147px] md:max-w-[157px] lg:h-[147px] lg:max-w-[210px] xl:h-[147px] xl:max-w-[210px] 2xl:h-[206px] 2xl:max-w-[294px]"
+              class="container-responsive pt-[382px] pb-4 md:pt-[476px] md:pb-[80px] xl:flex xl:items-start xl:gap-[271px] xl:pt-[281px] xl:pb-6 2xl:gap-[587px] 2xl:pt-[381px] 2xl:pb-[120px]"
             >
-              <img
-                alt="Map preview"
-                class="absolute inset-0 h-full w-full object-cover md:hidden"
-                src="./assets/images/mobile-map-preview.png"
-              />
-              <img
-                alt="Map preview"
-                class="absolute inset-0 hidden h-full w-full object-contain md:block"
-                src="./assets/images/map-preview.png"
-              />
-              <a
-                aria-label="View our location on map"
-                class="rounded-card focus-brand relative z-10 mt-auto flex h-full w-full items-end justify-between px-[10px] pb-[8px] md:px-[14px] md:pb-[10px]"
-                href="location.html"
+              <div
+                class="paragraph-sm-default animate-on-scroll mb-8 flex -translate-x-[30px] items-center gap-[11px] text-white opacity-0 transition-all duration-500 ease-in-out md:max-w-[175px] md:text-base 2xl:max-w-[195px] 2xl:text-lg"
               >
-                <p class="text-brand paragraph-sm-default md:font-medium 2xl:text-lg">Locations</p>
-                <span
-                  class="bg-brand flex h-[18px] w-[18px] items-center justify-center rounded-full 2xl:h-[22px] 2xl:w-[22px]"
+                Contact information <span class="size-1 rounded-full bg-white"></span>
+              </div>
+
+              <ul
+                class="ml-auto flex flex-1 flex-col gap-1 md:grid md:max-w-[736px] md:grid-cols-2 md:gap-2 xl:max-w-[872px] 2xl:max-w-[1066px]"
+              >
+                <!-- Address -->
+                <li
+                  class="animate-on-scroll order-2 flex h-[71px] w-full -translate-x-[50px] scale-90 flex-col justify-between rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] md:order-1 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
+                  data-delay="100"
                 >
-                  <svg
-                    aria-hidden="true"
-                    class="h-[6px] w-[6px] text-white 2xl:h-[7px] 2xl:w-[7px]"
-                    viewBox="0 0 6 6"
-                    fill="currentColor"
+                  <p class="paragraph-xs-default text-left text-white/70 md:mb-8 md:text-base">Address</p>
+                  <p class="paragraph-sm-default ml-auto max-w-[159px] text-right text-white md:max-w-[233px] md:text-lg">
+                    Ethniki Palaiokastritsas, Kerkira 491 00, Greece
+                  </p>
+                </li>
+
+                <!-- Phone -->
+                <li
+                  class="animate-on-scroll order-4 h-[71px] w-full -translate-x-[50px] scale-90 rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] md:order-2 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
+                  data-delay="250"
+                >
+                  <p class="paragraph-xs-default text-left text-white/70 md:mb-[44px] md:text-base">Phone</p>
+                  <div
+                    class="text-right text-[21px] leading-[136%] font-normal tracking-[-0.02em] text-white md:text-[31px]"
                   >
-                    <path
-                      d="M1 5L5 1M5 1H1M5 1V5"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </span>
-              </a>
+                    <a class="block" href="tel:+88006001441"> 8 800 600 14 41 </a>
+                  </div>
+                </li>
+
+                <!-- Social -->
+                <li
+                  class="animate-on-scroll order-1 h-[71px] w-full -translate-x-[50px] scale-90 rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] md:order-3 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
+                  data-delay="400"
+                >
+                  <p class="paragraph-xs-default text-left text-white/70 md:mb-8 md:text-base">Social</p>
+                  <div class="paragraph-sm-default ml-auto max-w-[92px] text-right text-white md:text-lg">
+                    <a class="block" href="https://www.facebook.com/laundromatgr"> Facebook </a>
+                    <a class="block" href="https://www.instagram.com/laundromatgr"> Instagram </a>
+                  </div>
+                </li>
+
+                <!-- Email -->
+                <li
+                  class="animate-on-scroll order-3 h-[71px] w-full -translate-x-[50px] scale-90 rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)] md:order-4 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
+                  data-delay="550"
+                >
+                  <p class="paragraph-xs-default text-left text-white/70 md:mb-[44px] md:text-base">E-mail</p>
+                  <div
+                    class="text-right text-[21px] leading-[136%] font-normal tracking-[-0.02em] text-white md:text-[31px]"
+                  >
+                    <a class="block" href="mailto:info@laundromat.gr"> info@laundromat.gr </a>
+                  </div>
+                </li>
+              </ul>
             </div>
+          </div>
+        </div>
+
+        <div
+          class="container-responsive pt-[64px] md:pt-[86px] xl:flex xl:items-start xl:gap-[86px] xl:pt-[112px] 2xl:gap-[231px] 2xl:pt-[86px]"
+        >
+          <h2
+            class="paragraph-heading-md animate-on-scroll text-text mb-9 max-w-[262px] translate-y-[100px] opacity-0 transition-all duration-[800px] ease-[cubic-bezier(0.25,0.1,0.25,1)] md:mb-[46px] md:max-w-[360px] md:text-[45px] md:leading-[110%] xl:max-w-[360px] xl:text-[45px] 2xl:mb-[56px] 2xl:max-w-[546px] 2xl:text-[64px]"
+            data-delay="200"
+          >
+            Have a question? <span class="text-brand">Get in touch.</span>
+          </h2>
+
+          <div
+            class="animate-on-scroll translate-y-[150px] opacity-0 transition-all duration-[800px] ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+            data-delay="300"
+          >
+            <form class="flex flex-1 flex-col gap-6 md:grid md:grid-cols-2 md:gap-4 2xl:gap-6">
+              <div>
+                <label
+                  class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]"
+                  for="first-name"
+                >
+                  First name
+                </label>
+                <input
+                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
+                  id="first-name"
+                  name="firstName"
+                  required
+                  type="text"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]"
+                  for="last-name"
+                >
+                  Last name
+                </label>
+                <input
+                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
+                  id="last-name"
+                  name="lastName"
+                  required
+                  type="text"
+                />
+              </div>
+
+              <div>
+                <label class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]" for="phone">
+                  Phone
+                </label>
+                <input
+                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
+                  id="phone"
+                  name="phone"
+                  required
+                  type="tel"
+                />
+              </div>
+
+              <div>
+                <label class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]" for="email">
+                  E-mail
+                </label>
+                <input
+                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
+                  id="email"
+                  name="email"
+                  required
+                  type="email"
+                />
+              </div>
+
+              <div class="md:col-span-2">
+                <label
+                  class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]"
+                  for="message"
+                >
+                  Message
+                </label>
+                <textarea
+                  class="text-text rounded-card h-[214px] w-full resize-none bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
+                  id="message"
+                  name="message"
+                ></textarea>
+              </div>
+
+              <div class="mt-2 flex items-start gap-3 md:col-span-2">
+                <input class="peer sr-only" id="consent" name="consent" type="checkbox" />
+                <label class="flex cursor-pointer items-start gap-[9px]" for="consent">
+                  <div
+                    class="border-brand flex size-[21px] shrink-0 items-center justify-center rounded-[6px] border bg-white transition-colors"
+                    id="consent-visual"
+                  >
+                    <!-- JS to toggle inner Div -->
+                  </div>
+
+                  <div
+                    class="text-text/40 max-w-[268px] text-base leading-[132%] font-normal tracking-[-0.01em] md:max-w-[622px]"
+                  >
+                    I agree to the processing of
+                    <span class="text-brand/60 underline"><a href="/privacy.html">Personal data</a></span> and to the terms
+                    of the <span class="text-brand/60 underline"><a href="/privacy.html">Privacy Policy</a></span>
+                  </div>
+                </label>
+              </div>
+
+              <div class="mt-2 md:col-span-2">
+                <button
+                  type="submit"
+                  id="submit-btn"
+                  class="group border-text/20 focus-visible:ring-brand flex w-[196px] flex-1 cursor-pointer flex-col rounded-[7px] border pt-[14px] pr-3 pb-3 pl-4 text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 md:h-[106px] md:w-[328px] xl:h-[75px] xl:w-[233px] 2xl:h-[106px] 2xl:w-[328px] 2xl:rounded-[10px] 2xl:pt-[18px] 2xl:pr-[14px] 2xl:pb-[14px] 2xl:pl-5"
+                  disabled
+                >
+                  <p
+                    class="text-text group-disabled:text-text/40 text-sm leading-[132%] font-medium tracking-[-0.01em] transition-colors 2xl:text-lg"
+                  >
+                    Send
+                  </p>
+
+                  <div class="mt-auto flex justify-end">
+                    <span
+                      class="bg-brand flex size-[17px] items-center justify-center rounded-full transition-opacity group-disabled:opacity-50 2xl:size-[22px]"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="size-[6px] text-white 2xl:size-[8px]"
+                        viewBox="0 0 7 8"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0.401367 5.81156C0.944808 6.43139 1.70294 6.82143 2.5225 6.90285C3.34207 6.98426 4.16193 6.75098 4.81634 6.25014C5.47075 5.74931 5.9109 5.01829 6.04781 4.20487C6.18471 3.39146 6.00817 2.55631 5.55385 1.86828M5.21495 1.43853C4.7966 0.99123 4.26066 0.671323 3.6688 0.515625"
+                          stroke="currentColor"
+                          stroke-width="1.06719"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </section>
@@ -566,7 +720,7 @@
 
     <script src="./assets/js/header.js"></script>
     <script src="./assets/js/mobile-menu.js"></script>
-    <script src="./assets/js/hero.js"></script>
+    <script src="./assets/js/contact.js"></script>
     <script src="./assets/js/footer.js"></script>
   </body>
 </html>

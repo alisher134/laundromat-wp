@@ -1,0 +1,1 @@
+export { TipsDetailPage } from './TipsDetailPage';

@@ -1,0 +1,26 @@
+{
+  "title": "FAQs",
+  "allQuestions": "All questions",
+  "questions": {
+    "howToUse": {
+      "question": "How can I use the washing and drying machines at Laundromat?",
+      "answer": "Our self-service washing and drying machines are very easy to use. Simply load your clothes, select a washing or drying cycle, insert coins, and press START. Read the full washing/drying instructions and what to avoid while using the machines here"
+    },
+    "detergent": {
+      "question": "Do I need to bring my own detergent and other supplies, or are they available on-site for use?",
+      "answer": "No, you do not need to bring detergent or any additional laundry supplies. All washing machines automatically dispense the required detergent during the wash cycle. Everything you need to do your laundry is available on-site at the laundromat."
+    },
+    "prices": {
+      "question": "What are the prices for laundry and drying services at Laundromat?",
+      "answer": "xxxx"
+    },
+    "restrictions": {
+      "question": "What can't be washed at Laundromat?",
+      "answer": "For safety and to protect the machines, please do not wash shoes, carpets or rugs, and pet equipment (such as beds, blankets, or accessories). Washing these items may damage the machines or affect wash quality for other customers."
+    },
+    "bulkyItems": {
+      "question": "Can I wash large and bulky items such as blankets, duvets, or bed linen?",
+      "answer": "Yes. Our machines are designed to handle large and bulky items, including duvets, blankets, bed linen, and pillows. For best results, please follow the recommended machine instructions and select the appropriate cycle."
+    }
+  }
+}

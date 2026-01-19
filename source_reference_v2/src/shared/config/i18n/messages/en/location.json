@@ -1,0 +1,22 @@
+{
+  "title": "Find the nearest <span>Laundromat</span>",
+  "labelPhone": "Phone",
+  "labelHours": "Store hours",
+  "items": {
+    "location-1": {
+      "address": "Ethniki Palaiokastritsas, Kerkira 491 00, Greece",
+      "phone": "8 800 600 14 41",
+      "hours": "Mon-Sun 7am - 11pm"
+    },
+    "location-2": {
+      "address": "Emergency Assistance of Kyklades S.A",
+      "phone": "8 800 600 14 41",
+      "hours": "Mon-Sun 7am - 11pm"
+    },
+    "location-3": {
+      "address": "Ethniki Palaiokastritsas, Kerkira 491 00, Greece",
+      "phone": "8 800 600 14 41",
+      "hours": "Mon-Sun 7am - 11pm"
+    }
+  }
+}

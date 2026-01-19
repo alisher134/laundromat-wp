@@ -1,0 +1,59 @@
+{
+  "title": "Ιστολόγιο",
+  "categories": {
+    "all": "All articles",
+    "tipsAndTricks": "Συμβουλές και κόλπα",
+    "usefulResources": "Χρήσιμοι πόροι",
+    "companyNews": "Company news"
+  },
+  "sortOptions": {
+    "latest": "Latest",
+    "oldest": "Oldest",
+    "titleAsc": "Title A-Z",
+    "titleDesc": "Title Z-A"
+  },
+  "sortPlaceholder": "Sort by",
+  "loadMore": "Load more",
+  "items": {
+    "tip-1": {
+      "category": "Συμβουλές και κόλπα",
+      "title": "Our washing machine and dryer broke down during the renovation in the basement renovation in the basemen",
+      "date": "29 Απριλίου 2025"
+    },
+    "tip-2": {
+      "category": "Χρήσιμοι πόροι",
+      "title": "10 Best Charlotte NC House Cleaning Services",
+      "date": "26 Απριλίου 2025"
+    },
+    "tip-3": {
+      "category": "Συμβουλές και κόλπα",
+      "title": "Laundry Pick Up Service vs Laundromat – Which Is Better?",
+      "date": "24 Απριλίου 2025"
+    },
+    "tip-4": {
+      "category": "Συμβουλές και κόλπα",
+      "title": "Laundry Bleach vs Laundry Whitener: Which Is Better For Your Clothes?",
+      "date": "24 Απριλίου 2025"
+    },
+    "tip-5": {
+      "category": "Company news",
+      "title": "Dirty Secrets Of Airbnbs: 15 Airbnb Laundry Tips For A Perfect Trip",
+      "date": "24 Απριλίου 2025"
+    },
+    "tip-6": {
+      "category": "Χρήσιμοι πόροι",
+      "title": "How To Prevent Clothes From Shrinking in the Wash FOREVER!",
+      "date": "24 Απριλίου 2025"
+    },
+    "tip-7": {
+      "category": "Συμβουλές και κόλπα",
+      "title": "7 Amazingly Simple Laundry Tips For Winter Clothes",
+      "date": "24 Απριλίου 2025"
+    },
+    "tip-8": {
+      "category": "Company news",
+      "title": "9 Huge Reasons To Use A Professional Laundry Service",
+      "date": "24 Απριλίου 2025"
+    }
+  }
+}

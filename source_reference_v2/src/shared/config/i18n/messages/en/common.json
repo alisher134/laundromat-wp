@@ -1,0 +1,38 @@
+{
+  "nav": {
+    "location": "Our location",
+    "services": "Services",
+    "instructions": "Instructions",
+    "laundryTips": "Laundry tips",
+    "contact": "Contact us",
+    "languages": "Languages",
+    "menu": "Menu"
+  },
+  "footer": {
+    "company": "Company",
+    "services": "Services",
+    "location": "Our location",
+    "laundryTips": "Laundry tips",
+    "contact": "Contact us",
+    "laundry": "Laundry",
+    "drying": "Drying",
+    "specialCleaning": "Special cleaning",
+    "faq": "FAQ",
+    "subscribePlaceholder": "Subscribe for Newsletter",
+    "privacyPolicy": "Privacy Policy",
+    "websiteBy": "Website by",
+    "copyright": "© 2025 Laundromat. All rights reserved"
+  },
+  "buttons": {
+    "learnMore": "Learn more",
+    "viewOnMaps": "View on Google maps",
+    "returnHome": "Return to Homepage"
+  },
+  "general": {
+    "open": "Open",
+    "price": "Price from",
+    "address": "Ioulianou 50, Athens 104 34, Greece",
+    "schedule": "Mon-Sun 07:00–00:00",
+    "contact": "Contact"
+  }
+}

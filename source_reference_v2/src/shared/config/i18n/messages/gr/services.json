@@ -1,0 +1,34 @@
+{
+  "title": "Ολοκληρωμένες λύσεις πλυσίματος, <span>γρήγορα και με άνεση</span>",
+  "items": {
+    "laundry": {
+      "title": "Πλύσιμο ρούχων",
+      "cardTitle": "Πλύσιμο ρούχων",
+      "description": "Τα προηγμένα, υψηλής χωρητικότητας πλυντήρια ρούχων μας εγγυώνται άψογα καθαρά ρούχα, κάθε φορά.",
+      "instructions": "Οδηγίες χρήσης πλυντηρίων ρούχων"
+    },
+    "drying": {
+      "title": "Στέγνωμα ρούχων",
+      "cardTitle": "Στέγνωμα ρούχων",
+      "description": "Στεγνώστε τα ρούχα σας σε χρόνο ρεκόρ με τα υψηλής ποιότητας, επαγγελματικά στεγνωτήρια ρούχων",
+      "instructions": "Οδηγίες χρήσης στεγνωτηρίων ρούχων"
+    },
+    "specialCleaning": {
+      "title": "Ειδικοί καθαρισμοί",
+      "cardTitle": "Ειδικοί καθαρισμοί",
+      "description": "Στη Laundromat καθαρίζουμε με προσοχή και ακρίβεια ιδιαίτερα αντικείμενα όπως ογκώδεις παπλώματα και ευαίσθητες μαξιλαροθήκες.",
+      "instructions": "Find a location"
+    }
+  },
+  "card": {
+    "pricesLabel": "Prices",
+    "allPrices": "All prices"
+  },
+  "features": {
+    "detergentIncluded": "Detergent included",
+    "quickWashes": "30 minute washes",
+    "performance": "A++ performance",
+    "longHours": "Long opening hours",
+    "cardPayments": "Card only payments"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "title": "Contact",
+  "subTitle": "Have a question? <span>Get in touch.</span>",
+  "information": {
+    "title": "Contact information",
+    "address": "Address",
+    "phone": "Phone",
+    "social": "Social",
+    "email": "E-mail"
+  },
+  "form": {
+    "firstName": "First name",
+    "lastName": "Last name",
+    "phone": "Phone",
+    "email": "E-mail",
+    "message": "Message",
+    "submit": "Send",
+    "agreement": "I agree to the processing of <personal>Personal data</personal> and to the terms of the <privacy>Privacy Policy</privacy>"
+  }
+}
