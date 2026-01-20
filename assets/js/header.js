@@ -10,19 +10,26 @@
       return;
     }
 
-    const scrollThreshold = window.innerHeight * 0.9;
+    // Use a small fixed threshold to ensure visibility immediately upon scrolling
+    const scrollThreshold = 50;
     const isScrolled = window.scrollY > scrollThreshold;
 
     if (isScrolled) {
       header.classList.add('bg-white/30', 'backdrop-blur-sm');
       // Change text color to dark
       header.querySelectorAll('.text-white').forEach((el) => {
+        // Skip if this is the logo or inside the logo
+        if (el.closest('a[href="index.html"]')) return;
+
         el.classList.remove('text-white');
         el.classList.add('text-text');
       });
       // Change logo color
-      header.querySelector('svg').classList.remove('text-white');
-      header.querySelector('svg').classList.add('text-brand');
+      const logo = header.querySelector('a[href="index.html"] svg');
+      if (logo) {
+        logo.classList.remove('text-white');
+        logo.classList.add('text-brand');
+      }
       // Change burger icon
       const burgerIcon = header.querySelector('#mobile-menu-btn svg');
       if (burgerIcon) {
@@ -40,7 +47,7 @@
         el.classList.add(isLight ? 'text-text' : 'text-white');
       });
       // Change logo color back
-      const logo = header.querySelector('svg');
+      const logo = header.querySelector('a[href="index.html"] svg');
       if (logo) {
         logo.classList.remove(isLight ? 'text-white' : 'text-brand');
         logo.classList.add(isLight ? 'text-brand' : 'text-white');

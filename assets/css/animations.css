@@ -1,3 +1,4 @@
+/* Base Keyframes */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -9,9 +10,62 @@
   }
 }
 
+@keyframes fade-in-up-small {
+  from {
+    opacity: 0;
+    transform: translateY(80px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-up-large {
+  from {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in-up-medium {
+  from {
+    opacity: 0;
+    transform: translateY(150px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Base Classes */
 .animate-fade-up {
   opacity: 0;
   animation: fade-in-up 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+
+/* Specific Motion Variants matching TipsPage.tsx */
+.animate-fade-up-small {
+  /* Filters */
+  opacity: 0;
+  animation: fade-in-up-small 1s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+}
+
+.animate-fade-up-large {
+  /* Title */
+  opacity: 0;
+  animation: fade-in-up-large 1s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
+}
+
+.animate-fade-up-medium {
+  /* Grid */
+  opacity: 0;
+  animation: fade-in-up-medium 1s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards;
 }
 
 .delay-100 {

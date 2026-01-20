@@ -1,1 +1,0 @@
-export { TipsDetailPage } from './TipsDetailPage';
