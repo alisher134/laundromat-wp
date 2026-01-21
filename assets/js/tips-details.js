@@ -100,13 +100,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const isActive = cat.key === 'all';
       // Base classes
       const baseClasses =
-        'rounded-[12px] border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] cursor-pointer transition-all duration-200 active:scale-95';
+        'rounded-[12px] border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] cursor-pointer transition-all duration-200 min-w-fit inline-flex items-center justify-center whitespace-nowrap';
 
       // State classes
-      // If active: Brand text, Brand border, maybe slight BG?
-      // If inactive: Text color, Transparent/Faint border, Hover effects
-      const activeState = 'text-brand border-brand/40 bg-brand/5';
-      const inactiveState = 'text-text border-text/20 hover:text-brand hover:border-brand/40';
+      // Aligning with ArticleHeader.tsx: active = text-brand border-brand/40 (NO background)
+      const activeState = 'border-brand/40 text-brand';
+      const inactiveState = 'text-text border-text/20';
 
       const currentClasses = isActive ? activeState : inactiveState;
 
@@ -125,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h1 class="animate-fade-up paragraph-heading-md text-text mb-8 max-w-[328px] md:mb-9 md:max-w-[576px] md:text-[45px] md:leading-[110%] xl:mb-0 xl:max-w-[614px] xl:text-[45px] 2xl:max-w-[1012px] 2xl:text-[64px]">
                   ${TIP_DETAIL_DATA.title}
                 </h1>
-                <div class="animate-fade-up delay-100 flex items-center gap-[6px] category-buttons">
+                <div class="animate-fade-up delay-100 flex items-center gap-[6px] category-buttons overflow-x-auto no-scrollbar pb-2 md:pb-0">
                   ${categoriesHtml}
                 </div>
             </div>
@@ -143,13 +142,13 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.addEventListener('click', () => {
         // Reset ALL buttons to inactive state
         headerContainer.querySelectorAll('button').forEach((b) => {
-          b.classList.remove('text-brand', 'border-brand/40', 'bg-brand/5');
-          b.classList.add('text-text', 'border-text/20', 'hover:text-brand', 'hover:border-brand/40');
+          b.classList.remove('border-brand/40', 'text-brand');
+          b.classList.add('text-text', 'border-text/20');
         });
 
         // Set THIS button to active state
-        btn.classList.add('text-brand', 'border-brand/40', 'bg-brand/5');
-        btn.classList.remove('text-text', 'border-text/20', 'hover:text-brand', 'hover:border-brand/40');
+        btn.classList.add('border-brand/40', 'text-brand');
+        btn.classList.remove('text-text', 'border-text/20');
       });
     });
   }
@@ -363,11 +362,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const observerOptions = {
     root: null,
     rootMargin: '0px',
-    threshold: 0.1
+    threshold: 0.1,
   };
 
   const observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add('is-visible');
         observer.unobserve(entry.target); // Reveal once
@@ -377,6 +376,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Attach to existing elements (rendered above)
   const revealElements = document.querySelectorAll('.reveal-on-scroll');
-  revealElements.forEach(el => observer.observe(el));
-
+  revealElements.forEach((el) => observer.observe(el));
 });

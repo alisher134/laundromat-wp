@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- State ---
   let activeCategory = 'all';
-  let currentSort = 'latest';
+  let currentSort = '';
   let currentPage = 1;
   let mobileFilterSlider = null;
   let mobileTipsSlider = null;
@@ -168,25 +168,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Sort HTML
     const sortLabel = SORT_OPTIONS.find((o) => o.value === currentSort)?.label || 'Sort by';
+    const sortLabelClass = currentSort ? 'text-text' : 'text-text/50';
+
     const sortHtml = `
             <div class="relative w-full md:w-[120px]" id="sort-dropdown">
-                <button id="sort-trigger" class="cursor-pointer border-text/20 text-text flex min-h-[45px] w-full items-center justify-between rounded-[12px] border bg-white px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] shadow-none md:w-[120px]">
-                    <span id="sort-current-label">${sortLabel}</span>
+                <button id="sort-trigger" class="cursor-pointer border-text/20 text-text flex min-h-[45px] w-full items-center justify-between rounded-[12px] border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] shadow-none md:w-[120px]">
+                    <span id="sort-current-label" class="${sortLabelClass}">${sortLabel}</span>
                     <svg class="text-text h-[15px] w-[15px] shrink-0 ml-auto" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5.63346 1.77859V12.4505M2.07617 5.30624L5.63346 1.74895M8.59787 1.80824V12.4801L12.1552 8.92282" stroke="currentColor" stroke-width="1.06719" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
                 <div id="sort-options" class="absolute top-full left-0 z-[100] mt-1 hidden w-full overflow-hidden rounded-md border border-neutral-200 bg-white shadow-md">
-                    ${SORT_OPTIONS.map(
-                      (opt) => `
-                        <button class="sort-option hover:bg-brand/5 w-full pl-2 pr-8 py-1.5 text-left text-sm leading-[132%] tracking-[-0.01em] transition-colors ${currentSort === opt.value ? 'font-semibold text-brand' : 'text-text'}" data-value="${opt.value}">
+                    ${SORT_OPTIONS.map((opt) => {
+                      const isSelected = currentSort === opt.value;
+                      return `
+                        <button class="sort-option hover:bg-brand/5 w-full pl-2 pr-8 py-1.5 text-left text-sm leading-[132%] tracking-[-0.01em] transition-colors text-text relative flex items-center gap-2" data-value="${opt.value}">
+                            ${
+                              isSelected
+                                ? `<span class="absolute right-2 flex size-3.5 items-center justify-center">
+                                    <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                                   </span>`
+                                : ''
+                            }
                             ${opt.label}
                         </button>
-                    `,
-                    ).join('')}
+                    `;
+                    }).join('')}
                 </div>
             </div>
-        `;
+            `;
 
     filtersContainer.innerHTML = `
             <div class="-mx-container-mobile md:hidden">
@@ -272,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 2. Sort
     filtered.sort((a, b) => {
-      if (currentSort === 'latest') return new Date(b.date) - new Date(a.date);
+      if (currentSort === 'latest' || currentSort === '') return new Date(b.date) - new Date(a.date);
       if (currentSort === 'oldest') return new Date(a.date) - new Date(b.date);
       if (currentSort === 'title-asc') return a.title.localeCompare(b.title);
       if (currentSort === 'title-desc') return b.title.localeCompare(a.title);
