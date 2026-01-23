@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
   // --- Detect Page Type ---
-  const isInstructionsPage = window.location.pathname.includes('instructions.html') || 
-                              window.location.href.includes('instructions.html') ||
-                              document.querySelector('h1#tips-title')?.textContent.trim() === 'Instructions';
-  
+  const isInstructionsPage =
+    window.location.pathname.includes('instructions.html') ||
+    window.location.href.includes('instructions.html') ||
+    document.querySelector('h1#tips-title')?.textContent.trim() === 'Instructions';
+
   // --- Data ---
   const CATEGORIES = [
     { key: 'all', label: 'All articles' },
@@ -153,15 +154,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const sliderMobile = document.getElementById('tips-slider-mobile');
   const pagination = document.getElementById('tips-pagination');
 
-  // --- Initialization ---
-  initPage();
-
-  function initPage() {
-    renderFilters();
-    renderContent();
-    renderPagination();
-    initScrollAnimations();
-  }
+  // --- Scroll Animation Variables (must be declared before initPage) ---
+  const SPRING_CONFIG_TIPS = { stiffness: 55, damping: 16, mass: 0.85 };
+  const imageSprings = new Map();
+  let lastTime = performance.now();
+  let animationFrameId = null;
 
   // --- Scroll Animations ---
   // Spring physics simulation for TipsSection images
@@ -180,15 +177,15 @@ document.addEventListener('DOMContentLoaded', () => {
       const force = (this.target - this.current) * this.stiffness;
       const damping = this.velocity * this.damping;
       const acceleration = (force - damping) / this.mass;
-      
+
       this.velocity += acceleration * deltaTimeSeconds;
       this.current += this.velocity * deltaTimeSeconds;
-      
+
       if (Math.abs(this.target - this.current) < 0.001 && Math.abs(this.velocity) < 0.001) {
         this.current = this.target;
         this.velocity = 0;
       }
-      
+
       return this.current;
     }
 
@@ -201,29 +198,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  const SPRING_CONFIG_TIPS = { stiffness: 55, damping: 16, mass: 0.85 };
-  const imageSprings = new Map();
-  let lastTime = performance.now();
-  let animationFrameId = null;
+  // --- Initialization ---
+  initPage();
+
+  function initPage() {
+    renderFilters();
+    renderContent();
+    renderPagination();
+    initScrollAnimations();
+  }
 
   function initScrollAnimations() {
     const images = document.querySelectorAll('.scroll-scale-image');
-    
-    // Initialize spring for each image with initial scale 0.8
-    images.forEach((img) => {
-      if (!imageSprings.has(img)) {
-        const spring = new Spring(SPRING_CONFIG_TIPS);
-        spring.current = 0.8; // Initial scale
-        spring.target = 0.8;
-        imageSprings.set(img, spring);
-        img.style.transform = `scale(0.8)`;
-      }
-    });
 
     function getImageScrollProgress(img) {
-      const card = img.closest('.tips-card');
+      const card = img.closest('article') || img.closest('.tips-card');
       if (!card) return 0;
-      
+
       const rect = card.getBoundingClientRect();
       const windowHeight = window.innerHeight;
       const elementTop = rect.top;
@@ -241,10 +232,24 @@ document.addEventListener('DOMContentLoaded', () => {
       // useTransform(smoothProgress, [0, 0.65], [0.8, 1])
       if (progress <= 0) return 0.8;
       if (progress >= 0.65) return 1;
-      
+
       const normalizedProgress = progress / 0.65;
       return 0.8 + 0.2 * normalizedProgress;
     }
+
+    // Initialize spring for each image with initial scale based on scroll position
+    images.forEach((img) => {
+      if (!imageSprings.has(img)) {
+        const spring = new Spring(SPRING_CONFIG_TIPS);
+        // Calculate initial scale based on scroll position
+        const initialScale = getImageScrollProgress(img);
+        spring.current = initialScale;
+        spring.target = initialScale;
+        imageSprings.set(img, spring);
+        img.style.transform = `scale(${initialScale})`;
+        img.style.transition = 'transform 0.1s linear';
+      }
+    });
 
     function updateAnimations() {
       const currentTime = performance.now();
@@ -254,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
       images.forEach((img) => {
         const targetScale = getImageScrollProgress(img);
         const spring = imageSprings.get(img);
-        
+
         if (spring) {
           spring.setTarget(targetScale);
           const smoothScale = spring.update(deltaTime);
@@ -264,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // Continue animation if any spring is not at target
       const needsUpdate = Array.from(imageSprings.values()).some(
-        (spring) => Math.abs(spring.getValue() - spring.target) > 0.001
+        (spring) => Math.abs(spring.getValue() - spring.target) > 0.001,
       );
 
       if (needsUpdate) {
@@ -282,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
-    
+
     // Initial call
     onScroll();
   }
@@ -542,12 +547,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const link = 'tips-details.html';
 
     return `
-        <article class="rounded-[12px] bg-white/80 backdrop-blur-[30px] backdrop-filter ${heightClass} 2xl:rounded-[16px] ${bigImageClass} ${paddingClass}">
+        <article class="tips-card rounded-[12px] bg-white/80 backdrop-blur-[30px] backdrop-filter ${heightClass} 2xl:rounded-[16px] ${bigImageClass} ${paddingClass}">
             ${
               item.bigImage
                 ? `
                 <div class="relative h-[277px] w-full origin-top-left overflow-hidden lg:mb-10 2xl:mb-12 2xl:h-[390px] shrink-0">
-                  <img alt="${item.title}" class="scroll-scale-image rounded-t-[12px] object-cover object-top 2xl:rounded-t-[16px] w-full h-full origin-top-left" style="transform: scale(0.8); transition: transform 0.1s linear;" src="${item.image}" />
+                  <img alt="${item.title}" class="scroll-scale-image rounded-t-[12px] object-cover object-top 2xl:rounded-t-[16px] w-full h-full origin-top-left" src="${item.image}" />
                 </div>
             `
                 : ''
@@ -561,7 +566,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   !item.bigImage
                     ? `
                     <div class="relative h-[87px] w-[149px] shrink-0 overflow-hidden md:h-[99px] md:w-[149px] lg:h-[127px] lg:w-[186px] 2xl:h-[177px] 2xl:w-[258px]">
-                        <img alt="${item.title}" class="scroll-scale-image rounded-[6px] object-cover w-full h-full origin-top-left" style="transform: scale(0.8); transition: transform 0.1s linear;" src="${item.image}" />
+                        <img alt="${item.title}" class="scroll-scale-image rounded-[6px] object-cover w-full h-full origin-top-left" src="${item.image}" />
                     </div>
                 `
                     : ''

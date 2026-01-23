@@ -92,4 +92,71 @@
   setupLangSwitcher('lang-switcher-footer', 'lang-button-footer', 'lang-dropdown-footer');
   // Init Mobile Footer Switcher
   setupLangSwitcher('lang-switcher-footer-mobile', 'lang-button-footer-mobile', 'lang-dropdown-footer-mobile');
+
+  // Active page detection and styling
+  function setActivePage() {
+    const currentPath = window.location.pathname;
+    const currentPage = currentPath.split('/').pop() || 'index.html';
+    
+    // Find all navigation links in header
+    const navLinks = header.querySelectorAll('nav a[href]');
+    
+    navLinks.forEach((link) => {
+      const href = link.getAttribute('href');
+      const linkPage = href.split('/').pop();
+      
+      // Check if this link matches current page
+      if (linkPage === currentPage) {
+        // Set active styles
+        const parentLi = link.closest('li');
+        if (parentLi) {
+          parentLi.classList.remove('text-text', 'text-white', 'hover:text-brand');
+          parentLi.classList.add('text-brand', 'font-semibold');
+        }
+        // Also update the link itself
+        link.classList.remove('text-text', 'text-white', 'hover:text-brand');
+        link.classList.add('text-brand', 'font-semibold');
+      } else {
+        // Set inactive styles with hover
+        const parentLi = link.closest('li');
+        if (parentLi) {
+          parentLi.classList.remove('text-brand', 'font-semibold');
+          // Keep text-text or text-white based on header theme, but ensure hover is present
+          const isDark = header.dataset.theme === 'dark' && !header.classList.contains('bg-white/30');
+          if (!isDark) {
+            parentLi.classList.add('text-text', 'hover:text-brand');
+          } else {
+            parentLi.classList.add('text-white', 'hover:text-brand');
+          }
+        }
+        link.classList.remove('text-brand', 'font-semibold');
+        link.classList.add('hover:text-brand', 'transition-colors');
+      }
+    });
+
+    // Also handle mobile menu links
+    const mobileMenu = document.getElementById('mobile-menu-content');
+    if (mobileMenu) {
+      const mobileLinks = mobileMenu.querySelectorAll('a[href]');
+      mobileLinks.forEach((link) => {
+        const href = link.getAttribute('href');
+        const linkPage = href.split('/').pop();
+        
+        if (linkPage === currentPage) {
+          link.classList.remove('text-text', 'hover:text-brand');
+          link.classList.add('text-brand', 'font-semibold');
+        } else {
+          link.classList.remove('text-brand', 'font-semibold');
+          link.classList.add('text-text', 'hover:text-brand');
+        }
+      });
+    }
+  }
+
+  // Set active page on load and after scroll (in case header theme changes)
+  setActivePage();
+  window.addEventListener('scroll', () => {
+    // Re-apply active styles after scroll in case colors changed
+    setTimeout(setActivePage, 100);
+  });
 })();
