@@ -285,10 +285,20 @@
       if (prevBtn) {
         prevBtn.disabled = track.rel === 0;
         prevBtn.setAttribute('aria-disabled', track.rel === 0);
+        if (track.rel === 0) {
+          prevBtn.classList.add('opacity-40');
+        } else {
+          prevBtn.classList.remove('opacity-40');
+        }
       }
       if (nextBtn) {
         nextBtn.disabled = track.rel === track.slides.length - 1;
         nextBtn.setAttribute('aria-disabled', track.rel === track.slides.length - 1);
+        if (track.rel === track.slides.length - 1) {
+          nextBtn.classList.add('opacity-40');
+        } else {
+          nextBtn.classList.remove('opacity-40');
+        }
       }
     }
 

@@ -299,6 +299,12 @@ document.addEventListener('DOMContentLoaded', () => {
         breakpoints: {
           '(min-width: 768px)': { slides: { perView: 'auto', spacing: 16 } },
         },
+        created(slider) {
+          updateSliderButtons(slider);
+        },
+        slideChanged(slider) {
+          updateSliderButtons(slider);
+        },
       });
     }
   }
@@ -325,14 +331,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const nextBtn = document.getElementById('slider-next');
       if (prevBtn)
         prevBtn.addEventListener('click', () => {
-          // Trigger both or just the visible one? Usually logic detects viewport.
-          // Assuming desktop buttons control desktop slider for now since they are hidden on mobile usually?
-          // Wait, design shows "Blog" + arrows on top.
-          // The arrows are visible on ALL screens in the HTML structure I copied?
-          // No, "Slider Controls" div is inside the block "mt-[120px] mb-20".
-          // In `RelatedArticlesSlider.tsx` logic:
-          // onPrev checks `isDesktop`.
-          // I will do the same check based on window width.
           if (window.innerWidth >= 1280) sliderInstanceDesktop.prev();
           else sliderInstanceMobile?.prev();
         });
@@ -342,6 +340,18 @@ document.addEventListener('DOMContentLoaded', () => {
           if (window.innerWidth >= 1280) sliderInstanceDesktop.next();
           else sliderInstanceMobile?.next();
         });
+
+      // Update buttons on resize to handle switch between mobile/desktop
+      let resizeTimeout;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+          const activeSlider = window.innerWidth >= 1280 ? sliderInstanceDesktop : sliderInstanceMobile;
+          if (activeSlider) {
+            updateSliderButtons(activeSlider);
+          }
+        }, 100);
+      });
     }
   }
 
@@ -351,8 +361,22 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!prevBtn || !nextBtn) return;
     const track = slider.track.details;
     if (!track) return;
+    
     prevBtn.disabled = track.rel === 0;
+    prevBtn.setAttribute('aria-disabled', track.rel === 0);
+    if (track.rel === 0) {
+      prevBtn.classList.add('opacity-40');
+    } else {
+      prevBtn.classList.remove('opacity-40');
+    }
+
     nextBtn.disabled = track.rel === track.slides.length - 1;
+    nextBtn.setAttribute('aria-disabled', track.rel === track.slides.length - 1);
+    if (track.rel === track.slides.length - 1) {
+      nextBtn.classList.add('opacity-40');
+    } else {
+      nextBtn.classList.remove('opacity-40');
+    }
   }
 
   // Handle Resize for buttons state?

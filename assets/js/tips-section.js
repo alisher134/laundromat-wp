@@ -179,7 +179,72 @@ document.addEventListener('DOMContentLoaded', () => {
     // Use setTimeout to ensure DOM is fully ready
     setTimeout(() => {
       initScrollAnimations();
+      initTipsSlider();
     }, 100);
+  }
+
+  // Initialize tips slider for index.html
+  function initTipsSlider() {
+    const sliderEl = document.getElementById('tips-slider-mobile');
+    if (!sliderEl || typeof KeenSlider === 'undefined') return;
+
+    if (mobileTipsSlider) {
+      mobileTipsSlider.destroy();
+    }
+
+    mobileTipsSlider = new KeenSlider('#tips-slider-mobile', {
+      loop: false,
+      mode: 'free',
+      rtl: false,
+      rubberband: true,
+      slides: {
+        perView: 'auto',
+        spacing: 8,
+        origin: 0,
+      },
+      created: (slider) => {
+        updateTipsButtons(slider);
+      },
+      slideChanged: (slider) => {
+        updateTipsButtons(slider);
+      },
+    });
+
+    const prevBtn = document.getElementById('tips-prev-btn-mobile');
+    const nextBtn = document.getElementById('tips-next-btn-mobile');
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', () => mobileTipsSlider.prev());
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener('click', () => mobileTipsSlider.next());
+    }
+  }
+
+  function updateTipsButtons(slider) {
+    if (!slider) return;
+    const prevBtn = document.getElementById('tips-prev-btn-mobile');
+    const nextBtn = document.getElementById('tips-next-btn-mobile');
+    if (!prevBtn || !nextBtn) return;
+
+    const track = slider.track.details;
+    if (!track) return;
+
+    prevBtn.disabled = track.rel === 0;
+    prevBtn.setAttribute('aria-disabled', track.rel === 0);
+    if (track.rel === 0) {
+      prevBtn.classList.add('opacity-40');
+    } else {
+      prevBtn.classList.remove('opacity-40');
+    }
+
+    nextBtn.disabled = track.rel === track.slides.length - 1;
+    nextBtn.setAttribute('aria-disabled', track.rel === track.slides.length - 1);
+    if (track.rel === track.slides.length - 1) {
+      nextBtn.classList.add('opacity-40');
+    } else {
+      nextBtn.classList.remove('opacity-40');
+    }
   }
 
   // --- Scroll Animations ---
