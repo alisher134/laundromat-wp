@@ -104,11 +104,21 @@
   }
 
   // Initialize mobile slider
+  let mobileSliderInstance = null;
+
   function initMobileSlider() {
     const sliderEl = document.getElementById('reviews-slider-mobile');
     if (!sliderEl || typeof KeenSlider === 'undefined') return;
 
-    const sliderInstance = new KeenSlider('#reviews-slider-mobile', {
+    const prevBtn = document.getElementById('reviews-prev-btn-mobile');
+    const nextBtn = document.getElementById('reviews-next-btn-mobile');
+
+    // Destroy existing slider if any
+    if (mobileSliderInstance) {
+      mobileSliderInstance.destroy();
+    }
+
+    mobileSliderInstance = new KeenSlider('#reviews-slider-mobile', {
       loop: false,
       mode: 'free',
       rtl: false,
@@ -134,14 +144,15 @@
       },
     });
 
-    const prevBtn = document.getElementById('reviews-prev-btn-mobile');
-    const nextBtn = document.getElementById('reviews-next-btn-mobile');
-
     if (prevBtn) {
-      prevBtn.addEventListener('click', () => sliderInstance.prev());
+      prevBtn.addEventListener('click', () => {
+        if (mobileSliderInstance) mobileSliderInstance.prev();
+      });
     }
     if (nextBtn) {
-      nextBtn.addEventListener('click', () => sliderInstance.next());
+      nextBtn.addEventListener('click', () => {
+        if (mobileSliderInstance) mobileSliderInstance.next();
+      });
     }
 
     function updateButtons(slider) {
@@ -149,19 +160,24 @@
       const track = slider.track.details;
       if (!track) return;
 
+      const maxIdx = track.maxIdx || track.slides.length - 1;
+      const currentSlide = track.rel;
+
       if (prevBtn) {
-        prevBtn.disabled = track.rel === 0;
-        prevBtn.setAttribute('aria-disabled', track.rel === 0);
-        if (track.rel === 0) {
+        const isFirstSlide = currentSlide === 0;
+        prevBtn.disabled = isFirstSlide;
+        prevBtn.setAttribute('aria-disabled', isFirstSlide);
+        if (isFirstSlide) {
           prevBtn.classList.add('opacity-40');
         } else {
           prevBtn.classList.remove('opacity-40');
         }
       }
       if (nextBtn) {
-        nextBtn.disabled = track.rel === track.slides.length - 1;
-        nextBtn.setAttribute('aria-disabled', track.rel === track.slides.length - 1);
-        if (track.rel === track.slides.length - 1) {
+        const isLastSlide = currentSlide >= maxIdx;
+        nextBtn.disabled = isLastSlide;
+        nextBtn.setAttribute('aria-disabled', isLastSlide);
+        if (isLastSlide) {
           nextBtn.classList.add('opacity-40');
         } else {
           nextBtn.classList.remove('opacity-40');
