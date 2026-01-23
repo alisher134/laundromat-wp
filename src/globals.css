@@ -313,6 +313,11 @@
     animation: accordion-up 0.2s ease-out forwards;
   }
 
+  /* FAQ Accordion transitions */
+  .faq-content {
+    transition: max-height 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
   /* 404 Page Animations */
   @keyframes notfound-title-enter {
     from {

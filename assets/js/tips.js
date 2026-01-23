@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // --- Detect Page Type ---
+  const isInstructionsPage = window.location.pathname.includes('instructions.html') || 
+                              window.location.href.includes('instructions.html') ||
+                              document.querySelector('h1#tips-title')?.textContent.trim() === 'Instructions';
+  
   // --- Data ---
   const CATEGORIES = [
     { key: 'all', label: 'All articles' },
@@ -73,6 +78,68 @@ document.addEventListener('DOMContentLoaded', () => {
     },
   ];
 
+  const INSTRUCTIONS_DATA = [
+    {
+      key: 'instruction-1',
+      image: './assets/images/tips-1.png',
+      category: 'Tips and tricks',
+      title: 'How to Use Our Washing Machines: A Complete Guide',
+      date: 'April 29, 2025',
+    },
+    {
+      key: 'instruction-2',
+      image: './assets/images/tips-2.png',
+      category: 'Useful resources',
+      title: 'Understanding Wash Cycles: When to Use Each Setting',
+      date: 'April 26, 2025',
+    },
+    {
+      key: 'instruction-3',
+      image: './assets/images/tips-3.png',
+      category: 'Tips and tricks',
+      title: 'How to Properly Load Your Laundry for Best Results',
+      date: 'April 24, 2025',
+    },
+    {
+      key: 'instruction-4',
+      image: './assets/images/tips-4.png',
+      category: 'Tips and tricks',
+      title: 'Choosing the Right Detergent for Your Clothes',
+      date: 'April 24, 2025',
+    },
+    {
+      key: 'instruction-5',
+      image: './assets/images/tips-5.png',
+      category: 'Company news',
+      title: 'New Self-Service Features Available at Our Locations',
+      date: 'April 24, 2025',
+    },
+    {
+      key: 'instruction-6',
+      image: './assets/images/tips-6.png',
+      category: 'Useful resources',
+      title: 'Step-by-Step Guide to Using Our Dryers',
+      date: 'April 24, 2025',
+    },
+    {
+      key: 'instruction-7',
+      image: './assets/images/tips-7.png',
+      category: 'Tips and tricks',
+      title: 'How to Handle Delicate Fabrics at Our Laundromat',
+      date: 'April 24, 2025',
+    },
+    {
+      key: 'instruction-8',
+      image: './assets/images/tips-8.png',
+      category: 'Company news',
+      title: 'Payment Options: Cards, Cash, and Mobile Payments',
+      date: 'April 24, 2025',
+    },
+  ];
+
+  // Use appropriate data based on page
+  const DATA = isInstructionsPage ? INSTRUCTIONS_DATA : TIPS_DATA;
+
   // --- State ---
   let activeCategory = 'all';
   let currentSort = '';
@@ -97,48 +164,125 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --- Scroll Animations ---
+  // Spring physics simulation for TipsSection images
+  class Spring {
+    constructor(config) {
+      this.stiffness = config.stiffness;
+      this.damping = config.damping;
+      this.mass = config.mass;
+      this.velocity = 0;
+      this.current = 0;
+      this.target = 0;
+    }
+
+    update(deltaTime) {
+      const deltaTimeSeconds = deltaTime / 1000;
+      const force = (this.target - this.current) * this.stiffness;
+      const damping = this.velocity * this.damping;
+      const acceleration = (force - damping) / this.mass;
+      
+      this.velocity += acceleration * deltaTimeSeconds;
+      this.current += this.velocity * deltaTimeSeconds;
+      
+      if (Math.abs(this.target - this.current) < 0.001 && Math.abs(this.velocity) < 0.001) {
+        this.current = this.target;
+        this.velocity = 0;
+      }
+      
+      return this.current;
+    }
+
+    setTarget(value) {
+      this.target = value;
+    }
+
+    getValue() {
+      return this.current;
+    }
+  }
+
+  const SPRING_CONFIG_TIPS = { stiffness: 55, damping: 16, mass: 0.85 };
+  const imageSprings = new Map();
+  let lastTime = performance.now();
+  let animationFrameId = null;
+
   function initScrollAnimations() {
     const images = document.querySelectorAll('.scroll-scale-image');
+    
+    // Initialize spring for each image with initial scale 0.8
+    images.forEach((img) => {
+      if (!imageSprings.has(img)) {
+        const spring = new Spring(SPRING_CONFIG_TIPS);
+        spring.current = 0.8; // Initial scale
+        spring.target = 0.8;
+        imageSprings.set(img, spring);
+        img.style.transform = `scale(0.8)`;
+      }
+    });
 
-    function onScroll() {
+    function getImageScrollProgress(img) {
+      const card = img.closest('.tips-card');
+      if (!card) return 0;
+      
+      const rect = card.getBoundingClientRect();
       const windowHeight = window.innerHeight;
+      const elementTop = rect.top;
+
+      // Framer Motion offset: ['start end', 'start center']
+      // 0 = top of card meets bottom of viewport (start end)
+      // 1 = top of card meets center of viewport (start center)
+      const startEnd = windowHeight;
+      const startCenter = windowHeight / 2;
+
+      let progress = (startEnd - elementTop) / (startEnd - startCenter);
+      progress = Math.min(Math.max(progress, 0), 1);
+
+      // Transform progress [0, 0.65] to scale [0.8, 1]
+      // useTransform(smoothProgress, [0, 0.65], [0.8, 1])
+      if (progress <= 0) return 0.8;
+      if (progress >= 0.65) return 1;
+      
+      const normalizedProgress = progress / 0.65;
+      return 0.8 + 0.2 * normalizedProgress;
+    }
+
+    function updateAnimations() {
+      const currentTime = performance.now();
+      const deltaTime = currentTime - lastTime;
+      lastTime = currentTime;
 
       images.forEach((img) => {
-        const wrapper = img.parentElement;
-        const rect = wrapper.getBoundingClientRect();
-
-        // Calculate progress matching Framer Motion's: offset: ['start end', 'start center']
-        // 0 = top of card meets bottom of viewport (start end)
-        // 1 = top of card meets center of viewport (start center)
-
-        const startEnd = windowHeight;
-        const startCenter = windowHeight / 2;
-
-        // Distance from top of viewport to top of element
-        const top = rect.top;
-
-        // Calculate progress: 0 at startEnd, 1 at startCenter
-        let progress = (startEnd - top) / (startEnd - startCenter);
-
-        // Clamp between 0 and 1
-        progress = Math.min(Math.max(progress, 0), 1);
-
-        // Map progress [0, 0.65] to scale [0.8, 1]
-        // If progress > 0.65, scale is 1
-
-        let scale = 0.8;
-        if (progress > 0) {
-          const mappedProgress = Math.min(progress / 0.65, 1);
-          scale = 0.8 + 0.2 * mappedProgress;
+        const targetScale = getImageScrollProgress(img);
+        const spring = imageSprings.get(img);
+        
+        if (spring) {
+          spring.setTarget(targetScale);
+          const smoothScale = spring.update(deltaTime);
+          img.style.transform = `scale(${smoothScale})`;
         }
-
-        img.style.transform = `scale(${scale})`;
       });
+
+      // Continue animation if any spring is not at target
+      const needsUpdate = Array.from(imageSprings.values()).some(
+        (spring) => Math.abs(spring.getValue() - spring.target) > 0.001
+      );
+
+      if (needsUpdate) {
+        animationFrameId = requestAnimationFrame(updateAnimations);
+      } else {
+        animationFrameId = null;
+      }
+    }
+
+    function onScroll() {
+      if (!animationFrameId) {
+        animationFrameId = requestAnimationFrame(updateAnimations);
+      }
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
-
+    
     // Initial call
     onScroll();
   }
@@ -271,13 +415,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- Rendering Content (Tips) ---
+  // --- Rendering Content (Tips/Instructions) ---
   function renderContent() {
     // 1. Filter
-    let filtered = TIPS_DATA;
+    let filtered = DATA;
     if (activeCategory !== 'all') {
       const catLabel = CATEGORIES.find((c) => c.key === activeCategory)?.label;
-      filtered = TIPS_DATA.filter((t) => t.category === catLabel);
+      filtered = DATA.filter((t) => t.category === catLabel);
     }
 
     // 2. Sort
