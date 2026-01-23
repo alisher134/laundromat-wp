@@ -81,6 +81,7 @@
   let sectionSpring = null;
   let lastTime = performance.now();
   let animationFrameId = null;
+  let isAnimating = false;
 
   // Initialize section scroll animation
   function initSectionAnimation() {
@@ -88,6 +89,11 @@
     if (!section) return;
 
     sectionSpring = new Spring(SPRING_CONFIG);
+    
+    // Set initial state
+    section.style.willChange = 'transform, opacity';
+    section.style.transform = 'translateY(220px)';
+    section.style.opacity = '0.3';
 
     function updateSection() {
       const currentTime = performance.now();
@@ -98,29 +104,45 @@
       sectionSpring.setTarget(scrollProgress);
       const smoothProgress = sectionSpring.update(deltaTime);
       
-      // Y: [0, 0.7] -> [220, 0]
+      // Y: [0, 0.7] -> [220, 0] (matching Next.js useTransform)
       const y = transformProgress(smoothProgress, [0, 0.7], [220, 0]);
       
-      // Opacity: [0, 0.5] -> [0.3, 1]
+      // Opacity: [0, 0.5] -> [0.3, 1] (matching Next.js useTransform)
       const opacity = transformProgress(smoothProgress, [0, 0.5], [0.3, 1]);
 
       section.style.transform = `translateY(${y}px)`;
       section.style.opacity = opacity;
 
-      if (Math.abs(sectionSpring.getValue() - scrollProgress) > 0.001) {
+      // Check if spring needs more updates (matching Framer Motion behavior)
+      const springValue = sectionSpring.getValue();
+      const velocity = sectionSpring.velocity;
+      
+      // Continue animation if spring is not at target or has velocity
+      const needsUpdate = Math.abs(springValue - scrollProgress) > 0.001 || 
+                         Math.abs(velocity) > 0.001;
+
+      if (needsUpdate) {
         animationFrameId = requestAnimationFrame(updateSection);
-  } else {
+        isAnimating = true;
+      } else {
         animationFrameId = null;
+        isAnimating = false;
+        // Clean up will-change when animation is complete
+        section.style.willChange = 'auto';
       }
     }
 
     function onScroll() {
-      if (!animationFrameId) {
+      if (!isAnimating && !animationFrameId) {
+        lastTime = performance.now();
         animationFrameId = requestAnimationFrame(updateSection);
       }
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    
+    // Initial call
     onScroll();
   }
 
