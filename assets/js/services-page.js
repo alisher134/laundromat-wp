@@ -207,8 +207,156 @@
 
   // Initialize on load
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initServiceCards);
+    document.addEventListener('DOMContentLoaded', () => {
+      initServiceCards();
+      initCategoryButtons();
+    });
   } else {
     initServiceCards();
+    initCategoryButtons();
   }
+
+  // Category buttons functionality
+  function initCategoryButtons() {
+    const categoryButtons = document.querySelectorAll('[data-category]');
+    const servicesList = document.getElementById('services-list');
+    
+    if (!categoryButtons.length || !servicesList) return;
+
+    // Find service cards by category
+    const serviceCards = {
+      laundry: servicesList.querySelector('[data-service="laundry"]') || servicesList.children[0],
+      drying: servicesList.querySelector('[data-service="drying"]') || servicesList.children[1],
+      specialCleaning: servicesList.querySelector('[data-service="specialCleaning"]') || servicesList.children[2],
+    };
+
+    // Set active category
+    function setActiveCategory(category) {
+      // Update button styles (both mobile and desktop)
+      categoryButtons.forEach((btn) => {
+        const btnCategory = btn.getAttribute('data-category');
+        if (btnCategory === category) {
+          // Active state
+          btn.classList.remove('border-text/20', 'text-text');
+          btn.classList.add('bg-brand/6', 'text-brand', 'border-transparent');
+        } else {
+          // Inactive state
+          btn.classList.remove('bg-brand/6', 'text-brand', 'border-transparent');
+          btn.classList.add('border-text/20', 'text-text');
+        }
+      });
+
+      // Scroll to corresponding service card
+      const targetCard = serviceCards[category];
+      if (targetCard) {
+        const headerHeight = 120; // Approximate header height with padding
+        const cardPosition = targetCard.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+        
+        window.scrollTo({
+          top: Math.max(0, cardPosition),
+          behavior: 'smooth',
+        });
+      }
+    }
+
+    // Add click handlers
+    categoryButtons.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const category = btn.getAttribute('data-category');
+        if (category) {
+          setActiveCategory(category);
+        }
+      });
+    });
+
+    // Initialize mobile slider for category buttons
+    // Find the slider container in the categories section
+    const categoriesSection = document.querySelector('.animate-fade-up');
+    const mobileSliderContainer = categoriesSection ? categoriesSection.querySelector('.keen-slider') : null;
+    
+    if (mobileSliderContainer && typeof KeenSlider !== 'undefined') {
+      try {
+        new KeenSlider(mobileSliderContainer, {
+          mode: 'free-snap',
+          slides: {
+            perView: 'auto',
+            spacing: 8,
+          },
+        });
+      } catch (e) {
+        console.warn('Could not initialize category slider:', e);
+      }
+    }
+  }
+
+  // FAQ accordion functionality
+  function initFAQAccordion() {
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    if (faqItems.length === 0) return;
+    
+    faqItems.forEach((item) => {
+      const trigger = item.querySelector('.faq-trigger');
+      const content = item.querySelector('.faq-content');
+      const icon = item.querySelector('.faq-icon');
+      
+      if (!trigger || !content) return;
+      
+      // Set initial state - all closed
+      content.setAttribute('data-state', 'closed');
+      content.style.maxHeight = '0';
+      content.style.opacity = '0';
+      content.style.overflow = 'hidden';
+      content.style.transition = 'max-height 0.3s ease-out, opacity 0.3s ease-out';
+      
+      if (icon) {
+        icon.style.transition = 'transform 0.3s ease-out';
+        icon.style.transform = 'rotate(0deg)';
+      }
+      
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isOpen = content.getAttribute('data-state') === 'open';
+        
+        // Close all other items (accordion behavior - only one open at a time)
+        faqItems.forEach((otherItem) => {
+          if (otherItem !== item) {
+            const otherContent = otherItem.querySelector('.faq-content');
+            const otherIcon = otherItem.querySelector('.faq-icon');
+            if (otherContent) {
+              otherContent.setAttribute('data-state', 'closed');
+              otherContent.style.maxHeight = '0';
+              otherContent.style.opacity = '0';
+              if (otherIcon) {
+                otherIcon.style.transform = 'rotate(0deg)';
+              }
+            }
+          }
+        });
+        
+        if (isOpen) {
+          // Close current item
+          content.setAttribute('data-state', 'closed');
+          content.style.maxHeight = '0';
+          content.style.opacity = '0';
+          if (icon) {
+            icon.style.transform = 'rotate(0deg)';
+          }
+        } else {
+          // Open current item
+          content.setAttribute('data-state', 'open');
+          // Set maxHeight to scrollHeight for smooth animation
+          content.style.maxHeight = content.scrollHeight + 'px';
+          content.style.opacity = '1';
+          if (icon) {
+            icon.style.transform = 'rotate(45deg)';
+          }
+        }
+      });
+    });
+  }
+
+  // Initialize FAQ accordion
+  initFAQAccordion();
 })();
