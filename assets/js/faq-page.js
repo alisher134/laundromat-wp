@@ -3,12 +3,17 @@
   let sectionSpring = null;
   let lastTime = performance.now();
   let animationFrameId = null;
+  let isAnimating = false;
 
   function initSectionAnimation() {
     const section = document.getElementById('faqs-section');
     if (!section) return;
 
     sectionSpring = new Spring(SPRING_CONFIGS.FAQ);
+    
+    section.style.willChange = 'transform, opacity';
+    section.style.transform = 'translateY(220px)';
+    section.style.opacity = '0.3';
 
     function updateSection() {
       const currentTime = performance.now();
@@ -25,20 +30,32 @@
       section.style.transform = `translateY(${y}px)`;
       section.style.opacity = opacity;
 
-      if (Math.abs(sectionSpring.getValue() - scrollProgress) > 0.001) {
+      const springValue = sectionSpring.getValue();
+      const velocity = sectionSpring.velocity;
+      
+      const needsUpdate = Math.abs(springValue - scrollProgress) > 0.001 || 
+                         Math.abs(velocity) > 0.001;
+
+      if (needsUpdate) {
         animationFrameId = requestAnimationFrame(updateSection);
-  } else {
+        isAnimating = true;
+      } else {
         animationFrameId = null;
+        isAnimating = false;
+        section.style.willChange = 'auto';
       }
     }
 
     function onScroll() {
-      if (!animationFrameId) {
+      if (!isAnimating && !animationFrameId) {
+        lastTime = performance.now();
         animationFrameId = requestAnimationFrame(updateSection);
       }
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    
     onScroll();
   }
 

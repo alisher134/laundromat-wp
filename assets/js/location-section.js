@@ -132,9 +132,16 @@
         marker.style.opacity = markersOpacity;
       });
 
+      const mapSpringValue = mapSpring.getValue();
+      const mapSpringVelocity = mapSpring.velocity;
+      const markersSpringValue = markersOpacitySpring.getValue();
+      const markersSpringVelocity = markersOpacitySpring.velocity;
+      
       const needsUpdate = 
-        Math.abs(mapSpring.getValue() - mapProgress) > 0.001 ||
-        Math.abs(markersOpacitySpring.getValue() - mapProgress) > 0.001;
+        Math.abs(mapSpringValue - mapProgress) > 0.001 ||
+        Math.abs(mapSpringVelocity) > 0.001 ||
+        Math.abs(markersSpringValue - mapProgress) > 0.001 ||
+        Math.abs(markersSpringVelocity) > 0.001;
 
       if (needsUpdate) {
         animationFrameId = requestAnimationFrame(updateMapAnimation);
@@ -150,11 +157,10 @@
     }
     
     function onResize() {
-      // Recalculate base transform on resize
-      const mapProgress = getMapScrollProgress(mapContainer);
-      mapSpring.setTarget(mapProgress);
-      markersOpacitySpring.setTarget(mapProgress);
-      onScroll();
+      lastTime = performance.now();
+      if (!animationFrameId) {
+        animationFrameId = requestAnimationFrame(updateMapAnimation);
+      }
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -215,8 +221,28 @@
       }
     }
 
-    sliderInstance.on('slideChanged', updateButtons);
-    sliderInstance.on('created', updateButtons);
+    // Sync slider position with active location
+    function syncSliderWithActiveLocation() {
+      if (!sliderInstance) return;
+      const track = sliderInstance.track.details;
+      if (!track) return;
+      
+      const currentSlideIndex = track.rel;
+      if (activeLocationIndex !== currentSlideIndex) {
+        activeLocationIndex = currentSlideIndex;
+        updateActiveCards();
+        updateStaticMarkers();
+      }
+    }
+
+    sliderInstance.on('slideChanged', () => {
+      updateButtons();
+      syncSliderWithActiveLocation();
+    });
+    sliderInstance.on('created', () => {
+      updateButtons();
+      syncSliderWithActiveLocation();
+    });
     updateButtons();
   }
 
@@ -269,12 +295,16 @@
   }
 
   // Handle location select
-  function handleLocationSelect(index) {
+  function handleLocationSelect(index, shouldMoveSlider = false) {
     if (activeLocationIndex === index) return;
     activeLocationIndex = index;
     
     updateActiveCards();
     updateStaticMarkers();
+    
+    if (shouldMoveSlider && sliderInstance) {
+      sliderInstance.moveToIdx(index);
+    }
   }
 
   // Initialize click handlers
@@ -284,7 +314,7 @@
     desktopCards.forEach((card) => {
       card.addEventListener('click', () => {
         const cardIndex = parseInt(card.getAttribute('data-location-index'));
-        handleLocationSelect(cardIndex);
+        handleLocationSelect(cardIndex, false);
       });
     });
 
@@ -293,7 +323,7 @@
     markers.forEach((marker) => {
       marker.addEventListener('click', () => {
         const markerId = parseInt(marker.getAttribute('data-location-id'));
-        handleLocationSelect(markerId);
+        handleLocationSelect(markerId, true);
       });
     });
   }

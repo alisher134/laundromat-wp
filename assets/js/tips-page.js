@@ -39,9 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const initialScale = getImageScrollProgress(img);
         spring.current = initialScale;
         spring.target = initialScale;
+        spring.velocity = 0;
         imageSprings.set(img, spring);
         img.style.transform = `scale(${initialScale})`;
-        img.style.transition = 'transform 0.1s linear';
+        img.style.transformOrigin = 'top left';
+        img.style.willChange = 'transform';
       }
     });
 
@@ -61,20 +63,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
 
-      // Continue animation if any spring is not at target
       const needsUpdate = Array.from(imageSprings.values()).some(
-        (spring) => Math.abs(spring.getValue() - spring.target) > 0.001,
+        (spring) => {
+          const springValue = spring.getValue();
+          return Math.abs(springValue - spring.target) > 0.001 || 
+                 Math.abs(spring.velocity) > 0.001;
+        }
       );
 
       if (needsUpdate) {
         animationFrameId = requestAnimationFrame(updateAnimations);
       } else {
         animationFrameId = null;
+        images.forEach((img) => {
+          img.style.willChange = 'auto';
+        });
       }
     }
 
     function onScroll() {
       if (!animationFrameId) {
+        lastTime = performance.now();
         animationFrameId = requestAnimationFrame(updateAnimations);
       }
     }
@@ -82,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll, { passive: true });
 
-    // Initial call
     onScroll();
   }
 

@@ -137,12 +137,16 @@
         card.style.opacity = cardOpacity;
         card.style.transform = `translateY(${cardY}px)`;
 
-        if (Math.abs(spring.getValue() - cardProgress) > 0.001) {
+        const springValue = spring.getValue();
+        const velocity = spring.velocity;
+        if (Math.abs(springValue - cardProgress) > 0.001 || Math.abs(velocity) > 0.001) {
           needsUpdate = true;
         }
       });
 
-      if (Math.abs(gridSpring.getValue() - gridProgress) > 0.001 || needsUpdate) {
+      const gridSpringValue = gridSpring.getValue();
+      const gridVelocity = gridSpring.velocity;
+      if (Math.abs(gridSpringValue - gridProgress) > 0.001 || Math.abs(gridVelocity) > 0.001 || needsUpdate) {
         animationFrameId = requestAnimationFrame(updateGrid);
       } else {
         animationFrameId = null;

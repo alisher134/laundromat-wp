@@ -58,7 +58,9 @@
           priceInfo.style.display = isActiveProgress > 0 ? 'flex' : 'none';
         }
 
-        if (Math.abs(spring.getValue() - scrollProgress) > 0.001) {
+        const springValue = spring.getValue();
+        const velocity = spring.velocity;
+        if (Math.abs(springValue - scrollProgress) > 0.001 || Math.abs(velocity) > 0.001) {
           needsUpdate = true;
         }
       });

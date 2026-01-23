@@ -137,12 +137,13 @@
     setupButtons();
   }
 
-  // Reinitialize on resize to update spacing
   let resizeTimeout;
-  window.addEventListener('resize', () => {
+  const handleResize = () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
       initSlider();
     }, 250);
-  });
+  };
+
+  window.addEventListener('resize', handleResize, { passive: true });
 })();
