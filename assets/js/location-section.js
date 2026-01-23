@@ -1,45 +1,4 @@
-// LocationSection initialization
 (function () {
-  const SPRING_CONFIG = { stiffness: 80, damping: 25, mass: 0.8 };
-
-  // Spring physics simulation
-  class Spring {
-    constructor(config) {
-      this.stiffness = config.stiffness;
-      this.damping = config.damping;
-      this.mass = config.mass;
-      this.velocity = 0;
-      this.current = 0;
-      this.target = 0;
-    }
-
-    update(deltaTime) {
-      const deltaTimeSeconds = deltaTime / 1000;
-      const force = (this.target - this.current) * this.stiffness;
-      const damping = this.velocity * this.damping;
-      const acceleration = (force - damping) / this.mass;
-      
-      this.velocity += acceleration * deltaTimeSeconds;
-      this.current += this.velocity * deltaTimeSeconds;
-      
-      if (Math.abs(this.target - this.current) < 0.001 && Math.abs(this.velocity) < 0.001) {
-        this.current = this.target;
-        this.velocity = 0;
-      }
-      
-      return this.current;
-    }
-
-    setTarget(value) {
-      this.target = value;
-    }
-
-    getValue() {
-      return this.current;
-    }
-  }
-
-  // --- Data ---
   const locations = [
     {
       id: 0,
@@ -81,42 +40,6 @@
   let lastTime = performance.now();
   let animationFrameId = null;
 
-  // Calculate scroll progress for map container
-  // Framer Motion offset: ['start end', 'start 0.3']
-  // 'start end' = container start at viewport end (progress = 0)
-  // 'start 0.3' = container start at 30% of viewport height (progress = 1)
-  function getMapScrollProgress(element) {
-    const rect = element.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    const elementTop = rect.top;
-    
-    // When element start is at viewport bottom: progress = 0
-    // When element start is at 30% of viewport height: progress = 1
-    const startPoint = windowHeight; // elementTop when progress = 0
-    const endPoint = windowHeight * 0.3; // elementTop when progress = 1
-    
-    let progress = (startPoint - elementTop) / (startPoint - endPoint);
-    progress = Math.max(0, Math.min(1, progress));
-    
-    return progress;
-  }
-
-  // Transform progress value
-  function transformProgress(progress, inputRange, outputRange, clamp = false) {
-    const [inputMin, inputMax] = inputRange;
-    const [outputMin, outputMax] = outputRange;
-    
-    if (progress <= inputMin) return clamp ? outputMin : outputMin;
-    if (progress >= inputMax) return clamp ? outputMax : outputMax;
-    
-    const inputRangeSize = inputMax - inputMin;
-    const outputRangeSize = outputMax - outputMin;
-    const normalizedProgress = (progress - inputMin) / inputRangeSize;
-    
-    return outputMin + normalizedProgress * outputRangeSize;
-  }
-
-  // Initialize map animations
   function initMapAnimation() {
     const mapContainer = document.getElementById('location-map-container');
     if (!mapContainer) return;
@@ -124,17 +47,15 @@
     const desktopMap = document.getElementById('location-map-desktop');
     if (!desktopMap) return;
 
-    mapSpring = new Spring(SPRING_CONFIG);
-    markersOpacitySpring = new Spring(SPRING_CONFIG);
+    mapSpring = new Spring(SPRING_CONFIGS.LOCATION);
+    markersOpacitySpring = new Spring(SPRING_CONFIGS.LOCATION);
     
-    // Set initial values (mapY starts at 150, markers opacity starts at 0)
-    mapSpring.current = 0; // progress starts at 0
+    mapSpring.current = 0;
     mapSpring.target = 0;
     markersOpacitySpring.current = 0;
     markersOpacitySpring.target = 0;
     
-    // Apply initial transform
-    const initialMapY = 150; // mapY = [150, 0] when progress = [0, 1]
+    const initialMapY = 150;
     const width = window.innerWidth;
     let baseTranslateX = 0;
     let baseTranslateY = 0;
@@ -158,7 +79,6 @@
     
     desktopMap.style.transform = `translateX(${baseTranslateX}px) translateY(${baseTranslateY + initialMapY}px)`;
     
-    // Set initial markers opacity
     const desktopMarkers = document.querySelectorAll('#location-map-desktop .location-marker');
     desktopMarkers.forEach((marker) => {
       marker.style.opacity = '0';
@@ -176,10 +96,7 @@
       const smoothMapProgress = mapSpring.update(deltaTime);
       const smoothMarkersProgress = markersOpacitySpring.update(deltaTime);
       
-      // Map Y: [0, 1] -> [150, 0]
       const mapY = transformProgress(smoothMapProgress, [0, 1], [150, 0]);
-      
-      // Markers opacity: [0.95, 1] -> [0, 1]
       const markersOpacity = transformProgress(smoothMarkersProgress, [0.95, 1], [0, 1], true);
       
       // Apply map Y transform
@@ -191,7 +108,6 @@
       let baseTranslateX = 0;
       let baseTranslateY = 0;
       
-      // Match Next.js breakpoints: 2xl (1536px), xl (1280px), lg (1024px), md (768px)
       if (width >= 1536) {
         baseTranslateX = 800;
         baseTranslateY = 0;
@@ -209,11 +125,8 @@
         baseTranslateY = 0;
       }
       
-      // Apply base transform + mapY (Framer Motion adds y on top of existing transforms)
-      // mapY starts at 150 and goes to 0, so we add it to baseTranslateY
       desktopMap.style.transform = `translateX(${baseTranslateX}px) translateY(${baseTranslateY + mapY}px)`;
       
-      // Apply markers opacity
       const desktopMarkers = document.querySelectorAll('#location-map-desktop .location-marker');
       desktopMarkers.forEach((marker) => {
         marker.style.opacity = markersOpacity;

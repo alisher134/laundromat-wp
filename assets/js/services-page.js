@@ -1,106 +1,5 @@
-// ServiceSection scroll animations
 (function () {
-  const SPRING_CONFIG = { stiffness: 35, damping: 18, mass: 1.3 };
-  const CARD_SIZES = {
-    small: {
-      lg: { height: 280, width: 350 },
-      xl: { height: 390, width: 475 },
-      '2xl': { height: 520, width: 720 },
-    },
-    large: {
-      lg: { height: 508, width: 700 },
-      xl: { height: 580, width: 900 },
-      '2xl': { height: 790, width: 1120 },
-    },
-  };
 
-  // Get breakpoint
-  function getBreakpoint() {
-    const width = window.innerWidth;
-    if (width >= 1536) return '2xl';
-    if (width >= 1280) return 'xl';
-    return 'lg';
-  }
-
-  // Spring physics simulation
-  class Spring {
-    constructor(config) {
-      this.stiffness = config.stiffness;
-      this.damping = config.damping;
-      this.mass = config.mass;
-      this.velocity = 0;
-      this.current = 0;
-      this.target = 0;
-    }
-
-    update(deltaTime) {
-      const deltaTimeSeconds = deltaTime / 1000;
-      const force = (this.target - this.current) * this.stiffness;
-      const damping = this.velocity * this.damping;
-      const acceleration = (force - damping) / this.mass;
-      
-      this.velocity += acceleration * deltaTimeSeconds;
-      this.current += this.velocity * deltaTimeSeconds;
-      
-      if (Math.abs(this.target - this.current) < 0.001 && Math.abs(this.velocity) < 0.001) {
-        this.current = this.target;
-        this.velocity = 0;
-      }
-      
-      return this.current;
-    }
-
-    setTarget(value) {
-      this.target = value;
-    }
-
-    getValue() {
-      return this.current;
-    }
-  }
-
-  // Calculate scroll progress
-  // Framer Motion offset: ['center end', 'center center']
-  // 'center end' = element center at viewport bottom (progress = 0)
-  // 'center center' = element center at viewport center (progress = 1)
-  function getScrollProgress(element) {
-    const rect = element.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    const elementCenter = rect.top + rect.height / 2;
-    const viewportCenter = windowHeight / 2;
-    const viewportBottom = windowHeight;
-    
-    // When element center is at viewport bottom: progress = 0
-    // When element center is at viewport center: progress = 1
-    const startPosition = viewportBottom; // center end
-    const endPosition = viewportCenter; // center center
-    
-    const distance = startPosition - endPosition; // windowHeight / 2
-    const currentPosition = elementCenter;
-    
-    // Calculate progress: 0 when at bottom, 1 when at center
-    let progress = 1 - (currentPosition - endPosition) / distance;
-    progress = Math.max(0, Math.min(1, progress));
-    
-    return progress;
-  }
-
-  // Transform progress value
-  function transformProgress(progress, inputRange, outputRange, clamp = false) {
-    const [inputMin, inputMax] = inputRange;
-    const [outputMin, outputMax] = outputRange;
-    
-    if (progress <= inputMin) return clamp ? outputMin : outputMin;
-    if (progress >= inputMax) return clamp ? outputMax : outputMax;
-    
-    const inputRangeSize = inputMax - inputMin;
-    const outputRangeSize = outputMax - outputMin;
-    const normalizedProgress = (progress - inputMin) / inputRangeSize;
-    
-    return outputMin + normalizedProgress * outputRangeSize;
-  }
-
-  // Initialize service cards
   function initServiceCards() {
     const cards = document.querySelectorAll('[data-service-card]');
     if (cards.length === 0) return;
@@ -116,10 +15,9 @@
       
       if (!wrapper || !imageWrapper) return;
 
-      const spring = new Spring(SPRING_CONFIG);
+      const spring = new Spring(SPRING_CONFIGS.SERVICES);
       springs.set(card, { spring, card, wrapper, imageWrapper, priceInfo });
 
-      // Set initial sizes
       const breakpoint = getBreakpoint();
       const smallSize = CARD_SIZES.small[breakpoint];
       imageWrapper.style.height = `${smallSize.height}px`;
@@ -135,7 +33,7 @@
       let needsUpdate = false;
 
       springs.forEach(({ spring, card, wrapper, imageWrapper, priceInfo }) => {
-        const scrollProgress = getScrollProgress(card);
+        const scrollProgress = getScrollProgressCenter(card);
         spring.setTarget(scrollProgress);
         const smoothProgress = spring.update(deltaTime);
         
@@ -145,22 +43,12 @@
         const smallSize = CARD_SIZES.small[breakpoint];
         const largeSize = CARD_SIZES.large[breakpoint];
         
-        // Height: [0, 0.9] -> [small, large]
         const height = transformProgress(expandProgress, [0, 0.9], [smallSize.height, largeSize.height]);
-        
-        // Width: [0, 1] -> [small, large]
         const width = transformProgress(expandProgress, [0, 1], [smallSize.width, largeSize.width]);
-        
-        // Active progress: [0, 0.4] -> [0, 1] (clamped)
         const isActiveProgress = transformProgress(expandProgress, [0, 0.4], [0, 1], true);
-        
-        // Justify content: [0, 0.3] -> ['flex-start', '']
         const justifyContentValue = expandProgress < 0.3 ? 'flex-start' : '';
-        
-        // Padding bottom: [0, 0.3] -> [12, 0]
         const paddingBottomValue = transformProgress(expandProgress, [0, 0.3], [12, 0]);
 
-        // Update styles
         imageWrapper.style.height = `${height}px`;
         imageWrapper.style.width = `${width}px`;
         wrapper.style.justifyContent = justifyContentValue;
@@ -191,7 +79,6 @@
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', () => {
-      // Reset sizes on resize
       const breakpoint = getBreakpoint();
       springs.forEach(({ imageWrapper }) => {
         const smallSize = CARD_SIZES.small[breakpoint];
@@ -201,11 +88,9 @@
       onScroll();
     });
 
-    // Initial update
     onScroll();
   }
 
-  // Initialize on load
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       initServiceCards();
@@ -216,40 +101,33 @@
     initCategoryButtons();
   }
 
-  // Category buttons functionality
   function initCategoryButtons() {
     const categoryButtons = document.querySelectorAll('[data-category]');
     const servicesList = document.getElementById('services-list');
     
     if (!categoryButtons.length || !servicesList) return;
 
-    // Find service cards by category
     const serviceCards = {
       laundry: servicesList.querySelector('[data-service="laundry"]') || servicesList.children[0],
       drying: servicesList.querySelector('[data-service="drying"]') || servicesList.children[1],
       specialCleaning: servicesList.querySelector('[data-service="specialCleaning"]') || servicesList.children[2],
     };
 
-    // Set active category
-    function setActiveCategory(category) {
-      // Update button styles (both mobile and desktop)
-      categoryButtons.forEach((btn) => {
-        const btnCategory = btn.getAttribute('data-category');
-        if (btnCategory === category) {
-          // Active state
-          btn.classList.remove('border-text/20', 'text-text');
-          btn.classList.add('bg-brand/6', 'text-brand', 'border-transparent');
-        } else {
-          // Inactive state
-          btn.classList.remove('bg-brand/6', 'text-brand', 'border-transparent');
-          btn.classList.add('border-text/20', 'text-text');
-        }
-      });
+      function setActiveCategory(category) {
+        categoryButtons.forEach((btn) => {
+          const btnCategory = btn.getAttribute('data-category');
+          if (btnCategory === category) {
+            btn.classList.remove('border-text/20', 'text-text');
+            btn.classList.add('bg-brand/6', 'text-brand', 'border-transparent');
+          } else {
+            btn.classList.remove('bg-brand/6', 'text-brand', 'border-transparent');
+            btn.classList.add('border-text/20', 'text-text');
+          }
+        });
 
-      // Scroll to corresponding service card
       const targetCard = serviceCards[category];
       if (targetCard) {
-        const headerHeight = 120; // Approximate header height with padding
+        const headerHeight = 120;
         const cardPosition = targetCard.getBoundingClientRect().top + window.pageYOffset - headerHeight;
         
         window.scrollTo({
@@ -259,7 +137,6 @@
       }
     }
 
-    // Add click handlers
     categoryButtons.forEach((btn) => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -270,8 +147,6 @@
       });
     });
 
-    // Initialize mobile slider for category buttons
-    // Find the slider container in the categories section
     const categoriesSection = document.querySelector('.animate-fade-up');
     const mobileSliderContainer = categoriesSection ? categoriesSection.querySelector('.keen-slider') : null;
     

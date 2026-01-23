@@ -1,93 +1,14 @@
-// FaqsSection initialization
 (function () {
-  const SPRING_CONFIG = { stiffness: 35, damping: 20, mass: 1.2 };
-
-  // Spring physics simulation
-  class Spring {
-    constructor(config) {
-      this.stiffness = config.stiffness;
-      this.damping = config.damping;
-      this.mass = config.mass;
-      this.velocity = 0;
-      this.current = 0;
-      this.target = 0;
-    }
-
-    update(deltaTime) {
-      const deltaTimeSeconds = deltaTime / 1000;
-      const force = (this.target - this.current) * this.stiffness;
-      const damping = this.velocity * this.damping;
-      const acceleration = (force - damping) / this.mass;
-      
-      this.velocity += acceleration * deltaTimeSeconds;
-      this.current += this.velocity * deltaTimeSeconds;
-      
-      if (Math.abs(this.target - this.current) < 0.001 && Math.abs(this.velocity) < 0.001) {
-        this.current = this.target;
-        this.velocity = 0;
-      }
-      
-      return this.current;
-    }
-
-    setTarget(value) {
-      this.target = value;
-    }
-
-    getValue() {
-      return this.current;
-    }
-  }
-
-  // Calculate scroll progress
-  // Framer Motion offset: ['start end', 'start 0.5']
-  // 'start end' = element start at viewport end (progress = 0)
-  // 'start 0.5' = element start at 50% of viewport height (progress = 1)
-  function getScrollProgress(element) {
-    const rect = element.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    const elementStart = rect.top;
-    
-    // When element start is at viewport bottom: progress = 0
-    // When element start is at 50% of viewport height: progress = 1
-    const startPosition = windowHeight; // start end
-    const endPosition = windowHeight * 0.5; // start 0.5
-    
-    const distance = startPosition - endPosition; // windowHeight * 0.5
-    const currentPosition = elementStart;
-    
-    // Calculate progress: 0 when at bottom, 1 when at 50%
-    let progress = 1 - (currentPosition - endPosition) / distance;
-    progress = Math.max(0, Math.min(1, progress));
-    
-    return progress;
-  }
-
-  // Transform progress value
-  function transformProgress(progress, inputRange, outputRange) {
-    const [inputMin, inputMax] = inputRange;
-    const [outputMin, outputMax] = outputRange;
-    
-    if (progress <= inputMin) return outputMin;
-    if (progress >= inputMax) return outputMax;
-    
-    const inputRangeSize = inputMax - inputMin;
-    const outputRangeSize = outputMax - outputMin;
-    const normalizedProgress = (progress - inputMin) / inputRangeSize;
-    
-    return outputMin + normalizedProgress * outputRangeSize;
-  }
 
   let sectionSpring = null;
   let lastTime = performance.now();
   let animationFrameId = null;
 
-  // Initialize section scroll animation
   function initSectionAnimation() {
     const section = document.getElementById('faqs-section');
     if (!section) return;
 
-    sectionSpring = new Spring(SPRING_CONFIG);
+    sectionSpring = new Spring(SPRING_CONFIGS.FAQ);
 
     function updateSection() {
       const currentTime = performance.now();
@@ -98,10 +19,7 @@
       sectionSpring.setTarget(scrollProgress);
       const smoothProgress = sectionSpring.update(deltaTime);
       
-      // Y: [0, 0.7] -> [220, 0]
       const y = transformProgress(smoothProgress, [0, 0.7], [220, 0]);
-      
-      // Opacity: [0, 0.5] -> [0.3, 1]
       const opacity = transformProgress(smoothProgress, [0, 0.5], [0.3, 1]);
 
       section.style.transform = `translateY(${y}px)`;
@@ -124,7 +42,6 @@
     onScroll();
   }
 
-  // Initialize accordion
   function initAccordion() {
     const items = document.querySelectorAll('#faq-accordion .faq-item');
 
@@ -136,7 +53,6 @@
 
       if (!trigger || !content) return;
 
-      // Set initial closed state
       content.style.height = '0';
       content.style.opacity = '0';
       item.setAttribute('data-state', 'closed');
@@ -144,7 +60,6 @@
       trigger.addEventListener('click', () => {
         const isOpen = item.getAttribute('data-state') === 'open';
 
-        // Close all other items (single mode)
         items.forEach((otherItem) => {
           if (otherItem !== item && otherItem.getAttribute('data-state') === 'open') {
             const otherContent = otherItem.querySelector('.accordion-content');
@@ -167,7 +82,6 @@
         });
 
         if (isOpen) {
-          // Close current item
           item.setAttribute('data-state', 'closed');
           content.style.height = '0';
           content.style.opacity = '0';
@@ -179,7 +93,6 @@
             iconBox.classList.add('bg-brand/10');
           }
         } else {
-          // Open current item
           item.setAttribute('data-state', 'open');
           const inner = content.querySelector('div');
           if (inner) {
@@ -198,9 +111,8 @@
     });
   }
 
-  // Initialize on load
   if (document.readyState === 'loading') {
-document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
       initSectionAnimation();
       initAccordion();
 });
