@@ -65,17 +65,20 @@
   function initHeroAnimation() {
     // Only animate if scroll position is at top (matches original logic)
     if (isLoaded && window.scrollY < 50) {
+      // Header appears first (before title and map)
       if (header) {
-        header.classList.add('hero-fade', 'hero-fade-0');
+        header.classList.add('hero-fade', 'hero-fade-1'); // 3.4s - appears first
       }
       if (heroSection) {
         heroSection.classList.add('hero-entrance');
       }
+      // Title appears second
       if (heroTitle) {
-        heroTitle.classList.add('hero-fade', 'hero-fade-1');
+        heroTitle.classList.add('hero-fade', 'hero-fade-2'); // 3.5s - appears second
       }
+      // Map appears last
       if (heroMap) {
-        heroMap.classList.add('hero-fade', 'hero-fade-2');
+        heroMap.classList.add('hero-fade', 'hero-fade-0'); // 4.7s - appears last
       }
     }
   }
