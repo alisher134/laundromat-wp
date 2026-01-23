@@ -61,24 +61,19 @@
     window.addEventListener('load', handleLoad);
   }
 
-  // Hero animation initialization - only after preloader is complete
   function initHeroAnimation() {
-    // Only animate if scroll position is at top (matches original logic)
     if (isLoaded && window.scrollY < 50) {
-      // Header appears first (before title and map)
       if (header) {
-        header.classList.add('hero-fade', 'hero-fade-1'); // 3.4s - appears first
+        header.classList.add('hero-fade', 'hero-fade-1');
       }
       if (heroSection) {
         heroSection.classList.add('hero-entrance');
       }
-      // Title appears second
       if (heroTitle) {
-        heroTitle.classList.add('hero-fade', 'hero-fade-2'); // 3.5s - appears second
+        heroTitle.classList.add('hero-fade', 'hero-fade-2');
       }
-      // Map appears last
       if (heroMap) {
-        heroMap.classList.add('hero-fade', 'hero-fade-0'); // 4.7s - appears last
+        heroMap.classList.add('hero-fade', 'hero-fade-0');
       }
     }
   }

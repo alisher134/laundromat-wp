@@ -102,10 +102,10 @@
     --animation-fade-duration: 0.8s;
     --animation-fade-easing: cubic-bezier(0.25, 0.1, 0.25, 1);
 
-    --animation-delay-0: 4.7s;
-    --animation-delay-1: 3.0s; /* Header appears first */
-    --animation-delay-2: 3.5s; /* Title appears second */
-    --animation-delay-3: 3.4s; /* Reserved for other elements */
+    --animation-delay-0: 3.7s;
+    --animation-delay-1: 3s;
+    --animation-delay-2: 3.5s;
+    --animation-delay-3: 3.4s;
   }
 
   @keyframes hero-lift {
@@ -319,7 +319,9 @@
 
   /* FAQ Accordion transitions */
   .faq-content {
-    transition: max-height 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), opacity 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    transition:
+      max-height 0.3s cubic-bezier(0.25, 0.1, 0.25, 1),
+      opacity 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   /* 404 Page Animations */

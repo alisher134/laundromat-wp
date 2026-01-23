@@ -6,13 +6,12 @@
   const heroMap = document.getElementById('hero-map');
   let shouldAnimate = false;
 
-  // Check if should play entrance animation
   if (window.scrollY < 50) {
     shouldAnimate = true;
-    header.classList.add('hero-fade', 'hero-fade-3'); // 3.5s - appears first
+    header.classList.add('hero-fade', 'hero-fade-1');
     heroSection.classList.add('hero-entrance');
-    heroTitle.classList.add('hero-fade', 'hero-fade-2'); // 4s - appears second
-    heroMap.classList.add('hero-fade', 'hero-fade-0'); // 4.7s - appears last
+    heroTitle.classList.add('hero-fade', 'hero-fade-2');
+    heroMap.classList.add('hero-fade', 'hero-fade-0');
   }
 
   // Set viewport height
