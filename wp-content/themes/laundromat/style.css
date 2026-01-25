@@ -1,0 +1,13 @@
+/*
+Theme Name: Laundromat Headless
+Theme URI: https://laundromat.gr
+Description: Headless WordPress backend for Laundromat static site. This theme provides REST API endpoints for content management.
+Version: 1.0.0
+Author: Laundromat
+Author URI: https://laundromat.gr
+Text Domain: laundromat
+License: GPL v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+This is a headless theme - no frontend rendering, only REST API.
+*/

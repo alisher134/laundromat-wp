@@ -1,37 +1,91 @@
 (function () {
-  const locations = [
-    {
-      id: 0,
-      key: 'location-1',
-      title: 'Ethniki Palaiokastritsas, Kerkira 491 00, Greece',
-      storeHours: 'Mon-Sun 7am - 11pm',
-    },
-    {
-      id: 1,
-      key: 'location-2',
-      title: 'Emergency Assistance of Kyklades S.A',
-      storeHours: 'Mon-Sun 7am - 11pm',
-    },
-    {
-      id: 2,
-      key: 'location-3',
-      title: 'Ethniki Palaiokastritsas, Kerkira 491 00, Greece',
-      storeHours: 'Mon-Sun 7am - 11pm',
-    },
-  ];
+  // Locations data - loaded from API (start empty)
+  let locations = [];
 
-  const LOCATIONS_POSITIONS = {
-    mobile: [
-      { id: 0, top: '21%', left: '47%' },
-      { id: 1, top: '32%', left: '54%' },
-      { id: 2, top: '45%', left: '55%' },
-    ],
-    desktop: [
-      { id: 0, top: '21%', left: '36%' },
-      { id: 1, top: '32%', left: '42%' },
-      { id: 2, top: '45%', left: '34%' },
-    ],
+  // Positions - loaded from API (start empty, fallback handled in updateMarkerPositions)
+  let LOCATIONS_POSITIONS = {
+    mobile: [],
+    desktop: [],
   };
+
+  // Load locations from API
+  async function loadLocationsFromAPI() {
+    if (typeof LaundroAPI === 'undefined') {
+      console.log('[Locations] LaundroAPI not available, cannot load data');
+      return;
+    }
+
+    try {
+      console.log('[Locations] Loading data from WordPress API...');
+
+      const [apiLocations, apiPositions] = await Promise.all([
+        LaundroAPI.getLocations(),
+        LaundroAPI.getLocationPositions()
+      ]);
+
+      if (apiLocations && apiLocations.length > 0) {
+        locations = apiLocations;
+        console.log('[Locations] Loaded', apiLocations.length, 'locations from API');
+
+        // Update location card content in the DOM
+        updateLocationCards();
+      }
+
+      if (apiPositions && apiPositions.mobile && apiPositions.desktop) {
+        LOCATIONS_POSITIONS = apiPositions;
+        console.log('[Locations] Loaded positions from API');
+      }
+
+      // Update marker positions (after both locations and positions are loaded)
+      updateMarkerPositions();
+    } catch (error) {
+      console.error('[Locations] Failed to load from API:', error);
+    }
+  }
+
+  // Update location cards with data from API
+  function updateLocationCards() {
+    const cards = document.querySelectorAll('.location-slide');
+
+    cards.forEach((card) => {
+      const cardIndex = parseInt(card.getAttribute('data-location-index'));
+      const location = locations.find(l => l.id === cardIndex);
+
+      if (location) {
+        // Update title
+        const titleEl = card.querySelector('.location-title, h2');
+        if (titleEl) {
+          titleEl.textContent = location.title;
+        }
+
+        // Update store hours
+        const hoursEl = card.querySelector('.store-hours, p');
+        if (hoursEl && location.storeHours) {
+          hoursEl.textContent = location.storeHours;
+        }
+      }
+    });
+  }
+
+  // Update marker positions based on API data
+  function updateMarkerPositions() {
+    const isMobile = window.innerWidth < 768;
+    const positions = isMobile ? LOCATIONS_POSITIONS.mobile : LOCATIONS_POSITIONS.desktop;
+
+    // If no positions loaded, don't update
+    if (!positions || positions.length === 0) return;
+
+    const markers = document.querySelectorAll('.location-marker');
+    markers.forEach((marker) => {
+      const markerId = parseInt(marker.getAttribute('data-location-id'));
+      const position = positions.find(p => p.id === markerId);
+
+      if (position) {
+        marker.style.top = position.top;
+        marker.style.left = position.left;
+      }
+    });
+  }
 
   let activeLocationIndex = null;
   let sliderInstance = null;
@@ -328,16 +382,23 @@
     });
   }
 
-  // Initialize on load
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      initMobileSlider();
-      initMapAnimation();
-      initClickHandlers();
-    });
-  } else {
+  // Initialize all components
+  function initAll() {
     initMobileSlider();
     initMapAnimation();
     initClickHandlers();
+
+    // Load data from API (non-blocking)
+    loadLocationsFromAPI();
+
+    // Listen for window resize to update marker positions
+    window.addEventListener('resize', updateMarkerPositions);
+  }
+
+  // Initialize on load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAll);
+  } else {
+    initAll();
   }
 })();

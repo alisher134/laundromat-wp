@@ -35,19 +35,66 @@ document.addEventListener('DOMContentLoaded', () => {
   // Form Handling
   const form = document.querySelector('form');
   if (form) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const checkbox = form.querySelector('input[name="consent"]');
       if (!checkbox.checked) return;
 
-      console.log('submitted');
-      // Here you would typically handle the form submission, e.g., send data to a server
-      alert('Thank you! Your message has been "sent" (logged to console).');
-      form.reset();
+      // Collect form data
+      const firstName = form.querySelector('input[name="firstName"]')?.value || '';
+      const lastName = form.querySelector('input[name="lastName"]')?.value || '';
+      const formData = {
+        name: `${firstName} ${lastName}`.trim(),
+        phone: form.querySelector('input[name="phone"]')?.value || '',
+        email: form.querySelector('input[name="email"]')?.value || '',
+        message: form.querySelector('textarea[name="message"]')?.value || '',
+      };
 
-      // Reset visual checkbox
-      const consentVisual = document.getElementById('consent-visual');
-      if (consentVisual) consentVisual.innerHTML = '';
+      // Get submit button for loading state
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalBtnText = submitBtn?.innerHTML;
+
+      // Use API if available, otherwise fallback to console.log
+      if (typeof LaundroAPI !== 'undefined') {
+        // Show loading state
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = 'Sending...';
+        }
+
+        try {
+          const result = await LaundroAPI.submitContact(formData);
+
+          if (result.success) {
+            alert('Thank you! Your message has been sent successfully.');
+            form.reset();
+
+            // Reset visual checkbox
+            const consentVisual = document.getElementById('consent-visual');
+            if (consentVisual) consentVisual.innerHTML = '';
+          } else {
+            alert(result.message || 'Failed to send message. Please try again.');
+          }
+        } catch (error) {
+          console.error('Contact form error:', error);
+          alert('An error occurred. Please try again later.');
+        } finally {
+          // Restore button state
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+          }
+        }
+      } else {
+        // Fallback for when API is not available
+        console.log('Form submitted:', formData);
+        alert('Thank you! Your message has been "sent" (logged to console).');
+        form.reset();
+
+        // Reset visual checkbox
+        const consentVisual = document.getElementById('consent-visual');
+        if (consentVisual) consentVisual.innerHTML = '';
+      }
     });
   }
 

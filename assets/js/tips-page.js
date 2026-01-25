@@ -1,15 +1,115 @@
+// Add at top level
+let dataLoaded = false;
+let DATA = [];
+let isInstructionsPage = false;
+
 document.addEventListener('DOMContentLoaded', () => {
-  const isInstructionsPage =
+  isInstructionsPage =
     window.location.pathname.includes('instructions.html') ||
     window.location.href.includes('instructions.html') ||
     document.querySelector('h1#tips-title')?.textContent.trim() === 'Instructions';
 
-  const DATA = isInstructionsPage ? INSTRUCTIONS_DATA : TIPS_DATA;
+  showLoadingState();
+
+  // Listen for API data
+  window.addEventListener('laundromatDataReady', handleDataReady);
+
+  // Timeout fallback
+  setTimeout(() => {
+    if (!dataLoaded) {
+      showErrorState('Data loading timeout. Please refresh the page.');
+    }
+  }, 10000);
+});
+
+function handleDataReady(event) {
+  const { tips, instructions, fromAPI, error } = event.detail;
+
+  if (error) {
+    showErrorState('Failed to load tips: ' + error);
+    return;
+  }
+
+  dataLoaded = true;
+  hideLoadingState();
+
+  DATA = isInstructionsPage ? instructions : tips;
+
+  if (!DATA || DATA.length === 0) {
+    showEmptyState();
+    return;
+  }
+
+  initPage();
+}
+
+// Phase 2: Add UI state functions (global scope)
+function showLoadingState() {
+  const gridDesktop = document.getElementById('tips-grid-desktop');
+  const sliderMobile = document.getElementById('tips-slider-mobile');
+
+  const loadingHtml = `
+    <div class="col-span-2 flex flex-col items-center justify-center py-20">
+      <div class="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-brand/20 border-t-brand"></div>
+      <p class="text-text/60 text-lg">Loading ${isInstructionsPage ? 'instructions' : 'tips'}...</p>
+    </div>
+  `;
+
+  if (gridDesktop) gridDesktop.innerHTML = loadingHtml;
+  if (sliderMobile) sliderMobile.innerHTML = loadingHtml;
+}
+
+function hideLoadingState() {
+  // Handled by renderContent
+}
+
+function showErrorState(message) {
+  const gridDesktop = document.getElementById('tips-grid-desktop');
+  const sliderMobile = document.getElementById('tips-slider-mobile');
+
+  const errorHtml = `
+    <div class="col-span-2 flex flex-col items-center justify-center py-20">
+      <div class="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+        <svg class="h-8 w-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <p class="text-text mb-4 text-lg">${message}</p>
+      <button onclick="window.location.reload()" class="rounded-lg bg-brand px-6 py-2 text-white transition-colors hover:bg-brand/90">
+        Retry
+      </button>
+    </div>
+  `;
+
+  if (gridDesktop) gridDesktop.innerHTML = errorHtml;
+  if (sliderMobile) sliderMobile.innerHTML = errorHtml;
+}
+
+function showEmptyState() {
+  const gridDesktop = document.getElementById('tips-grid-desktop');
+  const sliderMobile = document.getElementById('tips-slider-mobile');
+
+  const emptyHtml = `
+    <div class="col-span-2 flex flex-col items-center justify-center py-20">
+      <p class="text-text/60 text-lg">No ${isInstructionsPage ? 'instructions' : 'tips'} found.</p>
+    </div>
+  `;
+
+  if (gridDesktop) gridDesktop.innerHTML = emptyHtml;
+  if (sliderMobile) sliderMobile.innerHTML = emptyHtml;
+}
+
+(function() {
   let activeCategory = 'all';
   let currentSort = '';
   let currentPage = 1;
   let mobileFilterSlider = null;
   let mobileTipsSlider = null;
+
+  // Pagination constants
+  const ITEMS_PER_PAGE = 6; // 2 columns × 3 rows
+  let useLoadMore = false; // Toggle between pagination and load more
+  let visibleCount = ITEMS_PER_PAGE;
 
   // --- DOM Elements ---
   const filtersContainer = document.getElementById('tips-filters');
@@ -21,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let lastTime = performance.now();
   let animationFrameId = null;
 
-  initPage();
+  window.initPage = initPage;
 
   function initPage() {
     renderFilters();
@@ -174,6 +274,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const key = e.currentTarget.dataset.key;
         if (key !== activeCategory) {
           activeCategory = key;
+          currentPage = 1; // RESET pagination
+          visibleCount = ITEMS_PER_PAGE; // RESET load more
           renderFilters(); // Re-render to update active state styles
           renderContent(); // Filter content
         }
@@ -214,6 +316,8 @@ document.addEventListener('DOMContentLoaded', () => {
         btn.addEventListener('click', (e) => {
           const val = e.currentTarget.dataset.value;
           currentSort = val;
+          currentPage = 1; // RESET pagination
+          visibleCount = ITEMS_PER_PAGE; // RESET load more
           sortOptionsDiv.classList.add('hidden');
           renderFilters(); // Update label
           renderContent(); // Sort content
@@ -240,7 +344,20 @@ document.addEventListener('DOMContentLoaded', () => {
       return 0;
     });
 
-    const cardsHtml = filtered.map((item) => createDesktopCardHtml(item)).join('');
+    // Store filtered data globally for pagination
+    window.filteredData = filtered;
+
+    // Phase 4: Slice data based on pagination mode
+    let displayData;
+    if (useLoadMore) {
+      displayData = filtered.slice(0, visibleCount);
+    } else {
+      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+      const endIndex = startIndex + ITEMS_PER_PAGE;
+      displayData = filtered.slice(startIndex, endIndex);
+    }
+
+    const cardsHtml = displayData.map((item, index) => createDesktopCardHtml(item, index)).join('');
 
     // Desktop Grid
     if (gridDesktop) {
@@ -250,13 +367,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Mobile Slider (actually just a grid, no slider!)
     if (sliderMobile) {
       // Use specialized Mobile Card function - render directly without Keen Slider
-      const mobileCardsHtml = filtered.map((item) => createMobileCardHtml(item)).join('');
+      const mobileCardsHtml = displayData.map((item) => createMobileCardHtml(item)).join('');
 
       // Just inject cards directly - no keen-slider wrapper!
       sliderMobile.innerHTML = mobileCardsHtml;
 
       // Don't initialize Keen Slider for mobile - it's just a grid!
     }
+
+    // Call renderPagination to update pagination UI
+    renderPagination();
 
     // Refresh animations for new content
     initScrollAnimations();
@@ -266,7 +386,49 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderPagination() {
     if (!pagination) return;
 
-    const totalPages = 10; // Static for now, matches reference
+    // Phase 4: Calculate total pages dynamically
+    const totalItems = window.filteredData ? window.filteredData.length : 0;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+    // Phase 5: Handle load more mode
+    if (useLoadMore) {
+      // Hide pagination, show load more button
+      const paginationContainer = pagination.querySelector('.hidden.items-center.gap-1.md\\:flex');
+      if (paginationContainer) {
+        paginationContainer.style.display = 'none';
+      }
+
+      const loadMoreBtn = document.getElementById('load-more-btn');
+      if (loadMoreBtn) {
+        loadMoreBtn.style.display = 'block';
+        const allLoaded = visibleCount >= totalItems;
+        loadMoreBtn.textContent = allLoaded ? 'All items loaded' : 'Load more';
+        loadMoreBtn.disabled = allLoaded;
+        loadMoreBtn.onclick = handleLoadMore;
+      }
+      return;
+    }
+
+    // Hide load more button in pagination mode
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    if (loadMoreBtn) {
+      loadMoreBtn.style.display = 'none';
+    }
+
+    // Show pagination
+    const paginationContainer = pagination.querySelector('.hidden.items-center.gap-1.md\\:flex');
+    if (paginationContainer) {
+      paginationContainer.style.display = 'flex';
+    }
+
+    // If only one page or no data, hide pagination
+    if (totalPages <= 1) {
+      if (paginationContainer) {
+        paginationContainer.innerHTML = '';
+      }
+      return;
+    }
+
     const siblingCount = 1;
 
     // Generate page items (similar to getPageItems in reference)
@@ -323,7 +485,6 @@ document.addEventListener('DOMContentLoaded', () => {
       .join('');
 
     // Find pagination container and update
-    const paginationContainer = pagination.querySelector('.hidden.items-center.gap-1.md\\:flex');
     if (paginationContainer) {
       paginationContainer.innerHTML = paginationHtml;
 
@@ -333,25 +494,39 @@ document.addEventListener('DOMContentLoaded', () => {
           const page = parseInt(e.currentTarget.dataset.page);
           if (page !== currentPage) {
             currentPage = page;
-            renderPagination();
-            // In a real app, you'd also re-fetch/filter content here
-            console.log(`Navigated to page ${page}`);
+            renderContent();
+            // Scroll to top of tips section
+            const tipsSection = document.getElementById('tips-filters');
+            if (tipsSection) {
+              tipsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
           }
         });
       });
     }
   }
 
-  function createDesktopCardHtml(item) {
-    const bigImageClass = item.bigImage ? 'lg:row-span-2' : '';
-    const heightClass = item.bigImage ? 'lg:h-[576px] 2xl:h-[796px]' : 'lg:h-[278px] 2xl:h-[390px]';
-    const paddingClass = item.bigImage ? 'p-0' : '';
-    const link = 'tips-details.html';
+  // Phase 5: Load more handler
+  function handleLoadMore() {
+    visibleCount += ITEMS_PER_PAGE;
+    renderContent();
+  }
+
+  function createDesktopCardHtml(item, index) {
+    // Phase 7: Handle BigImage layout
+    const isBigImage = item.bigImage || (index % 5 === 0);
+    const bigImageClass = isBigImage ? 'lg:row-span-2' : '';
+    const heightClass = isBigImage ? 'lg:h-[576px] 2xl:h-[796px]' : 'lg:h-[278px] 2xl:h-[390px]';
+    const paddingClass = isBigImage ? 'p-0' : '';
+
+    // Phase 3: Add query parameters to links
+    const itemType = isInstructionsPage ? 'instruction' : 'tip';
+    const link = `tips-details.html?id=${item.id}&type=${itemType}`;
 
     return `
         <article class="tips-card rounded-[12px] bg-white/80 backdrop-blur-[30px] backdrop-filter ${heightClass} 2xl:rounded-[16px] ${bigImageClass} ${paddingClass}">
             ${
-              item.bigImage
+              isBigImage
                 ? `
                 <div class="relative h-[277px] w-full origin-top-left overflow-hidden lg:mb-10 2xl:mb-12 2xl:h-[390px] shrink-0">
                   <img alt="${item.title}" class="scroll-scale-image rounded-t-[12px] object-cover object-top 2xl:rounded-t-[16px] w-full h-full origin-top-left" src="${item.image}" />
@@ -360,12 +535,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 : ''
             }
 
-            <div class="flex items-start justify-between px-6 2xl:px-8 ${item.bigImage ? 'mb-20 2xl:mb-[120px]' : 'pt-6 lg:mb-[7px] 2xl:mb-[23px] 2xl:pt-8'}">
+            <div class="flex items-start justify-between px-6 2xl:px-8 ${isBigImage ? 'mb-20 2xl:mb-[120px]' : 'pt-6 lg:mb-[7px] 2xl:mb-[23px] 2xl:pt-8'}">
                 <div class="border-brand/40 text-brand rounded-[9px] border px-[13px] py-[9px] text-xs leading-[132%] font-normal tracking-[-0.01em] 2xl:rounded-[10px] 2xl:px-[18px] 2xl:py-[10px] 2xl:text-sm">
                   ${item.category}
                 </div>
                 ${
-                  !item.bigImage
+                  !isBigImage
                     ? `
                     <div class="relative h-[87px] w-[149px] shrink-0 overflow-hidden md:h-[99px] md:w-[149px] lg:h-[127px] lg:w-[186px] 2xl:h-[177px] 2xl:w-[258px]">
                         <img alt="${item.title}" class="scroll-scale-image rounded-[6px] object-cover w-full h-full origin-top-left" src="${item.image}" />
@@ -375,8 +550,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             </div>
 
-            <a class="text-text hover:text-brand block cursor-pointer pl-6 text-lg leading-[132%] font-normal tracking-[-0.01em] transition-colors md:max-w-[390px] lg:mb-4 2xl:mb-[3px] 2xl:max-w-[515px] 2xl:text-2xl 2xl:leading-[136%] 2xl:tracking-[-0.02em] ${item.bigImage ? '2xl:max-w-[560px]' : ''}" href="${link}">
-                <span class="line-clamp-2 ${item.bigImage ? 'line-clamp-3' : ''}">${item.title}</span>
+            <a class="text-text hover:text-brand block cursor-pointer pl-6 text-lg leading-[132%] font-normal tracking-[-0.01em] transition-colors md:max-w-[390px] lg:mb-4 2xl:mb-[3px] 2xl:max-w-[515px] 2xl:text-2xl 2xl:leading-[136%] 2xl:tracking-[-0.02em] ${isBigImage ? '2xl:max-w-[560px]' : ''}" href="${link}">
+                <span class="line-clamp-2 ${isBigImage ? 'line-clamp-3' : ''}">${item.title}</span>
             </a>
 
             <a class="flex items-center justify-between px-6 pb-6 2xl:px-8 mt-auto" href="${link}">
@@ -392,7 +567,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function createMobileCardHtml(item) {
-    const link = 'tips-details.html';
+    // Phase 3: Add query parameters to links
+    const itemType = isInstructionsPage ? 'instruction' : 'tip';
+    const link = `tips-details.html?id=${item.id}&type=${itemType}`;
 
     return `
         <article class="w-full min-h-[418px] shrink-0 md:min-h-[386px]">
@@ -428,4 +605,4 @@ document.addEventListener('DOMContentLoaded', () => {
         </article>
     `;
   }
-});
+})();

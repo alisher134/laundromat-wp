@@ -1,10 +1,16 @@
-const CATEGORIES = [
+/**
+ * Tips and Instructions Data
+ *
+ * Data is loaded from WordPress REST API.
+ * Empty arrays are used as initial state while data loads.
+ */
+
+// Categories - loaded from API, with fallback
+let CATEGORIES = [
   { key: 'all', label: 'All articles' },
-  { key: 'tipsAndTricks', label: 'Tips and tricks' },
-  { key: 'usefulResources', label: 'Useful resources' },
-  { key: 'companyNews', label: 'Company news' },
 ];
 
+// Sort options (static, no need for API)
 const SORT_OPTIONS = [
   { value: 'latest', label: 'Latest' },
   { value: 'oldest', label: 'Oldest' },
@@ -12,120 +18,93 @@ const SORT_OPTIONS = [
   { value: 'title-desc', label: 'Title Z-A' },
 ];
 
-const TIPS_DATA = [
-  {
-    key: 'tip-1',
-    image: './assets/images/tips-1.png',
-    category: 'Tips and tricks',
-    title: 'Our washing machine and dryer broke down during the renovation in the basement renovation in the basemen',
-    date: 'April 29, 2025',
-  },
-  {
-    key: 'tip-2',
-    image: './assets/images/tips-2.png',
-    category: 'Useful resources',
-    title: '10 Best Charlotte NC House Cleaning Services',
-    date: 'April 26, 2025',
-  },
-  {
-    key: 'tip-3',
-    image: './assets/images/tips-3.png',
-    category: 'Tips and tricks',
-    title: 'Laundry Pick Up Service vs Laundromat – Which Is Better?',
-    date: 'April 24, 2025',
-  },
-  {
-    key: 'tip-4',
-    image: './assets/images/tips-4.png',
-    category: 'Tips and tricks',
-    title: 'Laundry Bleach vs Laundry Whitener: Which Is Better For Your Clothes?',
-    date: 'April 24, 2025',
-  },
-  {
-    key: 'tip-5',
-    image: './assets/images/tips-5.png',
-    category: 'Company news',
-    title: 'Dirty Secrets Of Airbnbs: 15 Airbnb Laundry Tips For A Perfect Trip',
-    date: 'April 24, 2025',
-  },
-  {
-    key: 'tip-6',
-    image: './assets/images/tips-6.png',
-    category: 'Useful resources',
-    title: 'How To Prevent Clothes From Shrinking in the Wash FOREVER!',
-    date: 'April 24, 2025',
-  },
-  {
-    key: 'tip-7',
-    image: './assets/images/tips-7.png',
-    category: 'Tips and tricks',
-    title: '7 Amazingly Simple Laundry Tips For Winter Clothes',
-    date: 'April 24, 2025',
-  },
-  {
-    key: 'tip-8',
-    image: './assets/images/tips-8.png',
-    category: 'Company news',
-    title: '9 Huge Reasons To Use A Professional Laundry Service',
-    date: 'April 24, 2025',
-  },
-];
+// Data arrays - start empty, loaded from API
+let TIPS_DATA = [];
+let INSTRUCTIONS_DATA = [];
 
-const INSTRUCTIONS_DATA = [
-  {
-    key: 'instruction-1',
-    image: './assets/images/tips-1.png',
-    category: 'Tips and tricks',
-    title: 'How to Use Our Washing Machines: A Complete Guide',
-    date: 'April 29, 2025',
-  },
-  {
-    key: 'instruction-2',
-    image: './assets/images/tips-2.png',
-    category: 'Useful resources',
-    title: 'Understanding Wash Cycles: When to Use Each Setting',
-    date: 'April 26, 2025',
-  },
-  {
-    key: 'instruction-3',
-    image: './assets/images/tips-3.png',
-    category: 'Tips and tricks',
-    title: 'How to Properly Load Your Laundry for Best Results',
-    date: 'April 24, 2025',
-  },
-  {
-    key: 'instruction-4',
-    image: './assets/images/tips-4.png',
-    category: 'Tips and tricks',
-    title: 'Choosing the Right Detergent for Your Clothes',
-    date: 'April 24, 2025',
-  },
-  {
-    key: 'instruction-5',
-    image: './assets/images/tips-5.png',
-    category: 'Company news',
-    title: 'New Self-Service Features Available at Our Locations',
-    date: 'April 24, 2025',
-  },
-  {
-    key: 'instruction-6',
-    image: './assets/images/tips-6.png',
-    category: 'Useful resources',
-    title: 'Step-by-Step Guide to Using Our Dryers',
-    date: 'April 24, 2025',
-  },
-  {
-    key: 'instruction-7',
-    image: './assets/images/tips-7.png',
-    category: 'Tips and tricks',
-    title: 'How to Handle Delicate Fabrics at Our Laundromat',
-    date: 'April 24, 2025',
-  },
-  {
-    key: 'instruction-8',
-    image: './assets/images/tips-8.png',
-    category: 'Company news',
-    title: 'Payment Options: Cards, Cash, and Mobile Payments',
-    date: 'April 24, 2025',
-  },
-];
+// Flag to track if data has been loaded from API
+let dataLoadedFromAPI = false;
+let categoriesLoadedFromAPI = false;
+
+/**
+ * Load data from WordPress API
+ * Call this function to refresh data from the backend
+ */
+async function loadDataFromAPI() {
+  if (typeof LaundroAPI === 'undefined') {
+    console.log('[Tips Data] LaundroAPI not available, cannot load data');
+    // Dispatch event even with empty data so pages can handle it
+    window.dispatchEvent(new CustomEvent('laundromatDataReady', {
+      detail: { tips: TIPS_DATA, instructions: INSTRUCTIONS_DATA, fromAPI: false }
+    }));
+    return false;
+  }
+
+  try {
+    console.log('[Tips Data] Loading data from WordPress API...');
+
+    // Load categories, tips, and instructions in parallel
+    const [categories, tips, instructions] = await Promise.all([
+      LaundroAPI.getCategories(),
+      LaundroAPI.getTips(),
+      LaundroAPI.getInstructions()
+    ]);
+
+    if (categories && categories.length > 0) {
+      CATEGORIES = categories;
+      categoriesLoadedFromAPI = true;
+      console.log('[Tips Data] Loaded', categories.length, 'categories from API');
+    }
+
+    if (tips && tips.length > 0) {
+      TIPS_DATA = tips;
+      console.log('[Tips Data] Loaded', tips.length, 'tips from API');
+    }
+
+    if (instructions && instructions.length > 0) {
+      INSTRUCTIONS_DATA = instructions;
+      console.log('[Tips Data] Loaded', instructions.length, 'instructions from API');
+    }
+
+    dataLoadedFromAPI = true;
+
+    // Dispatch event when data is ready
+    window.dispatchEvent(new CustomEvent('laundromatDataReady', {
+      detail: { tips: TIPS_DATA, instructions: INSTRUCTIONS_DATA, categories: CATEGORIES, fromAPI: true }
+    }));
+
+    return true;
+  } catch (error) {
+    console.error('[Tips Data] Failed to load from API:', error);
+    // Dispatch event even on error so pages can handle it
+    window.dispatchEvent(new CustomEvent('laundromatDataReady', {
+      detail: { tips: TIPS_DATA, instructions: INSTRUCTIONS_DATA, fromAPI: false, error: error.message }
+    }));
+    return false;
+  }
+}
+
+/**
+ * Check if data was loaded from API
+ */
+function isDataFromAPI() {
+  return dataLoadedFromAPI;
+}
+
+/**
+ * Check if categories were loaded from API
+ */
+function isCategoriesFromAPI() {
+  return categoriesLoadedFromAPI;
+}
+
+// Auto-load from API when script is loaded
+(function () {
+  // Wait for DOM to be ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadDataFromAPI);
+  } else {
+    // Small delay to ensure LaundroAPI is loaded
+    setTimeout(loadDataFromAPI, 100);
+  }
+})();

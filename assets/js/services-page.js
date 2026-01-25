@@ -1,4 +1,145 @@
 (function () {
+  /**
+   * Create a price row element matching the frontend HTML structure
+   * @param {Object} row - { feature, time, timeUnit, price }
+   * @returns {HTMLElement}
+   */
+  function createPriceRowElement(row) {
+    const div = document.createElement('div');
+    div.className =
+      'border-text/12 flex items-center justify-between border-t py-[10px] last:border-b md:py-[12px] xl:py-4 2xl:py-4';
+
+    const timeDisplay = row.time ? `${row.time} ${row.timeUnit}` : '';
+    const priceDisplay = row.price ? `${row.price} $` : '';
+
+    div.innerHTML = `
+      <p class="text-text text-base leading-[132%] font-normal tracking-[-0.01em] md:text-lg xl:text-lg 2xl:text-[21px]">
+        ${row.feature}
+      </p>
+      <div class="flex items-center justify-end gap-3 md:gap-9 xl:gap-[64px]">
+        <p class="text-text text-lg leading-[132%] font-normal tracking-[-0.01em] md:text-[21px] xl:text-[21px] xl:leading-[136%] xl:tracking-[-0.02em] 2xl:text-[24px]">
+          ${timeDisplay}
+        </p>
+        <div class="bg-text/12 h-[42px] w-[0.5px]"></div>
+        <p class="text-text text-lg leading-[132%] font-normal tracking-[-0.01em] md:text-[21px] xl:text-[21px] xl:leading-[136%] xl:tracking-[-0.02em] 2xl:text-[24px]">
+          ${priceDisplay}
+        </p>
+      </div>
+    `;
+
+    return div;
+  }
+
+  // Fetch services from WordPress API and update DOM
+  async function loadServicesFromAPI() {
+    if (typeof LaundroAPI === 'undefined') {
+      console.warn('[Services] LaundroAPI not available, using static content');
+      return;
+    }
+
+    try {
+      const services = await LaundroAPI.getServices();
+      if (!services || services.length === 0) {
+        console.warn('[Services] No services returned from API');
+        return;
+      }
+
+      // Map services by category for easy lookup
+      const servicesByCategory = {};
+      services.forEach((service) => {
+        servicesByCategory[service.category] = service;
+      });
+
+      // Update each service section in the DOM
+      const servicesList = document.getElementById('services-list');
+      if (!servicesList) return;
+
+      const serviceSections = servicesList.querySelectorAll('[data-service]');
+      serviceSections.forEach((section) => {
+        const category = section.getAttribute('data-service');
+        const serviceData = servicesByCategory[category];
+
+        if (!serviceData) return;
+
+        // Update title
+        const titleEl = section.querySelector('h2');
+        if (titleEl && serviceData.title) {
+          titleEl.textContent = serviceData.title;
+        }
+
+        // Update description
+        const descriptionEl = section.querySelector('p.text-text[class*="max-w-"]');
+        if (descriptionEl && serviceData.description) {
+          const cleanDescription = serviceData.description.replace(/<[^>]*>/g, '').trim();
+          if (cleanDescription) {
+            descriptionEl.textContent = cleanDescription;
+          }
+        }
+
+        // Update image
+        const imageEl = section.querySelector('img');
+        if (imageEl && serviceData.image) {
+          imageEl.src = serviceData.image;
+          imageEl.alt = serviceData.title || 'Service';
+        }
+
+        // Find the price container (div that contains the "Prices" header and price rows)
+        const priceContainer = section.querySelector('.mt-\\[43px\\]');
+        if (priceContainer && serviceData.priceRows && serviceData.priceRows.length > 0) {
+          // Find and clear existing price rows (elements with border-text/12 class)
+          const existingRows = priceContainer.querySelectorAll('.border-text\\/12');
+          existingRows.forEach((row) => row.remove());
+
+          // Find the prices header to insert rows after it
+          const pricesHeader = priceContainer.querySelector('.text-brand.mb-4');
+
+          // Create and insert new price rows
+          serviceData.priceRows.forEach((row) => {
+            const rowElement = createPriceRowElement(row);
+            if (pricesHeader && pricesHeader.nextSibling) {
+              // Insert after the header
+              priceContainer.insertBefore(rowElement, pricesHeader.nextSibling);
+            } else {
+              priceContainer.appendChild(rowElement);
+            }
+          });
+
+          // Reorder: we inserted in reverse order, so reverse the rows
+          const newRows = priceContainer.querySelectorAll('.border-text\\/12');
+          const rowsArray = Array.from(newRows);
+          rowsArray.reverse().forEach((row) => {
+            if (pricesHeader) {
+              pricesHeader.after(row);
+            }
+          });
+        }
+
+        // Update action link
+        const actionLink = section.querySelector('a[href*="instructions"], a.group');
+        if (actionLink && serviceData.actionLink) {
+          if (serviceData.actionLink.url) {
+            actionLink.href = serviceData.actionLink.url;
+          }
+          if (serviceData.actionLink.text) {
+            const linkTextEl = actionLink.querySelector('p');
+            if (linkTextEl) {
+              linkTextEl.textContent = serviceData.actionLink.text;
+            }
+          }
+          // Hide action link if no text or URL
+          if (!serviceData.actionLink.text && !serviceData.actionLink.url) {
+            actionLink.style.display = 'none';
+          } else {
+            actionLink.style.display = '';
+          }
+        }
+      });
+
+      console.log('[Services] Updated from WordPress API');
+    } catch (error) {
+      console.error('[Services] Error loading services:', error);
+    }
+  }
 
   function initServiceCards() {
     const cards = document.querySelectorAll('[data-service-card]');
@@ -95,10 +236,12 @@
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+      loadServicesFromAPI();
       initServiceCards();
       initCategoryButtons();
     });
   } else {
+    loadServicesFromAPI();
     initServiceCards();
     initCategoryButtons();
   }
