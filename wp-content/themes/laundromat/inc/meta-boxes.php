@@ -11,6 +11,18 @@ if (!defined('ABSPATH')) {
 }
 
 /**
+ * Remove default title and editor for Services post type
+ * (they are included in the Service Details metabox instead)
+ */
+add_action('init', 'laundromat_remove_services_editor_support');
+
+function laundromat_remove_services_editor_support()
+{
+    remove_post_type_support('services', 'title');
+    remove_post_type_support('services', 'editor');
+}
+
+/**
  * Add Meta Boxes
  */
 add_action('add_meta_boxes', 'laundromat_add_meta_boxes');
@@ -194,9 +206,9 @@ function laundromat_service_meta_box_callback($post)
     $action_link_text = get_post_meta($post->ID, 'action_link_text', true);
     $action_link_url = get_post_meta($post->ID, 'action_link_url', true);
 
-    // Ensure we have at least one empty row for new services
-    if (empty($price_rows)) {
-        $price_rows = [['feature' => '', 'time' => '', 'time_unit' => 'min', 'price' => '']];
+    // Pad array to 5 rows for display
+    while (count($price_rows) < 5) {
+        $price_rows[] = ['feature' => '', 'time' => '', 'time_unit' => 'min', 'price' => ''];
     }
     ?>
     <style>
@@ -205,20 +217,29 @@ function laundromat_service_meta_box_callback($post)
         .laundromat-meta-box label { font-weight: 600; }
         .laundromat-meta-box input[type="text"],
         .laundromat-meta-box input[type="number"],
-        .laundromat-meta-box select { width: 100%; padding: 8px; }
+        .laundromat-meta-box select,
+        .laundromat-meta-box textarea { width: 100%; padding: 8px; }
+        .laundromat-meta-box textarea { min-height: 80px; resize: vertical; }
         .laundromat-meta-box .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .laundromat-meta-box .field-section { background: #f9f9f9; padding: 15px; border-radius: 4px; margin-top: 10px; }
         .laundromat-meta-box .field-section h4 { margin: 0 0 10px 0; }
-        .price-row { display: grid; grid-template-columns: 2fr 1fr 100px 1fr 40px; gap: 10px; align-items: end; margin-bottom: 10px; padding: 10px; background: #fff; border: 1px solid #ddd; border-radius: 4px; }
+        .price-row { display: grid; grid-template-columns: 2fr 1fr 100px 1fr; gap: 10px; align-items: end; margin-bottom: 10px; }
         .price-row .field-group { margin: 0; }
         .price-row input, .price-row select { padding: 6px 8px; }
-        .remove-row { background: #dc3232; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; height: 36px; }
-        .remove-row:hover { background: #c92c2c; }
-        .add-row { background: #0073aa; color: white; border: none; padding: 8px 16px; cursor: pointer; border-radius: 4px; margin-top: 10px; }
-        .add-row:hover { background: #005a8c; }
-        .price-rows-container { margin-top: 10px; }
+        .price-row-header { display: grid; grid-template-columns: 2fr 1fr 100px 1fr; gap: 10px; margin-bottom: 5px; }
+        .price-row-header span { font-weight: 600; font-size: 13px; }
     </style>
     <div class="laundromat-meta-box">
+        <div class="field-group">
+            <label for="service_title"><?php _e('Title', 'laundromat'); ?></label>
+            <input type="text" id="service_title" name="service_title" value="<?php echo esc_attr($post->post_title); ?>" placeholder="Washing machines">
+        </div>
+
+        <div class="field-group">
+            <label for="service_description"><?php _e('Description', 'laundromat'); ?></label>
+            <textarea id="service_description" name="service_description" placeholder="Service description..."><?php echo esc_textarea($post->post_content); ?></textarea>
+        </div>
+
         <div class="field-group">
             <label for="service_category"><?php _e('Service Category', 'laundromat'); ?></label>
             <select id="service_category" name="service_category">
@@ -230,36 +251,53 @@ function laundromat_service_meta_box_callback($post)
 
         <div class="field-section">
             <h4><?php _e('Price Table', 'laundromat'); ?></h4>
-            <p class="description"><?php _e('Add pricing rows for this service. Each row shows a feature, time, and price.', 'laundromat'); ?></p>
+            <p class="description"><?php _e('Enter pricing rows for this service. Empty rows will be ignored.', 'laundromat'); ?></p>
 
-            <div id="price-rows-container" class="price-rows-container">
-                <?php foreach ($price_rows as $index => $row): ?>
-                <div class="price-row" data-row-index="<?php echo $index; ?>">
-                    <div class="field-group">
-                        <label><?php _e('Feature', 'laundromat'); ?></label>
-                        <input type="text" name="price_rows[<?php echo $index; ?>][feature]" value="<?php echo esc_attr($row['feature'] ?? ''); ?>" placeholder="Detergent included">
-                    </div>
-                    <div class="field-group">
-                        <label><?php _e('Time', 'laundromat'); ?></label>
-                        <input type="number" min="0" name="price_rows[<?php echo $index; ?>][time]" value="<?php echo esc_attr($row['time'] ?? ''); ?>" placeholder="30">
-                    </div>
-                    <div class="field-group">
-                        <label><?php _e('Unit', 'laundromat'); ?></label>
-                        <select name="price_rows[<?php echo $index; ?>][time_unit]">
-                            <option value="min" <?php selected($row['time_unit'] ?? 'min', 'min'); ?>><?php _e('min', 'laundromat'); ?></option>
-                            <option value="hours" <?php selected($row['time_unit'] ?? '', 'hours'); ?>><?php _e('hours', 'laundromat'); ?></option>
-                        </select>
-                    </div>
-                    <div class="field-group">
-                        <label><?php _e('Price ($)', 'laundromat'); ?></label>
-                        <input type="number" step="0.01" min="0" name="price_rows[<?php echo $index; ?>][price]" value="<?php echo esc_attr($row['price'] ?? ''); ?>" placeholder="15">
-                    </div>
-                    <button type="button" class="remove-row" onclick="removeRow(this)" title="<?php _e('Remove row', 'laundromat'); ?>">&times;</button>
-                </div>
-                <?php endforeach; ?>
+            <div class="price-row-header">
+                <span><?php _e('Feature', 'laundromat'); ?></span>
+                <span><?php _e('Time', 'laundromat'); ?></span>
+                <span><?php _e('Unit', 'laundromat'); ?></span>
+                <span><?php _e('Price ($)', 'laundromat'); ?></span>
             </div>
 
-            <button type="button" class="add-row" onclick="addPriceRow()"><?php _e('+ Add Row', 'laundromat'); ?></button>
+            <div id="price-rows-container">
+            <?php for ($i = 0; $i < 5; $i++): $row = $price_rows[$i]; ?>
+            <div class="price-row">
+                <div class="field-group">
+                    <input type="text" name="price_rows[<?php echo $i; ?>][feature]" value="<?php echo esc_attr($row['feature'] ?? ''); ?>" placeholder="Detergent included">
+                </div>
+                <div class="field-group">
+                    <input type="number" min="0" name="price_rows[<?php echo $i; ?>][time]" value="<?php echo esc_attr($row['time'] ?? ''); ?>" placeholder="30">
+                </div>
+                <div class="field-group">
+                    <select name="price_rows[<?php echo $i; ?>][time_unit]">
+                        <option value="min" <?php selected($row['time_unit'] ?? 'min', 'min'); ?>><?php _e('min', 'laundromat'); ?></option>
+                        <option value="hours" <?php selected($row['time_unit'] ?? '', 'hours'); ?>><?php _e('hours', 'laundromat'); ?></option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <input type="number" step="0.01" min="0" name="price_rows[<?php echo $i; ?>][price]" value="<?php echo esc_attr($row['price'] ?? ''); ?>" placeholder="15">
+                </div>
+            </div>
+            <?php endfor; ?>
+            </div>
+            <button type="button" class="button" id="add-price-row" style="margin-top: 10px;"><?php _e('+ Add Row', 'laundromat'); ?></button>
+            <script>
+            (function() {
+                var rowIndex = 5;
+                document.getElementById('add-price-row').addEventListener('click', function() {
+                    var container = document.getElementById('price-rows-container');
+                    var row = document.createElement('div');
+                    row.className = 'price-row';
+                    row.innerHTML = '<div class="field-group"><input type="text" name="price_rows[' + rowIndex + '][feature]" placeholder="Detergent included"></div>' +
+                        '<div class="field-group"><input type="number" min="0" name="price_rows[' + rowIndex + '][time]" placeholder="30"></div>' +
+                        '<div class="field-group"><select name="price_rows[' + rowIndex + '][time_unit]"><option value="min">min</option><option value="hours">hours</option></select></div>' +
+                        '<div class="field-group"><input type="number" step="0.01" min="0" name="price_rows[' + rowIndex + '][price]" placeholder="15"></div>';
+                    container.appendChild(row);
+                    rowIndex++;
+                });
+            })();
+            </script>
         </div>
 
         <div class="field-section">
@@ -278,51 +316,6 @@ function laundromat_service_meta_box_callback($post)
             </div>
         </div>
     </div>
-
-    <script>
-    var rowIndex = <?php echo count($price_rows); ?>;
-
-    function addPriceRow() {
-        var container = document.getElementById('price-rows-container');
-        var row = document.createElement('div');
-        row.className = 'price-row';
-        row.setAttribute('data-row-index', rowIndex);
-        row.innerHTML = `
-            <div class="field-group">
-                <label><?php _e('Feature', 'laundromat'); ?></label>
-                <input type="text" name="price_rows[${rowIndex}][feature]" value="" placeholder="Detergent included">
-            </div>
-            <div class="field-group">
-                <label><?php _e('Time', 'laundromat'); ?></label>
-                <input type="number" min="0" name="price_rows[${rowIndex}][time]" value="" placeholder="30">
-            </div>
-            <div class="field-group">
-                <label><?php _e('Unit', 'laundromat'); ?></label>
-                <select name="price_rows[${rowIndex}][time_unit]">
-                    <option value="min"><?php _e('min', 'laundromat'); ?></option>
-                    <option value="hours"><?php _e('hours', 'laundromat'); ?></option>
-                </select>
-            </div>
-            <div class="field-group">
-                <label><?php _e('Price ($)', 'laundromat'); ?></label>
-                <input type="number" step="0.01" min="0" name="price_rows[${rowIndex}][price]" value="" placeholder="15">
-            </div>
-            <button type="button" class="remove-row" onclick="removeRow(this)" title="<?php _e('Remove row', 'laundromat'); ?>">&times;</button>
-        `;
-        container.appendChild(row);
-        rowIndex++;
-    }
-
-    function removeRow(button) {
-        var row = button.closest('.price-row');
-        var container = document.getElementById('price-rows-container');
-        if (container.querySelectorAll('.price-row').length > 1) {
-            row.remove();
-        } else {
-            alert('<?php _e('At least one price row is required.', 'laundromat'); ?>');
-        }
-    }
-    </script>
     <?php
 }
 
@@ -371,6 +364,21 @@ function laundromat_save_meta_boxes($post_id)
     // Save Service Meta
     if (isset($_POST['laundromat_service_meta_box_nonce']) &&
         wp_verify_nonce($_POST['laundromat_service_meta_box_nonce'], 'laundromat_service_meta_box')) {
+
+        // Save title and description
+        if (isset($_POST['service_title']) || isset($_POST['service_description'])) {
+            // Unhook to prevent infinite loop
+            remove_action('save_post', 'laundromat_save_meta_boxes');
+
+            wp_update_post([
+                'ID' => $post_id,
+                'post_title' => sanitize_text_field($_POST['service_title'] ?? ''),
+                'post_content' => wp_kses_post($_POST['service_description'] ?? ''),
+            ]);
+
+            // Re-hook
+            add_action('save_post', 'laundromat_save_meta_boxes');
+        }
 
         if (isset($_POST['service_category'])) {
             update_post_meta($post_id, 'service_category', sanitize_text_field($_POST['service_category']));

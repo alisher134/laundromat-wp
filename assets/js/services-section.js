@@ -1,5 +1,79 @@
 (function () {
 
+  // Map card index to service category
+  const CARD_CATEGORIES = ['laundry', 'drying', 'specialCleaning'];
+
+  /**
+   * Fetch services from API and update price info on cards
+   */
+  async function loadServicePrices() {
+    if (typeof LaundroAPI === 'undefined') {
+      console.warn('[Services Section] LaundroAPI not available');
+      return;
+    }
+
+    try {
+      const services = await LaundroAPI.getServices();
+      if (!services || services.length === 0) return;
+
+      // Map services by category
+      const servicesByCategory = {};
+      services.forEach((service) => {
+        servicesByCategory[service.category] = service;
+      });
+
+      // Update each card's price info
+      const cards = document.querySelectorAll('[data-service-card]');
+      cards.forEach((card) => {
+        const cardIndex = parseInt(card.getAttribute('data-service-card'), 10);
+        const category = CARD_CATEGORIES[cardIndex];
+        const service = servicesByCategory[category];
+
+        if (!service || !service.priceRows || service.priceRows.length === 0) return;
+
+        const priceInfo = card.querySelector('.service-price-info');
+        if (!priceInfo) return;
+
+        // Get first price row for "from" values
+        const firstRow = service.priceRows[0];
+
+        // Find the lowest price and shortest time across all rows
+        let minPrice = Infinity;
+        let minTime = Infinity;
+        let timeUnit = 'min';
+
+        service.priceRows.forEach((row) => {
+          if (row.price && parseFloat(row.price) < minPrice) {
+            minPrice = parseFloat(row.price);
+          }
+          if (row.time && parseFloat(row.time) < minTime) {
+            minTime = parseFloat(row.time);
+            timeUnit = row.timeUnit || 'min';
+          }
+        });
+
+        // Update price value
+        const priceValueEl = priceInfo.querySelector('.price-value');
+        if (priceValueEl && minPrice !== Infinity) {
+          priceValueEl.textContent = `${minPrice} $`;
+        }
+
+        // Update time value
+        const divs = priceInfo.querySelectorAll('div');
+        if (divs.length >= 3 && minTime !== Infinity) {
+          const timeValueEl = divs[2].querySelector('.price-value');
+          if (timeValueEl) {
+            timeValueEl.textContent = `${minTime} ${timeUnit}`;
+          }
+        }
+      });
+
+      console.log('[Services Section] Prices updated from API');
+    } catch (error) {
+      console.error('[Services Section] Error loading prices:', error);
+    }
+  }
+
   function initServiceCards() {
     const cards = document.querySelectorAll('[data-service-card]');
     if (cards.length === 0) return;
@@ -93,8 +167,12 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initServiceCards);
+    document.addEventListener('DOMContentLoaded', () => {
+      initServiceCards();
+      loadServicePrices();
+    });
   } else {
     initServiceCards();
+    loadServicePrices();
   }
 })();

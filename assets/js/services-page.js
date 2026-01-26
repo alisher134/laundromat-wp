@@ -83,35 +83,26 @@
           imageEl.alt = serviceData.title || 'Service';
         }
 
-        // Find the price container (div that contains the "Prices" header and price rows)
-        const priceContainer = section.querySelector('.mt-\\[43px\\]');
-        if (priceContainer && serviceData.priceRows && serviceData.priceRows.length > 0) {
-          // Find and clear existing price rows (elements with border-text/12 class)
-          const existingRows = priceContainer.querySelectorAll('.border-text\\/12');
-          existingRows.forEach((row) => row.remove());
+        // Update price rows if available
+        if (serviceData.priceRows && serviceData.priceRows.length > 0) {
+          const priceContainer = section.querySelector('[data-price-rows]');
+          if (priceContainer) {
+            // Keep the "Prices" header, remove everything else
+            const header = priceContainer.querySelector('.text-brand');
 
-          // Find the prices header to insert rows after it
-          const pricesHeader = priceContainer.querySelector('.text-brand.mb-4');
+            // Remove all children except the header
+            Array.from(priceContainer.children).forEach((child) => {
+              if (child !== header) {
+                child.remove();
+              }
+            });
 
-          // Create and insert new price rows
-          serviceData.priceRows.forEach((row) => {
-            const rowElement = createPriceRowElement(row);
-            if (pricesHeader && pricesHeader.nextSibling) {
-              // Insert after the header
-              priceContainer.insertBefore(rowElement, pricesHeader.nextSibling);
-            } else {
+            // Add new price rows
+            serviceData.priceRows.forEach((row) => {
+              const rowElement = createPriceRowElement(row);
               priceContainer.appendChild(rowElement);
-            }
-          });
-
-          // Reorder: we inserted in reverse order, so reverse the rows
-          const newRows = priceContainer.querySelectorAll('.border-text\\/12');
-          const rowsArray = Array.from(newRows);
-          rowsArray.reverse().forEach((row) => {
-            if (pricesHeader) {
-              pricesHeader.after(row);
-            }
-          });
+            });
+          }
         }
 
         // Update action link
