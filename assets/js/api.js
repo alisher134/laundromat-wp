@@ -237,7 +237,8 @@ const LaundroAPI = (function () {
 
       return data.map((item) => ({
         id: item.id,
-        title: item.title.rendered,
+        title: item.title?.rendered || '',
+        slug: item.slug || '',
         description: item.content?.rendered || '',
         category: item.meta?.service_category || 'laundry',
         image: item.featured_image_url || '',

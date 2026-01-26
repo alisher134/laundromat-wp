@@ -11,15 +11,18 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Remove default title and editor for Services post type
- * (they are included in the Service Details metabox instead)
+ * Remove default title and editor for custom post types
+ * (they are included in the respective metaboxes instead)
  */
-add_action('init', 'laundromat_remove_services_editor_support');
+add_action('init', 'laundromat_remove_default_editor_support');
 
-function laundromat_remove_services_editor_support()
+function laundromat_remove_default_editor_support()
 {
-    remove_post_type_support('services', 'title');
-    remove_post_type_support('services', 'editor');
+    $post_types = ['services', 'instructions', 'faqs'];
+    foreach ($post_types as $post_type) {
+        remove_post_type_support($post_type, 'title');
+        remove_post_type_support($post_type, 'editor');
+    }
 }
 
 /**
@@ -56,6 +59,26 @@ function laundromat_add_meta_boxes()
         'laundromat_contact_details_meta_box_callback',
         'contact_messages',
         'side',
+        'high'
+    );
+
+    // Instruction Details Meta Box
+    add_meta_box(
+        'instruction_details',
+        __('Instruction Details', 'laundromat'),
+        'laundromat_instruction_meta_box_callback',
+        'instructions',
+        'normal',
+        'high'
+    );
+
+    // FAQ Details Meta Box
+    add_meta_box(
+        'faq_details',
+        __('FAQ Details', 'laundromat'),
+        'laundromat_faq_meta_box_callback',
+        'faqs',
+        'normal',
         'high'
     );
 }
@@ -320,6 +343,64 @@ function laundromat_service_meta_box_callback($post)
 }
 
 /**
+ * Instruction Meta Box Callback
+ */
+function laundromat_instruction_meta_box_callback($post)
+{
+    wp_nonce_field('laundromat_instruction_meta_box', 'laundromat_instruction_meta_box_nonce');
+    ?>
+    <style>
+        .laundromat-meta-box { display: grid; gap: 15px; }
+        .laundromat-meta-box .field-group { display: grid; gap: 5px; }
+        .laundromat-meta-box label { font-weight: 600; }
+        .laundromat-meta-box input[type="text"],
+        .laundromat-meta-box textarea { width: 100%; padding: 8px; }
+        .laundromat-meta-box textarea { min-height: 120px; resize: vertical; }
+    </style>
+    <div class="laundromat-meta-box">
+        <div class="field-group">
+            <label for="instruction_title"><?php _e('Title', 'laundromat'); ?></label>
+            <input type="text" id="instruction_title" name="instruction_title" value="<?php echo esc_attr($post->post_title); ?>" placeholder="How to use the washing machines">
+        </div>
+
+        <div class="field-group">
+            <label for="instruction_description"><?php _e('Description', 'laundromat'); ?></label>
+            <textarea id="instruction_description" name="instruction_description" placeholder="Step-by-step instructions..."><?php echo esc_textarea($post->post_content); ?></textarea>
+        </div>
+    </div>
+    <?php
+}
+
+/**
+ * FAQ Meta Box Callback
+ */
+function laundromat_faq_meta_box_callback($post)
+{
+    wp_nonce_field('laundromat_faq_meta_box', 'laundromat_faq_meta_box_nonce');
+    ?>
+    <style>
+        .laundromat-meta-box { display: grid; gap: 15px; }
+        .laundromat-meta-box .field-group { display: grid; gap: 5px; }
+        .laundromat-meta-box label { font-weight: 600; }
+        .laundromat-meta-box input[type="text"],
+        .laundromat-meta-box textarea { width: 100%; padding: 8px; }
+        .laundromat-meta-box textarea { min-height: 100px; resize: vertical; }
+    </style>
+    <div class="laundromat-meta-box">
+        <div class="field-group">
+            <label for="faq_question"><?php _e('Question', 'laundromat'); ?></label>
+            <input type="text" id="faq_question" name="faq_question" value="<?php echo esc_attr($post->post_title); ?>" placeholder="What are your opening hours?">
+        </div>
+
+        <div class="field-group">
+            <label for="faq_answer"><?php _e('Answer', 'laundromat'); ?></label>
+            <textarea id="faq_answer" name="faq_answer" placeholder="The answer to the question..."><?php echo esc_textarea($post->post_content); ?></textarea>
+        </div>
+    </div>
+    <?php
+}
+
+/**
  * Save Meta Box Data
  */
 add_action('save_post', 'laundromat_save_meta_boxes');
@@ -408,6 +489,40 @@ function laundromat_save_meta_boxes($post_id)
         }
         if (isset($_POST['action_link_url'])) {
             update_post_meta($post_id, 'action_link_url', esc_url_raw($_POST['action_link_url']));
+        }
+    }
+
+    // Save Instruction Meta
+    if (isset($_POST['laundromat_instruction_meta_box_nonce']) &&
+        wp_verify_nonce($_POST['laundromat_instruction_meta_box_nonce'], 'laundromat_instruction_meta_box')) {
+
+        if (isset($_POST['instruction_title']) || isset($_POST['instruction_description'])) {
+            remove_action('save_post', 'laundromat_save_meta_boxes');
+
+            wp_update_post([
+                'ID' => $post_id,
+                'post_title' => sanitize_text_field($_POST['instruction_title'] ?? ''),
+                'post_content' => wp_kses_post($_POST['instruction_description'] ?? ''),
+            ]);
+
+            add_action('save_post', 'laundromat_save_meta_boxes');
+        }
+    }
+
+    // Save FAQ Meta
+    if (isset($_POST['laundromat_faq_meta_box_nonce']) &&
+        wp_verify_nonce($_POST['laundromat_faq_meta_box_nonce'], 'laundromat_faq_meta_box')) {
+
+        if (isset($_POST['faq_question']) || isset($_POST['faq_answer'])) {
+            remove_action('save_post', 'laundromat_save_meta_boxes');
+
+            wp_update_post([
+                'ID' => $post_id,
+                'post_title' => sanitize_text_field($_POST['faq_question'] ?? ''),
+                'post_content' => wp_kses_post($_POST['faq_answer'] ?? ''),
+            ]);
+
+            add_action('save_post', 'laundromat_save_meta_boxes');
         }
     }
 }

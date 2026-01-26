@@ -122,6 +122,20 @@ function laundromat_enhance_faq_response($response, $post, $request)
 
 function laundromat_enhance_service_response($response, $post, $request)
 {
+    // Ensure title is included (should be by default, but add explicitly for safety)
+    if (!isset($response->data['title']) || !isset($response->data['title']['rendered'])) {
+        $response->data['title'] = [
+            'rendered' => get_the_title($post->ID),
+        ];
+    }
+
+    // Ensure content is included
+    if (!isset($response->data['content']) || !isset($response->data['content']['rendered'])) {
+        $response->data['content'] = [
+            'rendered' => apply_filters('the_content', $post->post_content),
+        ];
+    }
+
     // Add featured image URL
     if (has_post_thumbnail($post->ID)) {
         $response->data['featured_image_url'] = get_the_post_thumbnail_url($post->ID, 'full');

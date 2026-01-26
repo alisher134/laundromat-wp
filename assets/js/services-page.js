@@ -44,22 +44,37 @@
         return;
       }
 
+      console.log('[Services] Loaded services from API:', services);
+
       // Map services by category for easy lookup
+      // If multiple services have the same category, use the first one
       const servicesByCategory = {};
       services.forEach((service) => {
-        servicesByCategory[service.category] = service;
+        if (!servicesByCategory[service.category]) {
+          servicesByCategory[service.category] = service;
+        }
       });
+
+      console.log('[Services] Services by category:', servicesByCategory);
 
       // Update each service section in the DOM
       const servicesList = document.getElementById('services-list');
-      if (!servicesList) return;
+      if (!servicesList) {
+        console.warn('[Services] #services-list not found');
+        return;
+      }
 
       const serviceSections = servicesList.querySelectorAll('[data-service]');
       serviceSections.forEach((section) => {
         const category = section.getAttribute('data-service');
         const serviceData = servicesByCategory[category];
 
-        if (!serviceData) return;
+        if (!serviceData) {
+          console.warn(`[Services] No service found for category: ${category}`);
+          return;
+        }
+
+        console.log(`[Services] Updating section for category: ${category}`, serviceData);
 
         // Update title
         const titleEl = section.querySelector('h2');
@@ -83,25 +98,33 @@
           imageEl.alt = serviceData.title || 'Service';
         }
 
-        // Update price rows if available
-        if (serviceData.priceRows && serviceData.priceRows.length > 0) {
-          const priceContainer = section.querySelector('[data-price-rows]');
-          if (priceContainer) {
-            // Keep the "Prices" header, remove everything else
-            const header = priceContainer.querySelector('.text-brand');
+        // Update price rows - always update if we have price rows from API
+        const priceContainer = section.querySelector('[data-price-rows]');
+        if (priceContainer && serviceData.priceRows) {
+          console.log(`[Services] Updating price rows for ${category}:`, serviceData.priceRows);
 
-            // Remove all children except the header
-            Array.from(priceContainer.children).forEach((child) => {
-              if (child !== header) {
-                child.remove();
-              }
-            });
+          // Keep the "Prices" header, remove everything else
+          const header = priceContainer.querySelector('.text-brand');
 
-            // Add new price rows
+          // Remove all children except the header
+          Array.from(priceContainer.children).forEach((child) => {
+            if (child !== header) {
+              child.remove();
+            }
+          });
+
+          // Add new price rows from API
+          if (serviceData.priceRows.length > 0) {
             serviceData.priceRows.forEach((row) => {
               const rowElement = createPriceRowElement(row);
               priceContainer.appendChild(rowElement);
             });
+          } else {
+            // If no price rows, add a placeholder message
+            const placeholder = document.createElement('p');
+            placeholder.className = 'text-text/60 text-base py-4';
+            placeholder.textContent = 'Pricing information coming soon';
+            priceContainer.appendChild(placeholder);
           }
         }
 
