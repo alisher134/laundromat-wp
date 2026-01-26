@@ -152,13 +152,13 @@ const LaundroAPI = (function () {
       if (!data) return null;
 
       return {
-        mobile: data.map((item, index) => ({
-          id: index,
+        mobile: data.map((item) => ({
+          id: item.id,
           top: item.map_position?.mobile?.top || '0%',
           left: item.map_position?.mobile?.left || '0%',
         })),
-        desktop: data.map((item, index) => ({
-          id: index,
+        desktop: data.map((item) => ({
+          id: item.id,
           top: item.map_position?.desktop?.top || '0%',
           left: item.map_position?.desktop?.left || '0%',
         })),

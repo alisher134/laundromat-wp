@@ -26,9 +26,6 @@
       if (apiLocations && apiLocations.length > 0) {
         locations = apiLocations;
         console.log('[Locations] Loaded', apiLocations.length, 'locations from API');
-
-        // Update location card content in the DOM
-        updateLocationCards();
       }
 
       if (apiPositions && apiPositions.mobile && apiPositions.desktop) {
@@ -36,55 +33,150 @@
         console.log('[Locations] Loaded positions from API');
       }
 
-      // Update marker positions (after both locations and positions are loaded)
-      updateMarkerPositions();
+      // Render cards and markers (after both locations and positions are loaded)
+      if (locations.length > 0) {
+        updateLocationCards();
+        updateMapMarkers();
+      }
     } catch (error) {
       console.error('[Locations] Failed to load from API:', error);
     }
   }
 
-  // Update location cards with data from API
-  function updateLocationCards() {
-    const cards = document.querySelectorAll('.location-slide');
+  // Dynamically render map markers from API data
+  function updateMapMarkers() {
+    // Update mobile map markers
+    const mobileMapContainer = document.querySelector('#location-map-container > div:not([id])');
+    if (mobileMapContainer && LOCATIONS_POSITIONS.mobile.length > 0) {
+      const mobileMarkersHTML = locations.map((location) => {
+        const position = LOCATIONS_POSITIONS.mobile.find(p => p.id === location.id) || { top: '0%', left: '0%' };
+        return `
+          <div
+            class="location-marker absolute z-10 flex -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center transition-transform hover:scale-110"
+            data-location-id="${location.id}"
+            style="top: ${position.top}; left: ${position.left}"
+          >
+            <svg width="18" height="18" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" class="location-marker-outline">
+              <rect x="0.75" y="0.75" width="23.5" height="23.5" rx="11.75" stroke="#3A6D90" stroke-width="1.5" />
+              <path d="M9 15.4438C9.76384 16.315 10.8294 16.8632 11.9814 16.9777C13.1333 17.0921 14.2857 16.7642 15.2055 16.0602C16.1253 15.3563 16.744 14.3288 16.9364 13.1855C17.1289 12.0422 16.8807 10.8683 16.2421 9.90124M15.7658 9.29721C15.1778 8.66849 14.4245 8.21884 13.5926 8" stroke="#3A6D90" stroke-width="1.5" />
+            </svg>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="location-marker-filled text-brand" style="display: none">
+              <rect width="18" height="18" rx="9" fill="currentColor" />
+              <path d="M6.40332 10.9878C6.94676 11.6077 7.70489 11.9977 8.52446 12.0791C9.34402 12.1605 10.1639 11.9272 10.8183 11.4264C11.4727 10.9256 11.9129 10.1946 12.0498 9.38114C12.1867 8.56773 12.0101 7.73258 11.5558 7.04454M11.2169 6.6148C10.7986 6.1675 10.2626 5.84759 9.67075 5.69189" stroke="white" stroke-width="1.06719" />
+            </svg>
+          </div>
+        `;
+      }).join('');
 
-    cards.forEach((card) => {
-      const cardIndex = parseInt(card.getAttribute('data-location-index'));
-      const location = locations.find(l => l.id === cardIndex);
+      // Find existing markers container or create new one
+      const existingMarkers = mobileMapContainer.querySelectorAll('.location-marker');
+      existingMarkers.forEach(marker => marker.remove());
+      mobileMapContainer.insertAdjacentHTML('beforeend', mobileMarkersHTML);
+    }
 
-      if (location) {
-        // Update title
-        const titleEl = card.querySelector('.location-title, h2');
-        if (titleEl) {
-          titleEl.textContent = location.title;
-        }
+    // Update desktop map markers
+    const desktopMap = document.getElementById('location-map-desktop');
+    if (desktopMap && LOCATIONS_POSITIONS.desktop.length > 0) {
+      const desktopMarkersHTML = locations.map((location) => {
+        const position = LOCATIONS_POSITIONS.desktop.find(p => p.id === location.id) || { top: '0%', left: '0%' };
+        return `
+          <div
+            class="location-marker absolute z-10 flex -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center transition-transform hover:scale-110"
+            data-location-id="${location.id}"
+            style="top: ${position.top}; left: ${position.left}; opacity: 0"
+          >
+            <svg width="18" height="18" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" class="location-marker-outline">
+              <rect x="0.75" y="0.75" width="23.5" height="23.5" rx="11.75" stroke="#3A6D90" stroke-width="1.5" />
+              <path d="M9 15.4438C9.76384 16.315 10.8294 16.8632 11.9814 16.9777C13.1333 17.0921 14.2857 16.7642 15.2055 16.0602C16.1253 15.3563 16.744 14.3288 16.9364 13.1855C17.1289 12.0422 16.8807 10.8683 16.2421 9.90124M15.7658 9.29721C15.1778 8.66849 14.4245 8.21884 13.5926 8" stroke="#3A6D90" stroke-width="1.5" />
+            </svg>
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="location-marker-filled text-brand" style="display: none">
+              <rect width="18" height="18" rx="9" fill="currentColor" />
+              <path d="M6.40332 10.9878C6.94676 11.6077 7.70489 11.9977 8.52446 12.0791C9.34402 12.1605 10.1639 11.9272 10.8183 11.4264C11.4727 10.9256 11.9129 10.1946 12.0498 9.38114C12.1867 8.56773 12.0101 7.73258 11.5558 7.04454M11.2169 6.6148C10.7986 6.1675 10.2626 5.84759 9.67075 5.69189" stroke="white" stroke-width="1.06719" />
+            </svg>
+          </div>
+        `;
+      }).join('');
 
-        // Update store hours
-        const hoursEl = card.querySelector('.store-hours, p');
-        if (hoursEl && location.storeHours) {
-          hoursEl.textContent = location.storeHours;
-        }
-      }
-    });
+      // Remove existing markers and add new ones
+      const existingMarkers = desktopMap.querySelectorAll('.location-marker');
+      existingMarkers.forEach(marker => marker.remove());
+      desktopMap.insertAdjacentHTML('beforeend', desktopMarkersHTML);
+    }
   }
 
-  // Update marker positions based on API data
+  // Dynamically render location cards from API data
+  function updateLocationCards() {
+    const sliderContainer = document.getElementById('location-slider');
+    if (!sliderContainer || locations.length === 0) return;
+
+    // Generate HTML for all location cards
+    const cardsHTML = locations.map((location) => `
+      <div
+        class="location-slide keen-slider__slide group hover:border-brand rounded-card border-text/16 max-w-[306px] shrink-0 cursor-pointer border bg-white/10 px-[20px] py-4 backdrop-blur-[30px] transition-colors duration-200 md:max-w-[306px] 2xl:max-w-[430px] 2xl:rounded-[16px] 2xl:p-6"
+        data-location-index="${location.id}"
+      >
+        <div class="mb-[31px] flex items-center justify-between md:mb-[27px] 2xl:mb-[41px]">
+          <h2
+            class="location-title text-text group-hover:text-brand max-w-[184px] text-base leading-[132%] font-normal tracking-[-0.01em] transition-colors duration-200 md:text-sm xl:text-sm 2xl:max-w-[307px] 2xl:text-lg 2xl:leading-[132%] 2xl:tracking-[-0.01em]"
+          >
+            ${location.title}
+          </h2>
+          <span class="bg-brand/6 flex size-[33px] items-center justify-center rounded-[6px] 2xl:size-[42px]">
+            <svg
+              aria-hidden="true"
+              class="text-brand size-4 2xl:size-[22px]"
+              viewBox="0 0 23 23"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M11.1563 19.0809H8.8078C7.63992 19.0809 6.51987 18.6169 5.69405 17.7911C4.86824 16.9653 4.4043 15.8453 4.4043 14.6774C4.4043 13.5095 4.86824 12.3895 5.69405 11.5636C6.51987 10.7378 7.63992 10.2739 8.8078 10.2739H13.5049C14.2056 10.2739 14.8776 9.99551 15.3731 9.50002C15.8686 9.00453 16.147 8.3325 16.147 7.63178C16.147 6.93105 15.8686 6.25902 15.3731 5.76353C14.8776 5.26804 14.2056 4.98967 13.5049 4.98967H11.1563C10.9228 4.98967 10.6988 4.89689 10.5336 4.73172C10.3684 4.56656 10.2756 4.34255 10.2756 4.10897C10.2756 3.8754 10.3684 3.65139 10.5336 3.48622C10.6988 3.32106 10.9228 3.22827 11.1563 3.22827H13.5049C14.6728 3.22827 15.7928 3.69221 16.6186 4.51803C17.4444 5.34385 17.9084 6.46389 17.9084 7.63178C17.9084 8.79966 17.4444 9.91971 16.6186 10.7455C15.7928 11.5713 14.6728 12.0353 13.5049 12.0353H8.8078C8.10707 12.0353 7.43504 12.3136 6.93955 12.8091C6.44406 13.3046 6.1657 13.9767 6.1657 14.6774C6.1657 15.3781 6.44406 16.0501 6.93955 16.5456C7.43504 17.0411 8.10707 17.3195 8.8078 17.3195H11.1563C11.3899 17.3195 11.6139 17.4123 11.7791 17.5774C11.9442 17.7426 12.037 17.9666 12.037 18.2002C12.037 18.4338 11.9442 18.6578 11.7791 18.8229C11.6139 18.9881 11.3899 19.0809 11.1563 19.0809Z"
+                fill="currentColor"
+              />
+              <path
+                d="M4.10994 0C3.01991 0 1.97454 0.43301 1.20377 1.20377C0.43301 1.97454 0 3.01991 0 4.10994C0 6.50192 2.13717 7.91339 3.55216 8.84811L3.78701 9.00194C3.88337 9.06606 3.99654 9.10027 4.11229 9.10027C4.22803 9.10027 4.3412 9.06606 4.43756 9.00194L4.67241 8.84811C6.08271 7.91339 8.21988 6.50192 8.21988 4.10994C8.21988 3.01991 7.78686 1.97454 7.0161 1.20377C6.24534 0.43301 5.19996 0 4.10994 0Z"
+                fill="currentColor"
+                fill-opacity="0.2"
+              />
+              <path
+                d="M4.13328 5.28515C3.82184 5.28671 3.52255 5.16448 3.30123 4.94537C3.07991 4.72625 2.9547 4.42819 2.95314 4.11675C2.95158 3.80532 3.07381 3.50602 3.29292 3.2847C3.51204 3.06338 3.8101 2.93817 4.12154 2.93661H4.13328C4.44471 2.93661 4.74339 3.06033 4.96361 3.28055C5.18383 3.50077 5.30755 3.79945 5.30755 4.11088C5.30755 4.42232 5.18383 4.721 4.96361 4.94122C4.74339 5.16143 4.44471 5.28515 4.13328 5.28515Z"
+                fill="currentColor"
+              />
+              <path
+                d="M18.2017 13.2105C17.1117 13.2105 16.0663 13.6435 15.2956 14.4143C14.5248 15.185 14.0918 16.2304 14.0918 17.3204C14.0918 19.7124 16.229 21.1239 17.644 22.0586L17.8788 22.2124C17.9752 22.2766 18.0883 22.3108 18.2041 22.3108C18.3198 22.3108 18.433 22.2766 18.5294 22.2124L18.7642 22.0586C20.1733 21.1192 22.3164 19.7101 22.3164 17.3204C22.3164 16.7803 22.2099 16.2455 22.0031 15.7466C21.7962 15.2476 21.4931 14.7943 21.1109 14.4126C20.7288 14.0309 20.2752 13.7283 19.776 13.522C19.2768 13.3157 18.7419 13.2099 18.2017 13.2105Z"
+                fill="currentColor"
+                fill-opacity="0.2"
+              />
+              <path
+                d="M18.2251 18.4957C18.0709 18.4964 17.918 18.4668 17.7753 18.4085C17.6325 18.3502 17.5026 18.2644 17.393 18.1559C17.2834 18.0474 17.1963 17.9184 17.1366 17.7762C17.0768 17.634 17.0457 17.4815 17.0449 17.3273C17.0442 17.1731 17.0738 17.0202 17.1321 16.8774C17.1904 16.7347 17.2762 16.6048 17.3847 16.4952C17.4932 16.3856 17.6222 16.2985 17.7644 16.2388C17.9066 16.179 18.0591 16.1479 18.2133 16.1471H18.2251C18.5365 16.1471 18.8352 16.2708 19.0554 16.4911C19.2756 16.7113 19.3993 17.01 19.3993 17.3214C19.3993 17.6328 19.2756 17.9315 19.0554 18.1517C18.8352 18.3719 18.5365 18.4957 18.2251 18.4957Z"
+                fill="currentColor"
+              />
+            </svg>
+          </span>
+        </div>
+        <div class="flex items-center justify-between">
+          <div class="space-y-[4px] 2xl:space-y-[6px]">
+            <p class="text-text/60 paragraph-sm-default md:text-xs xl:text-xs 2xl:text-base">Store hours</p>
+            <p class="store-hours text-text text-base leading-[132%] font-normal tracking-[-0.01em] md:text-sm xl:text-xs 2xl:text-base">
+              ${location.storeHours}
+            </p>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // Replace slider content
+    sliderContainer.innerHTML = cardsHTML;
+  }
+
+  // Update marker positions based on API data (regenerate on resize)
   function updateMarkerPositions() {
-    const isMobile = window.innerWidth < 768;
-    const positions = isMobile ? LOCATIONS_POSITIONS.mobile : LOCATIONS_POSITIONS.desktop;
-
     // If no positions loaded, don't update
-    if (!positions || positions.length === 0) return;
+    if (!LOCATIONS_POSITIONS.mobile || !LOCATIONS_POSITIONS.desktop) return;
+    if (locations.length === 0) return;
 
-    const markers = document.querySelectorAll('.location-marker');
-    markers.forEach((marker) => {
-      const markerId = parseInt(marker.getAttribute('data-location-id'));
-      const position = positions.find(p => p.id === markerId);
-
-      if (position) {
-        marker.style.top = position.top;
-        marker.style.left = position.left;
-      }
-    });
+    // Regenerate markers with correct positions for current screen size
+    updateMapMarkers();
   }
 
   let activeLocationIndex = null;
@@ -383,13 +475,15 @@
   }
 
   // Initialize all components
-  function initAll() {
-    initMobileSlider();
+  async function initAll() {
     initMapAnimation();
-    initClickHandlers();
 
-    // Load data from API (non-blocking)
-    loadLocationsFromAPI();
+    // Load data from API FIRST
+    await loadLocationsFromAPI();
+
+    // THEN initialize slider (after cards are rendered)
+    initMobileSlider();
+    initClickHandlers();
 
     // Listen for window resize to update marker positions
     window.addEventListener('resize', updateMarkerPositions);
