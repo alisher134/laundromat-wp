@@ -57,6 +57,7 @@ add_filter('rest_prepare_tips', 'laundromat_enhance_tips_response', 10, 3);
 add_filter('rest_prepare_instructions', 'laundromat_enhance_tips_response', 10, 3);
 add_filter('rest_prepare_faqs', 'laundromat_enhance_faq_response', 10, 3);
 add_filter('rest_prepare_services', 'laundromat_enhance_service_response', 10, 3);
+add_filter('rest_prepare_about_items', 'laundromat_enhance_about_item_response', 10, 3);
 
 function laundromat_enhance_location_response($response, $post, $request)
 {
@@ -171,6 +172,31 @@ function laundromat_enhance_service_response($response, $post, $request)
     $response->data['action_link'] = [
         'text' => $action_link_text ?: '',
         'url' => $action_link_url ?: '',
+    ];
+
+    return $response;
+}
+
+function laundromat_enhance_about_item_response($response, $post, $request)
+{
+    // Ensure title is included
+    if (!isset($response->data['title']) || !isset($response->data['title']['rendered'])) {
+        $response->data['title'] = [
+            'rendered' => get_the_title($post->ID),
+        ];
+    }
+
+    // Add featured image URL
+    if (has_post_thumbnail($post->ID)) {
+        $response->data['icon_image_url'] = get_the_post_thumbnail_url($post->ID, 'full');
+    } else {
+        $response->data['icon_image_url'] = '';
+    }
+
+    // Add meta fields explicitly
+    $response->data['meta'] = [
+        'secondary_title' => get_post_meta($post->ID, 'secondary_title', true) ?: '',
+        'description' => get_post_meta($post->ID, 'description', true) ?: '',
     ];
 
     return $response;

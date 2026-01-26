@@ -18,7 +18,7 @@ add_action('init', 'laundromat_remove_default_editor_support');
 
 function laundromat_remove_default_editor_support()
 {
-    $post_types = ['services', 'instructions', 'faqs'];
+    $post_types = ['services', 'instructions', 'faqs', 'about_items'];
     foreach ($post_types as $post_type) {
         remove_post_type_support($post_type, 'title');
         remove_post_type_support($post_type, 'editor');
@@ -78,6 +78,16 @@ function laundromat_add_meta_boxes()
         __('FAQ Details', 'laundromat'),
         'laundromat_faq_meta_box_callback',
         'faqs',
+        'normal',
+        'high'
+    );
+
+    // About Item Details Meta Box
+    add_meta_box(
+        'about_item_details',
+        __('About Item Details', 'laundromat'),
+        'laundromat_about_item_meta_box_callback',
+        'about_items',
         'normal',
         'high'
     );
@@ -401,6 +411,53 @@ function laundromat_faq_meta_box_callback($post)
 }
 
 /**
+ * About Item Meta Box Callback
+ */
+function laundromat_about_item_meta_box_callback($post)
+{
+    wp_nonce_field('laundromat_about_item_meta_box', 'laundromat_about_item_meta_box_nonce');
+
+    $secondary_title = get_post_meta($post->ID, 'secondary_title', true);
+    $description = get_post_meta($post->ID, 'description', true);
+    ?>
+    <style>
+        .laundromat-meta-box { display: grid; gap: 15px; }
+        .laundromat-meta-box .field-group { display: grid; gap: 5px; }
+        .laundromat-meta-box label { font-weight: 600; }
+        .laundromat-meta-box input[type="text"],
+        .laundromat-meta-box textarea { width: 100%; padding: 8px; }
+        .laundromat-meta-box textarea { min-height: 80px; resize: vertical; }
+    </style>
+    <div class="laundromat-meta-box">
+        <div class="field-group">
+            <label for="about_item_title"><?php _e('Title', 'laundromat'); ?></label>
+            <input type="text" id="about_item_title" name="about_item_title" value="<?php echo esc_attr($post->post_title); ?>" placeholder="365 days">
+            <p class="description"><?php _e('Main title displayed on the card (e.g., "365 days", ">60 min", "low prices")', 'laundromat'); ?></p>
+        </div>
+
+        <div class="field-group">
+            <label for="secondary_title"><?php _e('Secondary Title', 'laundromat'); ?></label>
+            <input type="text" id="secondary_title" name="secondary_title" value="<?php echo esc_attr($secondary_title); ?>" placeholder="Open 365 days, 07:00–00:00">
+            <p class="description"><?php _e('Detailed information or subtitle', 'laundromat'); ?></p>
+        </div>
+
+        <div class="field-group">
+            <label for="description"><?php _e('Description', 'laundromat'); ?></label>
+            <textarea id="description" name="description" placeholder="Laundry that fits your life, not the other way around"><?php echo esc_textarea($description); ?></textarea>
+            <p class="description"><?php _e('Short description or tagline for the card', 'laundromat'); ?></p>
+        </div>
+
+        <div class="field-group">
+            <p class="description" style="margin-top: 10px; padding: 10px; background: #f0f6fc; border-left: 4px solid #3a6d90;">
+                <strong><?php _e('Icon Image:', 'laundromat'); ?></strong>
+                <?php _e('Use the "Featured Image" box on the right to upload an icon. Recommended size: 100x100px, PNG with transparent background.', 'laundromat'); ?>
+            </p>
+        </div>
+    </div>
+    <?php
+}
+
+/**
  * Save Meta Box Data
  */
 add_action('save_post', 'laundromat_save_meta_boxes');
@@ -523,6 +580,32 @@ function laundromat_save_meta_boxes($post_id)
             ]);
 
             add_action('save_post', 'laundromat_save_meta_boxes');
+        }
+    }
+
+    // Save About Item Meta
+    if (isset($_POST['laundromat_about_item_meta_box_nonce']) &&
+        wp_verify_nonce($_POST['laundromat_about_item_meta_box_nonce'], 'laundromat_about_item_meta_box')) {
+
+        // Save title
+        if (isset($_POST['about_item_title'])) {
+            remove_action('save_post', 'laundromat_save_meta_boxes');
+
+            wp_update_post([
+                'ID' => $post_id,
+                'post_title' => sanitize_text_field($_POST['about_item_title'] ?? ''),
+            ]);
+
+            add_action('save_post', 'laundromat_save_meta_boxes');
+        }
+
+        // Save meta fields
+        if (isset($_POST['secondary_title'])) {
+            update_post_meta($post_id, 'secondary_title', sanitize_text_field($_POST['secondary_title']));
+        }
+
+        if (isset($_POST['description'])) {
+            update_post_meta($post_id, 'description', sanitize_text_field($_POST['description']));
         }
     }
 }

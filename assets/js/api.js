@@ -258,6 +258,23 @@ const LaundroAPI = (function () {
     },
 
     /**
+     * Fetch about items and map to existing frontend format
+     * @returns {Promise<Array|null>}
+     */
+    async getAboutItems() {
+      const data = await fetchJSON(`${CONFIG.WP_API}/about_items${buildQuery()}`);
+      if (!data) return null;
+
+      return data.map((item) => ({
+        id: item.id,
+        title: item.title?.rendered || '',
+        secondaryTitle: item.meta?.secondary_title || '',
+        description: item.meta?.description || '',
+        iconImageUrl: item.icon_image_url || '',
+      }));
+    },
+
+    /**
      * Fetch contact settings from WordPress options
      * @returns {Promise<Object|null>}
      */

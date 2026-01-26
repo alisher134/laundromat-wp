@@ -144,6 +144,31 @@ function laundromat_register_cpts()
         'menu_position' => 9,
     ]);
 
+    // About Items CPT (for homepage About Laundromat slider)
+    register_post_type('about_items', [
+        'labels' => [
+            'name' => __('About Items', 'laundromat'),
+            'singular_name' => __('About Item', 'laundromat'),
+            'add_new' => __('Add New Item', 'laundromat'),
+            'add_new_item' => __('Add New About Item', 'laundromat'),
+            'edit_item' => __('Edit About Item', 'laundromat'),
+            'new_item' => __('New About Item', 'laundromat'),
+            'view_item' => __('View About Item', 'laundromat'),
+            'search_items' => __('Search About Items', 'laundromat'),
+            'not_found' => __('No about items found', 'laundromat'),
+            'not_found_in_trash' => __('No about items found in trash', 'laundromat'),
+        ],
+        'public' => false,
+        'publicly_queryable' => false,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'show_in_rest' => true,
+        'rest_base' => 'about_items',
+        'supports' => ['title', 'thumbnail'],
+        'menu_icon' => 'dashicons-info',
+        'menu_position' => 10,
+    ]);
+
     // Contact Messages CPT (for storing form submissions)
     register_post_type('contact_messages', [
         'labels' => [
@@ -249,6 +274,21 @@ function laundromat_register_meta_fields()
             'single' => true,
             'type' => $type,
             'sanitize_callback' => $callback,
+        ]);
+    }
+
+    // About Item meta fields
+    $about_fields = [
+        'secondary_title' => 'string', // e.g., "Open 365 days, 07:00–00:00"
+        'description' => 'string', // e.g., "Laundry that fits your life, not the other way around"
+    ];
+
+    foreach ($about_fields as $field => $type) {
+        register_post_meta('about_items', $field, [
+            'show_in_rest' => true,
+            'single' => true,
+            'type' => $type,
+            'sanitize_callback' => 'sanitize_text_field',
         ]);
     }
 }

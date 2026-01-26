@@ -87,6 +87,7 @@ add_filter('rest_prepare_tips', 'laundromat_add_lang_to_rest', 20, 3);
 add_filter('rest_prepare_instructions', 'laundromat_add_lang_to_rest', 20, 3);
 add_filter('rest_prepare_faqs', 'laundromat_add_lang_to_rest', 20, 3);
 add_filter('rest_prepare_services', 'laundromat_add_lang_to_rest', 20, 3);
+add_filter('rest_prepare_about_items', 'laundromat_add_lang_to_rest', 20, 3);
 
 function laundromat_add_lang_to_rest($response, $post, $request)
 {
