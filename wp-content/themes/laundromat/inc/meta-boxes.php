@@ -18,7 +18,7 @@ add_action('init', 'laundromat_remove_default_editor_support');
 
 function laundromat_remove_default_editor_support()
 {
-    $post_types = ['services', 'instructions', 'faqs', 'about_items'];
+    $post_types = ['services', 'instructions', 'faqs', 'about_items', 'reviews'];
     foreach ($post_types as $post_type) {
         remove_post_type_support($post_type, 'title');
         remove_post_type_support($post_type, 'editor');
@@ -88,6 +88,16 @@ function laundromat_add_meta_boxes()
         __('About Item Details', 'laundromat'),
         'laundromat_about_item_meta_box_callback',
         'about_items',
+        'normal',
+        'high'
+    );
+
+    // Review Details Meta Box
+    add_meta_box(
+        'review_details',
+        __('Review Details', 'laundromat'),
+        'laundromat_review_meta_box_callback',
+        'reviews',
         'normal',
         'high'
     );
@@ -458,6 +468,44 @@ function laundromat_about_item_meta_box_callback($post)
 }
 
 /**
+ * Review Meta Box Callback
+ */
+function laundromat_review_meta_box_callback($post)
+{
+    wp_nonce_field('laundromat_review_meta_box', 'laundromat_review_meta_box_nonce');
+    ?>
+    <style>
+        .laundromat-meta-box { display: grid; gap: 15px; }
+        .laundromat-meta-box .field-group { display: grid; gap: 5px; }
+        .laundromat-meta-box label { font-weight: 600; }
+        .laundromat-meta-box input[type="text"],
+        .laundromat-meta-box textarea { width: 100%; padding: 8px; }
+        .laundromat-meta-box textarea { min-height: 120px; resize: vertical; }
+    </style>
+    <div class="laundromat-meta-box">
+        <div class="field-group">
+            <label for="review_author_name"><?php _e('Author Name', 'laundromat'); ?></label>
+            <input type="text" id="review_author_name" name="review_author_name" value="<?php echo esc_attr($post->post_title); ?>" placeholder="Andrey">
+            <p class="description"><?php _e('The name of the person who wrote this review', 'laundromat'); ?></p>
+        </div>
+
+        <div class="field-group">
+            <label for="review_text"><?php _e('Review Text', 'laundromat'); ?></label>
+            <textarea id="review_text" name="review_text" placeholder="Write the review text here..."><?php echo esc_textarea($post->post_content); ?></textarea>
+            <p class="description"><?php _e('The full text of the review', 'laundromat'); ?></p>
+        </div>
+
+        <div class="field-group">
+            <p class="description" style="margin-top: 10px; padding: 10px; background: #f0f6fc; border-left: 4px solid #3a6d90;">
+                <strong><?php _e('Profile Photo:', 'laundromat'); ?></strong>
+                <?php _e('Use the "Featured Image" box on the right to upload a profile photo. Recommended size: 80x80px or larger. If no image is provided, a default user icon will be displayed.', 'laundromat'); ?>
+            </p>
+        </div>
+    </div>
+    <?php
+}
+
+/**
  * Save Meta Box Data
  */
 add_action('save_post', 'laundromat_save_meta_boxes');
@@ -606,6 +654,23 @@ function laundromat_save_meta_boxes($post_id)
 
         if (isset($_POST['description'])) {
             update_post_meta($post_id, 'description', sanitize_text_field($_POST['description']));
+        }
+    }
+
+    // Save Review Meta
+    if (isset($_POST['laundromat_review_meta_box_nonce']) &&
+        wp_verify_nonce($_POST['laundromat_review_meta_box_nonce'], 'laundromat_review_meta_box')) {
+
+        if (isset($_POST['review_author_name']) || isset($_POST['review_text'])) {
+            remove_action('save_post', 'laundromat_save_meta_boxes');
+
+            wp_update_post([
+                'ID' => $post_id,
+                'post_title' => sanitize_text_field($_POST['review_author_name'] ?? ''),
+                'post_content' => wp_kses_post($_POST['review_text'] ?? ''),
+            ]);
+
+            add_action('save_post', 'laundromat_save_meta_boxes');
         }
     }
 }

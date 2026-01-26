@@ -12,7 +12,7 @@ const LaundroAPI = (function () {
     WP_API: '/wp/v2',
     CUSTOM_API: '/laundromat/v1',
     // Set to true to enable console logging
-    DEBUG: false,
+    DEBUG: true,
   };
 
   // Current language (for Polylang support)
@@ -189,6 +189,30 @@ const LaundroAPI = (function () {
     },
 
     /**
+     * Fetch homepage tips (only tips selected in admin settings)
+     * If no tips are selected, returns all tips
+     * @returns {Promise<Array|null>}
+     */
+    async getHomepageTips() {
+      const data = await fetchJSON(`${CONFIG.CUSTOM_API}/homepage-tips${buildQuery()}`);
+      if (!data) return null;
+
+      return data.map((item) => ({
+        id: item.id,
+        key: `tip-${item.id}`,
+        image: item.featured_image_url || './assets/images/tips-1.png',
+        category: item.category || 'Tips and tricks',
+        title: item.title.rendered,
+        date: item.formatted_date || new Date(item.date).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
+        content: item.content?.rendered || '',
+      }));
+    },
+
+    /**
      * Fetch instructions and map to existing frontend format
      * @returns {Promise<Array|null>}
      */
@@ -271,6 +295,22 @@ const LaundroAPI = (function () {
         secondaryTitle: item.meta?.secondary_title || '',
         description: item.meta?.description || '',
         iconImageUrl: item.icon_image_url || '',
+      }));
+    },
+
+    /**
+     * Fetch reviews and map to existing frontend format
+     * @returns {Promise<Array|null>}
+     */
+    async getReviews() {
+      const data = await fetchJSON(`${CONFIG.WP_API}/reviews${buildQuery()}`);
+      if (!data) return null;
+
+      return data.map((item) => ({
+        id: item.id,
+        authorName: item.author_name || item.title?.rendered || '',
+        reviewText: item.review_text || item.content?.rendered?.replace(/<[^>]*>/g, '') || '',
+        photoUrl: item.photo_url || '',
       }));
     },
 

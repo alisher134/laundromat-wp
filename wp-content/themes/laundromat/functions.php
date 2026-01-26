@@ -18,6 +18,7 @@ require_once get_template_directory() . '/inc/cpt.php';
 require_once get_template_directory() . '/inc/meta-boxes.php';
 require_once get_template_directory() . '/inc/rest-api.php';
 require_once get_template_directory() . '/inc/options-page.php';
+require_once get_template_directory() . '/inc/homepage-settings.php';
 
 /**
  * Theme Setup

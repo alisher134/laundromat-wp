@@ -169,6 +169,31 @@ function laundromat_register_cpts()
         'menu_position' => 10,
     ]);
 
+    // Reviews CPT (for homepage reviews section)
+    register_post_type('reviews', [
+        'labels' => [
+            'name' => __('Reviews', 'laundromat'),
+            'singular_name' => __('Review', 'laundromat'),
+            'add_new' => __('Add New Review', 'laundromat'),
+            'add_new_item' => __('Add New Review', 'laundromat'),
+            'edit_item' => __('Edit Review', 'laundromat'),
+            'new_item' => __('New Review', 'laundromat'),
+            'view_item' => __('View Review', 'laundromat'),
+            'search_items' => __('Search Reviews', 'laundromat'),
+            'not_found' => __('No reviews found', 'laundromat'),
+            'not_found_in_trash' => __('No reviews found in trash', 'laundromat'),
+        ],
+        'public' => false,
+        'publicly_queryable' => false,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'show_in_rest' => true,
+        'rest_base' => 'reviews',
+        'supports' => ['title', 'editor', 'thumbnail'],
+        'menu_icon' => 'dashicons-star-filled',
+        'menu_position' => 11,
+    ]);
+
     // Contact Messages CPT (for storing form submissions)
     register_post_type('contact_messages', [
         'labels' => [

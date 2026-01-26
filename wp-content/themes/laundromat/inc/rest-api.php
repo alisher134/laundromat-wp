@@ -58,6 +58,7 @@ add_filter('rest_prepare_instructions', 'laundromat_enhance_tips_response', 10, 
 add_filter('rest_prepare_faqs', 'laundromat_enhance_faq_response', 10, 3);
 add_filter('rest_prepare_services', 'laundromat_enhance_service_response', 10, 3);
 add_filter('rest_prepare_about_items', 'laundromat_enhance_about_item_response', 10, 3);
+add_filter('rest_prepare_reviews', 'laundromat_enhance_review_response', 10, 3);
 
 function laundromat_enhance_location_response($response, $post, $request)
 {
@@ -202,6 +203,38 @@ function laundromat_enhance_about_item_response($response, $post, $request)
     return $response;
 }
 
+function laundromat_enhance_review_response($response, $post, $request)
+{
+    // Ensure title is included (author name)
+    if (!isset($response->data['title']) || !isset($response->data['title']['rendered'])) {
+        $response->data['title'] = [
+            'rendered' => get_the_title($post->ID),
+        ];
+    }
+
+    // Ensure content is included (review text)
+    if (!isset($response->data['content']) || !isset($response->data['content']['rendered'])) {
+        $response->data['content'] = [
+            'rendered' => apply_filters('the_content', $post->post_content),
+        ];
+    }
+
+    // Add featured image URL (profile photo)
+    if (has_post_thumbnail($post->ID)) {
+        $response->data['photo_url'] = get_the_post_thumbnail_url($post->ID, 'full');
+    } else {
+        $response->data['photo_url'] = '';
+    }
+
+    // Add plain text version of review
+    $response->data['review_text'] = wp_strip_all_tags($post->post_content);
+
+    // Add author name for easy access
+    $response->data['author_name'] = get_the_title($post->ID);
+
+    return $response;
+}
+
 /**
  * Register Custom REST Endpoints
  */
@@ -234,6 +267,20 @@ function laundromat_register_rest_routes()
     register_rest_route('laundromat/v1', '/languages', [
         'methods' => 'GET',
         'callback' => 'laundromat_get_languages',
+        'permission_callback' => '__return_true',
+    ]);
+
+    // Homepage Tips endpoint - returns only selected tips
+    register_rest_route('laundromat/v1', '/homepage-tips', [
+        'methods' => 'GET',
+        'callback' => 'laundromat_get_homepage_tips',
+        'permission_callback' => '__return_true',
+    ]);
+
+    // Debug endpoint for homepage tips (shows query info)
+    register_rest_route('laundromat/v1', '/homepage-tips/debug', [
+        'methods' => 'GET',
+        'callback' => 'laundromat_debug_homepage_tips',
         'permission_callback' => '__return_true',
     ]);
 }
@@ -405,5 +452,138 @@ function laundromat_get_languages()
     return [
         'current' => $current_lang,
         'languages' => $formatted_languages,
+    ];
+}
+
+/**
+ * Get Homepage Tips - Only returns tips selected in settings
+ * If no tips are selected, returns all tips
+ */
+function laundromat_get_homepage_tips($request)
+{
+    // Get selected tip IDs from settings
+    $selected_tip_ids = get_option('laundromat_homepage_tips', []);
+
+    // Ensure it's an array
+    if (!is_array($selected_tip_ids)) {
+        $selected_tip_ids = [];
+    }
+
+    // Build query arguments
+    $args = [
+        'post_type' => 'tips',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'orderby' => 'date',
+        'order' => 'DESC',
+    ];
+
+    // If tips are selected, only fetch those
+    if (!empty($selected_tip_ids)) {
+        $args['post__in'] = $selected_tip_ids;
+        $args['orderby'] = 'post__in'; // Maintain the order of selected tips
+    }
+
+    // Handle language filter for Polylang
+    // NOTE: We use suppress_filters to prevent Polylang from auto-filtering
+    // Then we manually filter by language if needed
+    $lang = $request->get_param('lang');
+    $tips = get_posts($args);
+
+    // If language param provided and Polylang is active, filter results manually
+    if ($lang && function_exists('pll_get_post_language') && !empty($tips)) {
+        $tips = array_filter($tips, function ($tip) use ($lang) {
+            $tip_lang = pll_get_post_language($tip->ID, 'slug');
+            // Include tip if it matches the language OR has no language assigned
+            return $tip_lang === $lang || $tip_lang === false || $tip_lang === '';
+        });
+        // Re-index array after filtering
+        $tips = array_values($tips);
+    }
+
+    // Format response using the same structure as regular tips endpoint
+    $formatted_tips = [];
+    foreach ($tips as $tip) {
+        $featured_image_url = get_the_post_thumbnail_url($tip->ID, 'full');
+
+        // Get category
+        $terms = wp_get_post_terms($tip->ID, 'content_category');
+        $category = 'Tips and tricks';
+        $category_slug = 'tips-and-tricks';
+
+        if (!is_wp_error($terms) && !empty($terms)) {
+            $category = $terms[0]->name;
+            $category_slug = $terms[0]->slug;
+        }
+
+        $formatted_tips[] = [
+            'id' => $tip->ID,
+            'title' => [
+                'rendered' => get_the_title($tip->ID),
+            ],
+            'content' => [
+                'rendered' => apply_filters('the_content', $tip->post_content),
+            ],
+            'featured_image_url' => $featured_image_url ?: '',
+            'category' => $category,
+            'category_slug' => $category_slug,
+            'formatted_date' => get_the_date('F j, Y', $tip->ID),
+            'date' => $tip->post_date,
+            'slug' => $tip->post_name,
+            'lang' => function_exists('pll_get_post_language') ? pll_get_post_language($tip->ID, 'slug') : '',
+        ];
+    }
+
+    return $formatted_tips;
+}
+
+/**
+ * Debug Homepage Tips - Shows configuration and what would be returned
+ */
+function laundromat_debug_homepage_tips($request)
+{
+    $selected_tip_ids = get_option('laundromat_homepage_tips', []);
+
+    // Get all published tips
+    $all_tips = get_posts([
+        'post_type' => 'tips',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'fields' => 'ids',
+    ]);
+
+    // Get tips that would be returned
+    $args = [
+        'post_type' => 'tips',
+        'posts_per_page' => -1,
+        'post_status' => 'publish',
+        'orderby' => 'date',
+        'order' => 'DESC',
+    ];
+
+    if (!empty($selected_tip_ids) && is_array($selected_tip_ids)) {
+        $args['post__in'] = $selected_tip_ids;
+        $args['orderby'] = 'post__in';
+    }
+
+    $lang = $request->get_param('lang');
+    if ($lang && function_exists('pll_current_language')) {
+        $args['lang'] = $lang;
+    }
+
+    $would_return = get_posts($args);
+
+    return [
+        'selected_tip_ids' => $selected_tip_ids,
+        'selected_count' => count($selected_tip_ids),
+        'total_published_tips' => count($all_tips),
+        'all_tip_ids' => $all_tips,
+        'would_return_count' => count($would_return),
+        'would_return_ids' => array_map(function ($tip) {
+            return $tip->ID;
+        }, $would_return),
+        'query_args' => $args,
+        'lang_param' => $lang,
+        'polylang_active' => function_exists('pll_current_language'),
     ];
 }
