@@ -16,7 +16,22 @@ const LaundroAPI = (function () {
   };
 
   // Current language (for Polylang support)
-  let currentLang = 'en';
+  // Auto-detect language from URL path
+  function detectLanguage() {
+    const pathParts = window.location.pathname.split('/').filter(p => p);
+    // Check if we're in the /el/ directory
+    if (pathParts.includes('el')) {
+      return 'el';
+    }
+    return 'en';
+  }
+
+  let currentLang = detectLanguage();
+
+  // Log initial language detection
+  if (CONFIG.DEBUG) {
+    console.log('[LaundroAPI] Auto-detected language:', currentLang);
+  }
 
   /**
    * Helper: Log debug messages
@@ -255,6 +270,14 @@ const LaundroAPI = (function () {
      */
     async getCategories() {
       return await fetchJSON(`${CONFIG.CUSTOM_API}/categories`);
+    },
+
+    /**
+     * Fetch available languages from Polylang
+     * @returns {Promise<Object|null>}
+     */
+    async getLanguages() {
+      return await fetchJSON(`${CONFIG.CUSTOM_API}/languages`);
     },
 
     /**

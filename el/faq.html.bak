@@ -1,27 +1,28 @@
 <!doctype html>
-<html lang="en">
+<html lang="el">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Laundromat - Contact</title>
+    <title>Laundromat - FAQ</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
 
-    <link href="./assets/css/output.css" rel="stylesheet" />
+    <link href="../assets/css/output.css" rel="stylesheet" />
   </head>
   <body>
     <!-- HEADER CONTENT ... -->
     <header
       id="header"
-      data-theme="dark"
+      data-header-style="dark"
+      data-theme="light"
       class="px-container-mobile min-[1120px]:px-container-tablet 2xl:px-container-desktop fixed top-0 right-0 left-0 z-50 pt-4 pb-4 transition-all duration-500 min-[1366px]:pt-[11px] min-[1366px]:pb-[11px] md:pt-[18px] md:pb-[18px] 2xl:pt-[22px] 2xl:pb-[22px]"
     >
       <div class="flex items-center justify-between">
         <a href="index.html">
           <svg
-            class="h-[30px] w-[118px] text-white min-[1366px]:h-[31px] min-[1366px]:w-[126px] md:h-[32px] md:w-[122px] 2xl:h-[39px] 2xl:w-[156px]"
+            class="text-brand h-[30px] w-[118px] min-[1366px]:h-[31px] min-[1366px]:w-[126px] md:h-[32px] md:w-[122px] 2xl:h-[39px] 2xl:w-[156px]"
             fill="currentColor"
           >
             <g clip-path="url(#clip0_510_10759)">
@@ -98,7 +99,7 @@
 
         <nav class="hidden items-center gap-[123px] min-[1366px]:flex">
           <ul>
-            <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs text-text hover:text-brand transition-colors 2xl:text-lg">
               <a class="hover:text-brand flex items-center gap-[6px] transition-colors" href="location.html">
                 Our location
                 <svg viewBox="0 0 11 10" class="h-[10px] w-[11px]" fill="none">
@@ -120,16 +121,16 @@
           </ul>
 
           <ul class="flex items-center gap-[28px]">
-            <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs text-text hover:text-brand transition-colors 2xl:text-lg">
               <a class="hover:text-brand transition-colors" href="services.html">Services</a>
             </li>
-            <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs text-text hover:text-brand transition-colors 2xl:text-lg">
               <a class="hover:text-brand transition-colors" href="instructions.html">Instructions</a>
             </li>
-            <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs text-text hover:text-brand transition-colors 2xl:text-lg">
               <a class="hover:text-brand transition-colors" href="tips.html">Laundry tips</a>
             </li>
-            <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs text-text hover:text-brand transition-colors 2xl:text-lg">
               <a class="hover:text-brand transition-colors" href="contact.html">Contact us</a>
             </li>
           </ul>
@@ -139,12 +140,12 @@
           <div class="relative" id="lang-switcher">
             <button
               id="lang-button"
-              class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-lg"
+              class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] text-text 2xl:text-lg"
               type="button"
             >
-              <span class="leading-[132%] tracking-[-0.01em]">En</span>
+              <span class="leading-[132%] tracking-[-0.01em]">Gr</span>
               <span class="bg-brand/8 rounded-[6px] px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-                <svg class="h-[3px] w-[5px] text-white" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="h-[3px] w-[5px] text-text" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M0.5 0.5L2.9901 2.63438L5.48021 0.5" stroke="currentColor" stroke-linecap="round" />
                 </svg>
               </span>
@@ -159,7 +160,7 @@
                   class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 font-semibold transition"
                   type="button"
                 >
-                  En
+                  Gr
                 </button>
               </li>
               <li>
@@ -167,20 +168,20 @@
                   class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
                   type="button"
                 >
-                  Gr
+                  En
                 </button>
               </li>
             </ul>
           </div>
 
           <a
-            class="hidden text-sm leading-[132%] font-normal tracking-[-0.01em] text-white md:block 2xl:text-lg 2xl:font-medium"
+            class="hidden text-sm leading-[132%] font-normal tracking-[-0.01em] text-text md:block 2xl:text-lg 2xl:font-medium"
             href="tel:+88006001441"
           >
             8 800 600 14 41
           </a>
 
-          <button id="mobile-menu-btn" class="block text-white min-[1366px]:hidden" aria-label="Menu">
+          <button id="mobile-menu-btn" class="block text-text min-[1366px]:hidden" aria-label="Menu">
             <svg class="h-9 w-[38px]" viewBox="0 0 38 36" fill="none">
               <rect width="38" height="36" rx="10" fill="currentColor" fill-opacity="0.01" />
               <rect x="0.5" y="0.5" width="37" height="35" rx="9.5" stroke="currentColor" stroke-opacity="0.8" />
@@ -204,7 +205,7 @@
             alt=""
             aria-hidden="true"
             class="absolute inset-0 h-full w-full translate-x-[-100px] translate-y-[-40px] rotate-170 object-cover"
-            src="./assets/images/mobile-circle.png"
+            src="../assets/images/mobile-circle.png"
           />
 
           <div class="absolute top-4 right-4 z-10 flex items-center gap-5">
@@ -214,7 +215,7 @@
                 class="text-text flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
                 type="button"
               >
-                <span class="leading-[132%] tracking-[-0.01em]">En</span>
+                <span class="leading-[132%] tracking-[-0.01em]">Gr</span>
                 <span class="bg-brand/8 rounded-[6px] px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 4" class="text-brand h-[3px] w-[5px]">
                     <path stroke="currentColor" stroke-linecap="round" d="m.5.5 2.49 2.134L5.48.5"></path>
@@ -231,7 +232,7 @@
                     class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 font-semibold transition"
                     type="button"
                   >
-                    En
+                    Gr
                   </button>
                 </li>
                 <li>
@@ -239,7 +240,7 @@
                     class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
                     type="button"
                   >
-                    Gr
+                    En
                   </button>
                 </li>
               </ul>
@@ -323,232 +324,58 @@
       </div>
     </div>
 
-    <main>
-      <section class="relative min-h-screen w-full">
-        <div class="relative">
-          <div
-            class="absolute inset-x-0 -top-[141px] bottom-0 -z-10 bg-cover bg-left md:bg-center"
-            style="background-image: url('assets/images/contact-background.png')"
-          ></div>
+    <main class="min-h-screen">
+      <div class="mx-container-mobile md:mx-container-mobile pt-[124px] md:pt-[136px] xl:pt-[147px] 2xl:pt-[208px]">
+        <!-- Title -->
+        <h1
+          id="faq-title"
+          class="paragraph-heading-md text-text mb-[56px] translate-y-[100px] text-left uppercase opacity-0 transition-all duration-700 ease-out md:text-center md:text-[64px] md:leading-[110%] xl:text-[45px] 2xl:text-[64px]"
+        >
+          Faq
+        </h1>
 
-          <div class="relative z-10">
-            <h1
-              class="animate-on-scroll hidden translate-y-[100px] leading-[110%] font-normal tracking-[-0.04em] text-white opacity-0 transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:ml-4 md:block md:pt-[136px] md:text-[45px] xl:ml-6 xl:pt-[147px] 2xl:ml-9 2xl:pt-[208px] 2xl:text-[64px]"
-              data-delay="200"
-            >
-              Contact
-            </h1>
-
+        <!-- Categories Wrapper -->
+        <div
+          id="categories-wrapper"
+          class="translate-y-[80px] opacity-0 transition-all delay-100 duration-700 ease-out md:flex md:flex-col md:items-center md:justify-center"
+        >
+          <!-- Mobile Categories Slider -->
+          <div class="-mx-container-mobile mb-[56px] md:hidden">
             <div
-              class="container-responsive pt-[382px] pb-4 md:pt-[476px] md:pb-[80px] xl:flex xl:items-start xl:gap-[271px] xl:pt-[281px] xl:pb-6 2xl:gap-[587px] 2xl:pt-[381px] 2xl:pb-[120px]"
+              id="mobile-categories-slider"
+              class="keen-slider pl-container-mobile no-scrollbar flex gap-2 overflow-x-auto pb-4"
             >
-              <div
-                class="paragraph-sm-default mb-8 flex items-center gap-[11px] text-white md:max-w-[175px] md:text-base 2xl:max-w-[195px] 2xl:text-lg"
-              >
-                Contact information <span class="size-1 rounded-full bg-white"></span>
-              </div>
-
-              <ul
-                class="ml-auto flex flex-1 flex-col gap-1 md:grid md:max-w-[736px] md:grid-cols-2 md:gap-2 xl:max-w-[872px] 2xl:max-w-[1066px]"
-              >
-                <!-- Address -->
-                <li
-                  class="animate-on-scroll order-2 flex h-[71px] w-full translate-y-[100px] flex-col justify-between rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-1 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
-                  data-delay="100"
-                >
-                  <p class="paragraph-xs-default text-left text-white/70 md:mb-8 md:text-base">Address</p>
-                  <p class="paragraph-sm-default ml-auto max-w-[159px] text-right text-white md:max-w-[233px] md:text-lg">
-                    Ethniki Palaiokastritsas, Kerkira 491 00, Greece
-                  </p>
-                </li>
-
-                <!-- Phone -->
-                <li
-                  class="animate-on-scroll order-4 h-[71px] w-full translate-y-[100px] rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-2 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
-                  data-delay="250"
-                >
-                  <p class="paragraph-xs-default text-left text-white/70 md:mb-[44px] md:text-base">Phone</p>
-                  <div
-                    class="text-right text-[21px] leading-[136%] font-normal tracking-[-0.02em] text-white md:text-[31px]"
-                  >
-                    <a class="block" href="tel:+88006001441"> 8 800 600 14 41 </a>
-                  </div>
-                </li>
-
-                <!-- Social -->
-                <li
-                  class="animate-on-scroll order-1 h-[71px] w-full translate-y-[100px] rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-3 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
-                  data-delay="400"
-                >
-                  <p class="paragraph-xs-default text-left text-white/70 md:mb-8 md:text-base">Social</p>
-                  <div class="paragraph-sm-default ml-auto max-w-[92px] text-right text-white md:text-lg">
-                    <a class="block" href="https://www.facebook.com/laundromatgr"> Facebook </a>
-                    <a class="block" href="https://www.instagram.com/laundromatgr"> Instagram </a>
-                  </div>
-                </li>
-
-                <!-- Email -->
-                <li
-                  class="animate-on-scroll order-3 h-[71px] w-full translate-y-[100px] rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-4 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
-                  data-delay="550"
-                >
-                  <p class="paragraph-xs-default text-left text-white/70 md:mb-[44px] md:text-base">E-mail</p>
-                  <div
-                    class="text-right text-[21px] leading-[136%] font-normal tracking-[-0.02em] text-white md:text-[31px]"
-                  >
-                    <a class="block" href="mailto:info@laundromat.gr"> info@laundromat.gr </a>
-                  </div>
-                </li>
-              </ul>
+              <!-- Injected by JS -->
             </div>
           </div>
-        </div>
 
-        <div
-          class="container-responsive pt-[64px] md:pt-[86px] xl:flex xl:items-start xl:gap-[86px] xl:pt-[112px] 2xl:gap-[231px] 2xl:pt-[86px]"
-        >
-          <h2
-            class="paragraph-heading-md animate-on-scroll text-text mb-9 max-w-[262px] translate-y-[100px] opacity-0 transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:mb-[46px] md:max-w-[360px] md:text-[45px] md:leading-[110%] xl:max-w-[360px] xl:text-[45px] 2xl:mb-[56px] 2xl:max-w-[546px] 2xl:text-[64px]"
-            data-delay="200"
-          >
-            Have a question? <span class="text-brand">Get in touch.</span>
-          </h2>
-
-          <div
-            class="animate-on-scroll translate-y-[150px] opacity-0 transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
-            data-delay="300"
-          >
-            <form class="flex flex-1 flex-col gap-6 md:grid md:grid-cols-2 md:gap-4 2xl:gap-6">
-              <div>
-                <label
-                  class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]"
-                  for="first-name"
-                >
-                  First name
-                </label>
-                <input
-                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
-                  id="first-name"
-                  name="firstName"
-                  required
-                  type="text"
-                />
-              </div>
-
-              <div>
-                <label
-                  class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]"
-                  for="last-name"
-                >
-                  Last name
-                </label>
-                <input
-                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
-                  id="last-name"
-                  name="lastName"
-                  required
-                  type="text"
-                />
-              </div>
-
-              <div>
-                <label class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]" for="phone">
-                  Phone
-                </label>
-                <input
-                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
-                  id="phone"
-                  name="phone"
-                  required
-                  type="tel"
-                />
-              </div>
-
-              <div>
-                <label class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]" for="email">
-                  E-mail
-                </label>
-                <input
-                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
-                  id="email"
-                  name="email"
-                  required
-                  type="email"
-                />
-              </div>
-
-              <div class="md:col-span-2">
-                <label
-                  class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]"
-                  for="message"
-                >
-                  Message
-                </label>
-                <textarea
-                  class="text-text rounded-card h-[214px] w-full resize-none bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
-                  id="message"
-                  name="message"
-                ></textarea>
-              </div>
-
-              <div class="mt-2 flex items-start gap-3 md:col-span-2">
-                <input class="peer sr-only" id="consent" name="consent" type="checkbox" />
-                <label class="flex cursor-pointer items-start gap-[9px]" for="consent">
-                  <div
-                    class="border-brand flex size-[21px] shrink-0 items-center justify-center rounded-[6px] border bg-white transition-colors"
-                    id="consent-visual"
-                  >
-                    <!-- JS to toggle inner Div -->
-                  </div>
-
-                  <div
-                    class="text-text/40 max-w-[268px] text-base leading-[132%] font-normal tracking-[-0.01em] md:max-w-[622px]"
-                  >
-                    I agree to the processing of
-                    <span class="text-brand/60 underline"><a href="personal-data.html">Personal data</a></span> and to the terms
-                    of the <span class="text-brand/60 underline"><a href="privacy-policy.html">Privacy Policy</a></span>
-                  </div>
-                </label>
-              </div>
-
-              <div class="mt-2 md:col-span-2">
-                <button
-                  type="submit"
-                  id="submit-btn"
-                  class="group border-text/20 focus-visible:ring-brand flex w-[196px] flex-1 cursor-pointer flex-col rounded-[7px] border pt-[14px] pr-3 pb-3 pl-4 text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60 md:h-[106px] md:w-[328px] xl:h-[75px] xl:w-[233px] 2xl:h-[106px] 2xl:w-[328px] 2xl:rounded-[10px] 2xl:pt-[18px] 2xl:pr-[14px] 2xl:pb-[14px] 2xl:pl-5"
-                  disabled
-                >
-                  <p
-                    class="text-text group-disabled:text-text/40 text-sm leading-[132%] font-medium tracking-[-0.01em] transition-colors 2xl:text-lg"
-                  >
-                    Send
-                  </p>
-
-                  <div class="mt-auto flex justify-end">
-                    <span
-                      class="bg-brand flex size-[17px] items-center justify-center rounded-full transition-opacity group-disabled:opacity-50 2xl:size-[22px]"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        class="size-[6px] text-white 2xl:size-[8px]"
-                        viewBox="0 0 7 8"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0.401367 5.81156C0.944808 6.43139 1.70294 6.82143 2.5225 6.90285C3.34207 6.98426 4.16193 6.75098 4.81634 6.25014C5.47075 5.74931 5.9109 5.01829 6.04781 4.20487C6.18471 3.39146 6.00817 2.55631 5.55385 1.86828M5.21495 1.43853C4.7966 0.99123 4.26066 0.671323 3.6688 0.515625"
-                          stroke="currentColor"
-                          stroke-width="1.06719"
-                        />
-                      </svg>
-                    </span>
-                  </div>
-                </button>
-              </div>
-            </form>
+          <!-- Desktop Categories -->
+          <div id="desktop-categories" class="mb-[56px] hidden gap-2 md:flex">
+            <!-- Injected by JS -->
           </div>
         </div>
-      </section>
+
+        <!-- Accordion Wrapper -->
+        <div
+          id="accordion-container-wrapper"
+          class="translate-y-[150px] opacity-0 transition-all delay-200 duration-700 ease-out"
+        >
+          <div
+            id="faq-accordion"
+            class="mx-auto mb-[56px] space-y-4 md:mb-[86px] xl:mb-[86px] xl:w-[1067px] 2xl:mb-[116px] 2xl:w-[1091px]"
+          >
+            <!-- Injected by JS -->
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <p
+          id="empty-message"
+          class="text-text/60 mb-[56px] hidden translate-y-[100px] text-center text-lg opacity-0 transition-all duration-700 ease-out"
+        >
+          No questions found in this category.
+        </p>
+      </div>
     </main>
 
     <footer
@@ -612,9 +439,11 @@
 
           <!-- Desktop Lang Switcher -->
           <div class="hidden md:block">
-            <div class="group relative">
+            <div class="relative" id="lang-switcher-footer">
               <button
+                id="lang-button-footer"
                 class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
+                type="button"
               >
                 <span class="leading-[132%] tracking-[-0.01em] text-white">En</span>
                 <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
@@ -623,6 +452,28 @@
                   </svg>
                 </span>
               </button>
+
+              <ul
+                id="lang-dropdown-footer"
+                class="absolute top-full right-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white/90 text-center shadow-xl backdrop-blur"
+              >
+                <li>
+                <button
+                  class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 font-semibold transition"
+                  type="button"
+                >
+                  Gr
+                </button>
+              </li>
+              <li>
+                <button
+                  class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                  type="button"
+                >
+                  En
+                </button>
+              </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -664,16 +515,42 @@
 
         <!-- Mobile Lang Switcher -->
         <div class="mb-[29px] block md:hidden">
-          <button
-            class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em]"
-          >
-            <span class="leading-[132%] tracking-[-0.01em] text-white">En</span>
-            <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-              <svg class="h-[3px] w-[5px] text-white" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.5 0.5L2.9901 2.63438L5.48021 0.5" stroke="currentColor" stroke-linecap="round" />
-              </svg>
-            </span>
-          </button>
+          <div class="relative" id="lang-switcher-footer-mobile">
+            <button
+              id="lang-button-footer-mobile"
+              class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em]"
+              type="button"
+            >
+              <span class="leading-[132%] tracking-[-0.01em] text-white">En</span>
+              <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
+                <svg class="h-[3px] w-[5px] text-white" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0.5 0.5L2.9901 2.63438L5.48021 0.5" stroke="currentColor" stroke-linecap="round" />
+                </svg>
+              </span>
+            </button>
+
+            <ul
+              id="lang-dropdown-footer-mobile"
+              class="absolute top-full left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white/90 text-center shadow-xl backdrop-blur"
+            >
+              <li>
+                <button
+                  class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 font-semibold transition"
+                  type="button"
+                >
+                  Gr
+                </button>
+              </li>
+              <li>
+                <button
+                  class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                  type="button"
+                >
+                  En
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <!-- Newsletter Form -->
@@ -741,12 +618,15 @@
       </div>
     </footer>
 
-    <script src="./assets/js/api.js"></script>
-    <script src="./assets/js/header.js"></script>
-    <script src="./assets/js/lang-switcher.js"></script>
-    <script src="./assets/js/mobile-menu.js"></script>
-    <script src="./assets/js/contact.js"></script>
-    <script src="./assets/js/footer-data.js"></script>
-    <script src="./assets/js/footer.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/utils/spring.js"></script>
+    <script src="../assets/js/utils/scroll-utils.js"></script>
+    <script src="../assets/js/config/spring-configs.js"></script>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/lang-switcher.js"></script>
+    <script src="../assets/js/mobile-menu.js"></script>
+    <script src="../assets/js/faq-page.js"></script>
+    <script src="../assets/js/footer-data.js"></script>
+    <script src="../assets/js/footer.js"></script>
   </body>
 </html>

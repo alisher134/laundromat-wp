@@ -1,15 +1,15 @@
 <!doctype html>
-<html lang="en">
+<html lang="el">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Laundromat - The easiest way to do your laundry</title>
+    <title>Laundromat - Ο ευκολότερος τρόπος να πλύνετε τα ρούχα σας
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
 
-    <link href="./assets/css/output.css" rel="stylesheet" />
+    <link href="../assets/css/output.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css" />
   </head>
   <body>
@@ -25,7 +25,7 @@
         loop
         muted
         playsinline
-        src="./assets/videos/preloader-speed.mp4"
+        src="../assets/videos/preloader-speed.mp4"
       ></video>
     </div>
     <header
@@ -157,7 +157,7 @@
               class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-lg"
               type="button"
             >
-              <span class="leading-[132%] tracking-[-0.01em]">En</span>
+              <span class="leading-[132%] tracking-[-0.01em]">Gr</span>
               <span class="bg-brand/8 rounded-[6px] px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
                 <svg class="h-[3px] w-[5px] text-white" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M0.5 0.5L2.9901 2.63438L5.48021 0.5" stroke="currentColor" stroke-linecap="round" />
@@ -174,7 +174,7 @@
                   class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 font-semibold transition"
                   type="button"
                 >
-                  En
+                  Gr
                 </button>
               </li>
               <li>
@@ -182,7 +182,7 @@
                   class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
                   type="button"
                 >
-                  Gr
+                  En
                 </button>
               </li>
             </ul>
@@ -219,7 +219,7 @@
             alt=""
             aria-hidden="true"
             class="absolute inset-0 h-full w-full translate-x-[-100px] translate-y-[-40px] rotate-170 object-cover"
-            src="./assets/images/mobile-circle.png"
+            src="../assets/images/mobile-circle.png"
           />
 
           <div class="absolute top-4 right-4 z-10 flex items-center gap-5">
@@ -229,7 +229,7 @@
                 class="text-text flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
                 type="button"
               >
-                <span class="leading-[132%] tracking-[-0.01em]">En</span>
+                <span class="leading-[132%] tracking-[-0.01em]">Gr</span>
                 <span class="bg-brand/8 rounded-[6px] px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 4" class="text-brand h-[3px] w-[5px]">
                     <path stroke="currentColor" stroke-linecap="round" d="m.5.5 2.49 2.134L5.48.5"></path>
@@ -246,7 +246,7 @@
                     class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 font-semibold transition"
                     type="button"
                   >
-                    En
+                    Gr
                   </button>
                 </li>
                 <li>
@@ -254,7 +254,7 @@
                     class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
                     type="button"
                   >
-                    Gr
+                    En
                   </button>
                 </li>
               </ul>
@@ -360,7 +360,7 @@
         <img
           alt="Laundromat hero background"
           class="absolute inset-0 h-full w-full object-cover object-top"
-          src="./assets/images/hero-background.png"
+          src="../assets/images/hero-background.png"
           style="transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden"
         />
 
@@ -382,12 +382,12 @@
               <img
                 alt="Map preview"
                 class="absolute inset-0 h-full w-full object-cover md:hidden"
-                src="./assets/images/mobile-map-preview.png"
+                src="../assets/images/mobile-map-preview.png"
               />
               <img
                 alt="Map preview"
                 class="absolute inset-0 hidden h-full w-full object-contain md:block"
-                src="./assets/images/map-preview.png"
+                src="../assets/images/map-preview.png"
               />
               <a
                 aria-label="View our location on map"
@@ -839,7 +839,7 @@
                 <img
                   alt="Laundry service"
                   class="rounded-card h-full w-full object-cover"
-                  src="./assets/images/service-1.png"
+                  src="../assets/images/service-1.png"
                 />
               </div>
             </div>
@@ -908,7 +908,7 @@
                   <img
                     alt="Laundry service"
                     class="rounded-card h-full w-full object-cover object-center"
-                    src="./assets/images/service-1.png"
+                    src="../assets/images/service-1.png"
                   />
                 </div>
               </div>
@@ -980,7 +980,7 @@
                 <img
                   alt="Drying service"
                   class="rounded-card h-full w-full object-cover"
-                  src="./assets/images/service-2.png"
+                  src="../assets/images/service-2.png"
                 />
               </div>
             </div>
@@ -1048,7 +1048,7 @@
                   <img
                     alt="Drying service"
                     class="rounded-card h-full w-full object-cover object-center"
-                    src="./assets/images/service-2.png"
+                    src="../assets/images/service-2.png"
                   />
                 </div>
               </div>
@@ -1121,7 +1121,7 @@
                 <img
                   alt="Special cleaning"
                   class="rounded-card h-full w-full object-cover"
-                  src="./assets/images/service-3.png"
+                  src="../assets/images/service-3.png"
                 />
               </div>
             </div>
@@ -1190,7 +1190,7 @@
                   <img
                     alt="Special cleaning"
                     class="rounded-card h-full w-full object-cover object-center"
-                    src="./assets/images/service-3.png"
+                    src="../assets/images/service-3.png"
                   />
                 </div>
               </div>
@@ -1281,7 +1281,7 @@
                 <img
                   alt="Map showing laundromat locations in the area"
                   class="h-full w-full object-contain"
-                  src="./assets/images/big-map-preview.png"
+                  src="../assets/images/big-map-preview.png"
                 />
                 <!-- Mobile Markers -->
                 <div
@@ -1403,7 +1403,7 @@
                   alt=""
                   aria-hidden="true"
                   class="h-full w-full object-contain"
-                  src="./assets/images/desktop-map-preview.png"
+                  src="../assets/images/desktop-map-preview.png"
                 />
                 <!-- Desktop Markers -->
                 <div
@@ -1801,7 +1801,7 @@
                 <img
                   alt="Google"
                   class="h-[55px] w-[53px] md:h-[78px] md:w-[81px] lg:h-[78px] lg:w-[81px] 2xl:h-[99px] 2xl:w-[94px]"
-                  src="./assets/images/google-logo.png"
+                  src="../assets/images/google-logo.png"
                 />
                 <div>
                   <svg
@@ -1841,7 +1841,7 @@
               <div
                 class="flex min-h-[72px] w-fit min-w-[194px] items-center justify-start gap-[10px] rounded-[14px] bg-white py-[12px] pr-[14px] pl-[10px] md:min-h-[94px] md:min-w-[240px] md:gap-[14px] lg:hidden"
               >
-                <img alt="Google" class="h-[55px] w-[53px]" src="./assets/images/google-logo.png" />
+                <img alt="Google" class="h-[55px] w-[53px]" src="../assets/images/google-logo.png" />
                 <div>
                   <svg
                     aria-hidden="true"
@@ -2292,7 +2292,7 @@
                           <img
                             alt="Our washing machine and dryer broke down during the renovation in the basemen  renovation in the basemen"
                             class="h-full w-full rounded-[6px] object-cover"
-                            src="./assets/images/tips-1.png"
+                            src="../assets/images/tips-1.png"
                           />
                         </div>
                       </div>
@@ -2339,7 +2339,7 @@
                           <img
                             alt="10 Best Charlotte NC House Cleaning Services"
                             class="h-full w-full rounded-[6px] object-cover"
-                            src="./assets/images/tips-2.png"
+                            src="../assets/images/tips-2.png"
                           />
                         </div>
                       </div>
@@ -2385,7 +2385,7 @@
                           <img
                             alt="Laundry Bleach vs Laundry Whitener: Which Is Better For Your Clothes?"
                             class="h-full w-full rounded-[6px] object-cover"
-                            src="./assets/images/tips-3.png"
+                            src="../assets/images/tips-3.png"
                           />
                         </div>
                       </div>
@@ -2434,7 +2434,7 @@
                     <img
                       alt="Our washing machine and dryer broke down during the renovation in the basemen  renovation in the basemen"
                       class="scroll-scale-image h-full w-full origin-top-left rounded-t-[12px] object-cover object-top 2xl:rounded-t-[16px]"
-                      src="./assets/images/tips-1.png"
+                      src="../assets/images/tips-1.png"
                     />
                   </div>
                   <div class="mb-20 flex items-start justify-between px-6 2xl:mb-[120px] 2xl:px-8">
@@ -2490,7 +2490,7 @@
                       <img
                         alt="10 Best Charlotte NC House Cleaning Services"
                         class="scroll-scale-image h-full w-full origin-top-left rounded-[6px] object-cover"
-                        src="./assets/images/tips-2.png"
+                        src="../assets/images/tips-2.png"
                       />
                     </div>
                   </div>
@@ -2537,7 +2537,7 @@
                       <img
                         alt="Laundry Bleach vs Laundry Whitener: Which Is Better For Your Clothes?"
                         class="scroll-scale-image h-full w-full origin-top-left rounded-[6px] object-cover"
-                        src="./assets/images/tips-4.png"
+                        src="../assets/images/tips-4.png"
                       />
                     </div>
                   </div>
@@ -3156,24 +3156,24 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.js"></script>
-    <script src="./assets/js/api.js"></script>
-    <script src="./assets/js/utils/spring.js"></script>
-    <script src="./assets/js/utils/scroll-utils.js"></script>
-    <script src="./assets/js/utils/breakpoint.js"></script>
-    <script src="./assets/js/config/spring-configs.js"></script>
-    <script src="./assets/js/config/services-config.js"></script>
-    <script src="./assets/js/config/tips-data.js"></script>
-    <script src="./assets/js/main.js"></script>
-    <script src="./assets/js/header.js"></script>
-    <script src="./assets/js/lang-switcher.js"></script>
-    <script src="./assets/js/mobile-menu.js"></script>
-    <script src="./assets/js/about-section.js"></script>
-    <script src="./assets/js/services-section.js"></script>
-    <script src="./assets/js/location-section.js"></script>
-    <script src="./assets/js/reviews-section.js"></script>
-    <script src="./assets/js/tips-section.js"></script>
-    <script src="./assets/js/faq-section.js"></script>
-    <script src="./assets/js/footer-data.js"></script>
-    <script src="./assets/js/footer.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/utils/spring.js"></script>
+    <script src="../assets/js/utils/scroll-utils.js"></script>
+    <script src="../assets/js/utils/breakpoint.js"></script>
+    <script src="../assets/js/config/spring-configs.js"></script>
+    <script src="../assets/js/config/services-config.js"></script>
+    <script src="../assets/js/config/tips-data.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/lang-switcher.js"></script>
+    <script src="../assets/js/mobile-menu.js"></script>
+    <script src="../assets/js/about-section.js"></script>
+    <script src="../assets/js/services-section.js"></script>
+    <script src="../assets/js/location-section.js"></script>
+    <script src="../assets/js/reviews-section.js"></script>
+    <script src="../assets/js/tips-section.js"></script>
+    <script src="../assets/js/faq-section.js"></script>
+    <script src="../assets/js/footer-data.js"></script>
+    <script src="../assets/js/footer.js"></script>
   </body>
 </html>

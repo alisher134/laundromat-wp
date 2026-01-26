@@ -66,34 +66,97 @@
   window.addEventListener('scroll', handleScroll);
   handleScroll();
 
-  // Language switcher setup
-  function setupLangSwitcher(switcherId, buttonId, dropdownId) {
-    const switcher = document.getElementById(switcherId);
-    const button = document.getElementById(buttonId);
-    const dropdown = document.getElementById(dropdownId);
+  // Language switcher setup - NOTE: Now handled by lang-switcher.js
+  // The setupLangSwitcher function is no longer used here to avoid conflicts
+  // Language switching is managed by assets/js/lang-switcher.js
 
-    if (switcher && button && dropdown) {
-      // Toggle
-      button.addEventListener('click', (e) => {
-        e.stopPropagation();
-        dropdown.classList.toggle('hidden');
-      });
+  // Initialize language switcher with API data
+  async function initLanguageSwitcher() {
+    // Check if API is available
+    if (typeof window.LaundroAPI === 'undefined') {
+      console.warn('[Header] LaundroAPI not available for language switching');
+      return;
+    }
 
-      // Close on outside click
-      document.addEventListener('click', (e) => {
-        if (!switcher.contains(e.target)) {
-          dropdown.classList.add('hidden');
-        }
-      });
+    try {
+      const languageData = await window.LaundroAPI.getLanguages();
+
+      if (!languageData || !languageData.languages) {
+        console.warn('[Header] No language data received');
+        return;
+      }
+
+      const { current, languages } = languageData;
+
+      // Update all language switchers
+      updateLanguageSwitcher('lang-button', 'lang-dropdown', current, languages);
+      updateLanguageSwitcher('lang-button-mobile', 'lang-dropdown-mobile', current, languages);
+      updateLanguageSwitcher('lang-button-footer', 'lang-dropdown-footer', current, languages);
+      updateLanguageSwitcher('lang-button-footer-mobile', 'lang-dropdown-footer-mobile', current, languages);
+
+      console.log('[Header] Language switcher initialized with', languages.length, 'languages');
+    } catch (error) {
+      console.error('[Header] Error initializing language switcher:', error);
     }
   }
 
-  // Init Header Switcher
-  setupLangSwitcher('lang-switcher', 'lang-button', 'lang-dropdown');
-  // Init Footer Switcher
-  setupLangSwitcher('lang-switcher-footer', 'lang-button-footer', 'lang-dropdown-footer');
-  // Init Mobile Footer Switcher
-  setupLangSwitcher('lang-switcher-footer-mobile', 'lang-button-footer-mobile', 'lang-dropdown-footer-mobile');
+  // Update a specific language switcher with data
+  function updateLanguageSwitcher(buttonId, dropdownId, currentLang, languages) {
+    const button = document.getElementById(buttonId);
+    const dropdown = document.getElementById(dropdownId);
+
+    if (!button || !dropdown) return;
+
+    // Find current language object
+    const currentLanguage = languages.find(lang => lang.code === currentLang);
+    if (!currentLanguage) return;
+
+    // Update button text to show current language
+    const buttonTextSpan = button.querySelector('span');
+    if (buttonTextSpan) {
+      buttonTextSpan.textContent = currentLanguage.code.toUpperCase();
+    }
+
+    // Determine if this is a footer switcher (different styling)
+    const isFooter = buttonId.includes('footer');
+
+    // Clear dropdown and populate with languages
+    dropdown.innerHTML = '';
+
+    languages.forEach(lang => {
+      const li = document.createElement('li');
+      const link = document.createElement('a');
+
+      link.href = lang.url;
+      link.textContent = lang.code.toUpperCase();
+
+      // Apply appropriate classes based on footer vs header
+      if (isFooter) {
+        // Footer style - simpler white text on dark background
+        link.className = 'block px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors';
+        if (lang.is_current) {
+          link.className += ' font-semibold bg-white/5';
+        }
+      } else {
+        // Header style - matches existing dropdown buttons
+        if (lang.is_current) {
+          link.className = 'paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 font-semibold transition';
+        } else {
+          link.className = 'paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition';
+        }
+      }
+
+      li.appendChild(link);
+      dropdown.appendChild(li);
+    });
+  }
+
+  // Initialize on DOM ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLanguageSwitcher);
+  } else {
+    initLanguageSwitcher();
+  }
 
   // Active page detection and styling
   function setActivePage() {

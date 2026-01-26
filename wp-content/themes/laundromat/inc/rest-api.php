@@ -174,6 +174,13 @@ function laundromat_register_rest_routes()
         'callback' => 'laundromat_get_categories',
         'permission_callback' => '__return_true',
     ]);
+
+    // Languages endpoint for Polylang
+    register_rest_route('laundromat/v1', '/languages', [
+        'methods' => 'GET',
+        'callback' => 'laundromat_get_languages',
+        'permission_callback' => '__return_true',
+    ]);
 }
 
 /**
@@ -305,4 +312,43 @@ function laundromat_get_categories()
     }
 
     return $categories;
+}
+
+/**
+ * Get Available Languages from Polylang
+ */
+function laundromat_get_languages()
+{
+    // Check if Polylang is active
+    if (!function_exists('pll_the_languages') || !function_exists('pll_current_language')) {
+        return new WP_Error(
+            'polylang_not_active',
+            __('Polylang plugin is not active', 'laundromat'),
+            ['status' => 503]
+        );
+    }
+
+    $current_lang = pll_current_language('slug');
+    $languages = pll_the_languages(['raw' => 1]);
+
+    if (empty($languages)) {
+        return [];
+    }
+
+    $formatted_languages = [];
+
+    foreach ($languages as $lang) {
+        $formatted_languages[] = [
+            'code' => $lang['slug'],
+            'name' => $lang['name'],
+            'url' => $lang['url'],
+            'flag' => $lang['flag'] ?? '',
+            'is_current' => $lang['slug'] === $current_lang,
+        ];
+    }
+
+    return [
+        'current' => $current_lang,
+        'languages' => $formatted_languages,
+    ];
 }
