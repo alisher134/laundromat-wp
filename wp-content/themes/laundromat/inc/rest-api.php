@@ -114,8 +114,23 @@ function laundromat_enhance_tips_response($response, $post, $request)
 
 function laundromat_enhance_faq_response($response, $post, $request)
 {
+    // Add title since title support is removed from the CPT
+    // and it's not included in REST response by default
+    $response->data['title'] = [
+        'rendered' => get_the_title($post->ID),
+    ];
+
+    // Get content directly from post object since editor support is removed
+    // and content is not included in REST response by default
+    $content = apply_filters('the_content', $post->post_content);
+
+    // Add content to response
+    $response->data['content'] = [
+        'rendered' => $content,
+    ];
+
     // Strip HTML from content for plain text answer
-    $response->data['answer'] = wp_strip_all_tags($response->data['content']['rendered']);
+    $response->data['answer'] = wp_strip_all_tags($content);
 
     return $response;
 }
