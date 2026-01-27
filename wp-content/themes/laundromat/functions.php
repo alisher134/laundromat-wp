@@ -73,6 +73,8 @@ add_action('init', function () {
         'Mon-Sun',
         'Read more',
         'Learn more',
+        'Not provided',
+        'Message from %s',
     ];
 
     foreach ($strings as $string) {
@@ -89,11 +91,45 @@ add_filter('rest_prepare_instructions', 'laundromat_add_lang_to_rest', 20, 3);
 add_filter('rest_prepare_faqs', 'laundromat_add_lang_to_rest', 20, 3);
 add_filter('rest_prepare_services', 'laundromat_add_lang_to_rest', 20, 3);
 add_filter('rest_prepare_about_items', 'laundromat_add_lang_to_rest', 20, 3);
+add_filter('rest_prepare_reviews', 'laundromat_add_lang_to_rest', 20, 3);
 
 function laundromat_add_lang_to_rest($response, $post, $request)
 {
-    if (function_exists('pll_get_post_language')) {
-        $response->data['lang'] = pll_get_post_language($post->ID, 'slug');
+    if (!function_exists('pll_get_post_language')) {
+        return $response;
     }
+
+    $response->data['lang'] = pll_get_post_language($post->ID, 'slug');
+
+    // Add translations map (lang_code => post_id)
+    if (function_exists('pll_get_post_translations')) {
+        $response->data['translations'] = pll_get_post_translations($post->ID);
+    }
+
     return $response;
+}
+
+/**
+ * Polylang: Enable translation for custom post types
+ */
+add_filter('pll_get_post_types', 'laundromat_add_cpts_to_polylang', 10, 2);
+
+function laundromat_add_cpts_to_polylang($post_types, $is_settings)
+{
+    $cpts = ['locations', 'tips', 'instructions', 'faqs', 'services', 'about_items', 'reviews'];
+    foreach ($cpts as $cpt) {
+        $post_types[$cpt] = $cpt;
+    }
+    return $post_types;
+}
+
+/**
+ * Polylang: Enable translation for content_category taxonomy
+ */
+add_filter('pll_get_taxonomies', 'laundromat_add_taxonomies_to_polylang', 10, 2);
+
+function laundromat_add_taxonomies_to_polylang($taxonomies, $is_settings)
+{
+    $taxonomies['content_category'] = 'content_category';
+    return $taxonomies;
 }

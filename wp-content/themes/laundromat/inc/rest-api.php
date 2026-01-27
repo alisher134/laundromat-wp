@@ -50,6 +50,26 @@ add_action('init', function () {
 });
 
 /**
+ * Filter REST API queries by language when ?lang= parameter is provided
+ */
+add_filter('rest_locations_query', 'laundromat_filter_rest_by_lang', 10, 2);
+add_filter('rest_tips_query', 'laundromat_filter_rest_by_lang', 10, 2);
+add_filter('rest_instructions_query', 'laundromat_filter_rest_by_lang', 10, 2);
+add_filter('rest_faqs_query', 'laundromat_filter_rest_by_lang', 10, 2);
+add_filter('rest_services_query', 'laundromat_filter_rest_by_lang', 10, 2);
+add_filter('rest_about_items_query', 'laundromat_filter_rest_by_lang', 10, 2);
+add_filter('rest_reviews_query', 'laundromat_filter_rest_by_lang', 10, 2);
+
+function laundromat_filter_rest_by_lang($args, $request)
+{
+    $lang = $request->get_param('lang');
+    if (!empty($lang) && function_exists('pll_current_language')) {
+        $args['lang'] = sanitize_text_field($lang);
+    }
+    return $args;
+}
+
+/**
  * Add extra data to REST API responses
  */
 add_filter('rest_prepare_locations', 'laundromat_enhance_location_response', 10, 3);
@@ -93,6 +113,20 @@ function laundromat_enhance_location_response($response, $post, $request)
 
 function laundromat_enhance_tips_response($response, $post, $request)
 {
+    // Ensure title is included (may be missing in some language contexts)
+    if (!isset($response->data['title']) || !isset($response->data['title']['rendered'])) {
+        $response->data['title'] = [
+            'rendered' => get_the_title($post->ID),
+        ];
+    }
+
+    // Ensure content is included
+    if (!isset($response->data['content']) || !isset($response->data['content']['rendered'])) {
+        $response->data['content'] = [
+            'rendered' => apply_filters('the_content', $post->post_content),
+        ];
+    }
+
     // Add featured image URL
     if (has_post_thumbnail($post->ID)) {
         $response->data['featured_image_url'] = get_the_post_thumbnail_url($post->ID, 'full');
@@ -104,7 +138,7 @@ function laundromat_enhance_tips_response($response, $post, $request)
         $response->data['category'] = $terms[0]->name;
         $response->data['category_slug'] = $terms[0]->slug;
     } else {
-        $response->data['category'] = 'Tips and tricks';
+        $response->data['category'] = function_exists('pll__') ? pll__('Tips and tricks') : __('Tips and tricks', 'laundromat');
         $response->data['category_slug'] = 'tips-and-tricks';
     }
 
@@ -283,21 +317,54 @@ function laundromat_register_rest_routes()
         'callback' => 'laundromat_debug_homepage_tips',
         'permission_callback' => '__return_true',
     ]);
+
+    // Translated strings endpoint for frontend UI
+    register_rest_route('laundromat/v1', '/strings', [
+        'methods' => 'GET',
+        'callback' => 'laundromat_get_translated_strings',
+        'permission_callback' => '__return_true',
+    ]);
 }
 
 /**
  * Get Settings Callback
+ * Accepts ?lang= parameter for translated address and working_hours
  */
-function laundromat_get_settings()
+function laundromat_get_settings($request)
 {
+    $lang = $request->get_param('lang');
+
+    // Determine which language suffix to use
+    $lang_suffix = '';
+    if ($lang) {
+        $lang_suffix = '_' . sanitize_text_field($lang);
+    } elseif (function_exists('pll_current_language')) {
+        $current_lang = pll_current_language('slug');
+        if ($current_lang) {
+            $lang_suffix = '_' . $current_lang;
+        }
+    }
+
+    // Get per-language fields with fallback to default (no suffix)
+    $address = get_option('laundromat_address' . $lang_suffix, '');
+    if (empty($address) && $lang_suffix) {
+        $address = get_option('laundromat_address', '');
+    }
+
+    $working_hours = get_option('laundromat_working_hours' . $lang_suffix, '');
+    if (empty($working_hours) && $lang_suffix) {
+        $working_hours = get_option('laundromat_working_hours', '');
+    }
+
     return [
         'phone' => get_option('laundromat_phone', ''),
         'email' => get_option('laundromat_email', ''),
-        'address' => get_option('laundromat_address', ''),
-        'working_hours' => get_option('laundromat_working_hours', ''),
+        'address' => $address,
+        'working_hours' => $working_hours,
         'facebook_url' => get_option('laundromat_facebook_url', ''),
         'instagram_url' => get_option('laundromat_instagram_url', ''),
         'tiktok_url' => get_option('laundromat_tiktok_url', ''),
+        'lang' => $lang ?: (function_exists('pll_current_language') ? pll_current_language('slug') : null),
     ];
 }
 
@@ -334,7 +401,7 @@ function laundromat_handle_contact_form($request)
     // Save as private post (always works, even without email)
     $post_id = wp_insert_post([
         'post_type' => 'contact_messages',
-        'post_title' => sprintf('Message from %s', $name),
+        'post_title' => sprintf(__('Message from %s', 'laundromat'), $name),
         'post_content' => $message,
         'post_status' => 'private',
     ]);
@@ -367,7 +434,7 @@ function laundromat_handle_contact_form($request)
         "View in admin: %s\n" .
         "Sent from %s",
         $name,
-        $phone ?: 'Not provided',
+        $phone ?: __('Not provided', 'laundromat'),
         $email,
         $message,
         admin_url('edit.php?post_type=contact_messages'),
@@ -456,13 +523,35 @@ function laundromat_get_languages()
 }
 
 /**
- * Get Homepage Tips - Only returns tips selected in settings
- * If no tips are selected, returns all tips
+ * Get Homepage Tips - Only returns tips selected in settings for the specified language
+ * If no tips are selected, returns all tips for that language
  */
 function laundromat_get_homepage_tips($request)
 {
-    // Get selected tip IDs from settings
-    $selected_tip_ids = get_option('laundromat_homepage_tips', []);
+    $lang = $request->get_param('lang');
+
+    // Determine the language to use
+    $lang_suffix = '';
+    if ($lang) {
+        $lang_suffix = '_' . sanitize_text_field($lang);
+    } elseif (function_exists('pll_current_language')) {
+        $current_lang = pll_current_language('slug');
+        if ($current_lang) {
+            $lang_suffix = '_' . $current_lang;
+            $lang = $current_lang;
+        }
+    }
+
+    // Get selected tip IDs from language-specific settings
+    $selected_tip_ids = [];
+    if ($lang_suffix) {
+        $selected_tip_ids = get_option('laundromat_homepage_tips' . $lang_suffix, []);
+    }
+
+    // Fallback to legacy global setting if no language-specific selection exists
+    if (empty($selected_tip_ids)) {
+        $selected_tip_ids = get_option('laundromat_homepage_tips', []);
+    }
 
     // Ensure it's an array
     if (!is_array($selected_tip_ids)) {
@@ -484,22 +573,12 @@ function laundromat_get_homepage_tips($request)
         $args['orderby'] = 'post__in'; // Maintain the order of selected tips
     }
 
-    // Handle language filter for Polylang
-    // NOTE: We use suppress_filters to prevent Polylang from auto-filtering
-    // Then we manually filter by language if needed
-    $lang = $request->get_param('lang');
-    $tips = get_posts($args);
-
-    // If language param provided and Polylang is active, filter results manually
-    if ($lang && function_exists('pll_get_post_language') && !empty($tips)) {
-        $tips = array_filter($tips, function ($tip) use ($lang) {
-            $tip_lang = pll_get_post_language($tip->ID, 'slug');
-            // Include tip if it matches the language OR has no language assigned
-            return $tip_lang === $lang || $tip_lang === false || $tip_lang === '';
-        });
-        // Re-index array after filtering
-        $tips = array_values($tips);
+    // Add language filter for Polylang
+    if ($lang && function_exists('pll_current_language')) {
+        $args['lang'] = $lang;
     }
+
+    $tips = get_posts($args);
 
     // Format response using the same structure as regular tips endpoint
     $formatted_tips = [];
@@ -508,7 +587,7 @@ function laundromat_get_homepage_tips($request)
 
         // Get category
         $terms = wp_get_post_terms($tip->ID, 'content_category');
-        $category = 'Tips and tricks';
+        $category = function_exists('pll__') ? pll__('Tips and tricks') : __('Tips and tricks', 'laundromat');
         $category_slug = 'tips-and-tricks';
 
         if (!is_wp_error($terms) && !empty($terms)) {
@@ -542,15 +621,47 @@ function laundromat_get_homepage_tips($request)
  */
 function laundromat_debug_homepage_tips($request)
 {
-    $selected_tip_ids = get_option('laundromat_homepage_tips', []);
+    $lang = $request->get_param('lang');
+
+    // Determine the language to use
+    $lang_suffix = '';
+    if ($lang) {
+        $lang_suffix = '_' . sanitize_text_field($lang);
+    } elseif (function_exists('pll_current_language')) {
+        $current_lang = pll_current_language('slug');
+        if ($current_lang) {
+            $lang_suffix = '_' . $current_lang;
+            $lang = $current_lang;
+        }
+    }
+
+    // Get selected tip IDs from language-specific settings
+    $selected_tip_ids = [];
+    if ($lang_suffix) {
+        $selected_tip_ids = get_option('laundromat_homepage_tips' . $lang_suffix, []);
+    }
+
+    // Fallback to legacy global setting
+    $legacy_selected = get_option('laundromat_homepage_tips', []);
+    if (empty($selected_tip_ids) && !empty($legacy_selected)) {
+        $selected_tip_ids = $legacy_selected;
+    }
+
+    if (!is_array($selected_tip_ids)) {
+        $selected_tip_ids = [];
+    }
 
     // Get all published tips
-    $all_tips = get_posts([
+    $all_tips_args = [
         'post_type' => 'tips',
         'posts_per_page' => -1,
         'post_status' => 'publish',
         'fields' => 'ids',
-    ]);
+    ];
+    if ($lang && function_exists('pll_current_language')) {
+        $all_tips_args['lang'] = $lang;
+    }
+    $all_tips = get_posts($all_tips_args);
 
     // Get tips that would be returned
     $args = [
@@ -561,12 +672,11 @@ function laundromat_debug_homepage_tips($request)
         'order' => 'DESC',
     ];
 
-    if (!empty($selected_tip_ids) && is_array($selected_tip_ids)) {
+    if (!empty($selected_tip_ids)) {
         $args['post__in'] = $selected_tip_ids;
         $args['orderby'] = 'post__in';
     }
 
-    $lang = $request->get_param('lang');
     if ($lang && function_exists('pll_current_language')) {
         $args['lang'] = $lang;
     }
@@ -574,16 +684,72 @@ function laundromat_debug_homepage_tips($request)
     $would_return = get_posts($args);
 
     return [
+        'lang_param' => $lang,
+        'lang_suffix' => $lang_suffix,
         'selected_tip_ids' => $selected_tip_ids,
         'selected_count' => count($selected_tip_ids),
-        'total_published_tips' => count($all_tips),
-        'all_tip_ids' => $all_tips,
+        'legacy_selected_ids' => $legacy_selected,
+        'total_published_tips_for_lang' => count($all_tips),
+        'all_tip_ids_for_lang' => $all_tips,
         'would_return_count' => count($would_return),
         'would_return_ids' => array_map(function ($tip) {
             return $tip->ID;
         }, $would_return),
         'query_args' => $args,
-        'lang_param' => $lang,
         'polylang_active' => function_exists('pll_current_language'),
+    ];
+}
+
+/**
+ * Get Translated Strings for Frontend UI
+ * Returns all registered UI strings translated to the requested language
+ */
+function laundromat_get_translated_strings($request)
+{
+    $lang = $request->get_param('lang');
+
+    // All registered UI strings (must match those in functions.php pll_register_string)
+    $strings = [
+        'Our location',
+        'Services',
+        'Instructions',
+        'Laundry tips',
+        'Contact us',
+        'Send message',
+        'Subscribe',
+        'All articles',
+        'Tips and tricks',
+        'Useful resources',
+        'Company news',
+        'Latest',
+        'Oldest',
+        'Title A-Z',
+        'Title Z-A',
+        'Mon-Sun',
+        'Read more',
+        'Learn more',
+        'Not provided',
+        'Message from %s',
+    ];
+
+    $translated = [];
+
+    foreach ($strings as $string) {
+        // Create a sanitized key from the string
+        $key = sanitize_title($string);
+
+        // Translate using Polylang if available
+        if (function_exists('pll_translate_string') && $lang) {
+            $translated[$key] = pll_translate_string($string, $lang);
+        } elseif (function_exists('pll__')) {
+            $translated[$key] = pll__($string);
+        } else {
+            $translated[$key] = $string;
+        }
+    }
+
+    return [
+        'lang' => $lang ?: (function_exists('pll_current_language') ? pll_current_language('slug') : 'en'),
+        'strings' => $translated,
     ];
 }

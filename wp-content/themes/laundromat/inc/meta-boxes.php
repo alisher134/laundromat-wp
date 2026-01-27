@@ -143,28 +143,28 @@ function laundromat_location_meta_box_callback($post)
     <div class="laundromat-meta-box">
         <div class="field-group">
             <label for="address"><?php _e('Full Address', 'laundromat'); ?></label>
-            <input type="text" id="address" name="address" value="<?php echo esc_attr($address); ?>" placeholder="Ethniki Palaiokastritsas, Kerkira 491 00, Greece">
+            <input type="text" id="address" name="address" value="<?php echo esc_attr($address); ?>" placeholder="<?php esc_attr_e('Ethniki Palaiokastritsas, Kerkira 491 00, Greece', 'laundromat'); ?>">
         </div>
 
         <div class="field-row">
             <div class="field-group">
                 <label for="store_hours"><?php _e('Store Hours', 'laundromat'); ?></label>
-                <input type="text" id="store_hours" name="store_hours" value="<?php echo esc_attr($store_hours); ?>" placeholder="Mon-Sun 7am - 11pm">
+                <input type="text" id="store_hours" name="store_hours" value="<?php echo esc_attr($store_hours); ?>" placeholder="<?php esc_attr_e('Mon-Sun 7am - 11pm', 'laundromat'); ?>">
             </div>
             <div class="field-group">
                 <label for="phone"><?php _e('Phone', 'laundromat'); ?></label>
-                <input type="text" id="phone" name="phone" value="<?php echo esc_attr($phone); ?>" placeholder="8 800 600 14 41">
+                <input type="text" id="phone" name="phone" value="<?php echo esc_attr($phone); ?>" placeholder="<?php esc_attr_e('8 800 600 14 41', 'laundromat'); ?>">
             </div>
         </div>
 
         <div class="field-row">
             <div class="field-group">
                 <label for="latitude"><?php _e('Latitude', 'laundromat'); ?></label>
-                <input type="number" step="any" id="latitude" name="latitude" value="<?php echo esc_attr($latitude); ?>" placeholder="39.6243">
+                <input type="number" step="any" id="latitude" name="latitude" value="<?php echo esc_attr($latitude); ?>" placeholder="<?php esc_attr_e('39.6243', 'laundromat'); ?>">
             </div>
             <div class="field-group">
                 <label for="longitude"><?php _e('Longitude', 'laundromat'); ?></label>
-                <input type="number" step="any" id="longitude" name="longitude" value="<?php echo esc_attr($longitude); ?>" placeholder="19.9217">
+                <input type="number" step="any" id="longitude" name="longitude" value="<?php echo esc_attr($longitude); ?>" placeholder="<?php esc_attr_e('19.9217', 'laundromat'); ?>">
             </div>
         </div>
 
@@ -173,21 +173,21 @@ function laundromat_location_meta_box_callback($post)
             <div class="field-row">
                 <div class="field-group">
                     <label for="map_pos_mobile_top"><?php _e('Mobile - Top %', 'laundromat'); ?></label>
-                    <input type="text" id="map_pos_mobile_top" name="map_pos_mobile_top" value="<?php echo esc_attr($map_pos_mobile_top); ?>" placeholder="21%">
+                    <input type="text" id="map_pos_mobile_top" name="map_pos_mobile_top" value="<?php echo esc_attr($map_pos_mobile_top); ?>" placeholder="<?php esc_attr_e('21%', 'laundromat'); ?>">
                 </div>
                 <div class="field-group">
                     <label for="map_pos_mobile_left"><?php _e('Mobile - Left %', 'laundromat'); ?></label>
-                    <input type="text" id="map_pos_mobile_left" name="map_pos_mobile_left" value="<?php echo esc_attr($map_pos_mobile_left); ?>" placeholder="47%">
+                    <input type="text" id="map_pos_mobile_left" name="map_pos_mobile_left" value="<?php echo esc_attr($map_pos_mobile_left); ?>" placeholder="<?php esc_attr_e('47%', 'laundromat'); ?>">
                 </div>
             </div>
             <div class="field-row" style="margin-top: 10px;">
                 <div class="field-group">
                     <label for="map_pos_desktop_top"><?php _e('Desktop - Top %', 'laundromat'); ?></label>
-                    <input type="text" id="map_pos_desktop_top" name="map_pos_desktop_top" value="<?php echo esc_attr($map_pos_desktop_top); ?>" placeholder="21%">
+                    <input type="text" id="map_pos_desktop_top" name="map_pos_desktop_top" value="<?php echo esc_attr($map_pos_desktop_top); ?>" placeholder="<?php esc_attr_e('21%', 'laundromat'); ?>">
                 </div>
                 <div class="field-group">
                     <label for="map_pos_desktop_left"><?php _e('Desktop - Left %', 'laundromat'); ?></label>
-                    <input type="text" id="map_pos_desktop_left" name="map_pos_desktop_left" value="<?php echo esc_attr($map_pos_desktop_left); ?>" placeholder="36%">
+                    <input type="text" id="map_pos_desktop_left" name="map_pos_desktop_left" value="<?php echo esc_attr($map_pos_desktop_left); ?>" placeholder="<?php esc_attr_e('36%', 'laundromat'); ?>">
                 </div>
             </div>
         </div>
@@ -285,12 +285,12 @@ function laundromat_service_meta_box_callback($post)
     <div class="laundromat-meta-box">
         <div class="field-group">
             <label for="service_title"><?php _e('Title', 'laundromat'); ?></label>
-            <input type="text" id="service_title" name="service_title" value="<?php echo esc_attr($post->post_title); ?>" placeholder="Washing machines">
+            <input type="text" id="service_title" name="service_title" value="<?php echo esc_attr($post->post_title); ?>" placeholder="<?php esc_attr_e('Washing machines', 'laundromat'); ?>">
         </div>
 
         <div class="field-group">
             <label for="service_description"><?php _e('Description', 'laundromat'); ?></label>
-            <textarea id="service_description" name="service_description" placeholder="Service description..."><?php echo esc_textarea($post->post_content); ?></textarea>
+            <textarea id="service_description" name="service_description" placeholder="<?php esc_attr_e('Service description...', 'laundromat'); ?>"><?php echo esc_textarea($post->post_content); ?></textarea>
         </div>
 
         <div class="field-group">
@@ -317,10 +317,10 @@ function laundromat_service_meta_box_callback($post)
             <?php for ($i = 0; $i < 5; $i++): $row = $price_rows[$i]; ?>
             <div class="price-row">
                 <div class="field-group">
-                    <input type="text" name="price_rows[<?php echo $i; ?>][feature]" value="<?php echo esc_attr($row['feature'] ?? ''); ?>" placeholder="Detergent included">
+                    <input type="text" name="price_rows[<?php echo $i; ?>][feature]" value="<?php echo esc_attr($row['feature'] ?? ''); ?>" placeholder="<?php esc_attr_e('Detergent included', 'laundromat'); ?>">
                 </div>
                 <div class="field-group">
-                    <input type="number" min="0" name="price_rows[<?php echo $i; ?>][time]" value="<?php echo esc_attr($row['time'] ?? ''); ?>" placeholder="30">
+                    <input type="number" min="0" name="price_rows[<?php echo $i; ?>][time]" value="<?php echo esc_attr($row['time'] ?? ''); ?>" placeholder="<?php esc_attr_e('30', 'laundromat'); ?>">
                 </div>
                 <div class="field-group">
                     <select name="price_rows[<?php echo $i; ?>][time_unit]">
@@ -329,7 +329,7 @@ function laundromat_service_meta_box_callback($post)
                     </select>
                 </div>
                 <div class="field-group">
-                    <input type="number" step="0.01" min="0" name="price_rows[<?php echo $i; ?>][price]" value="<?php echo esc_attr($row['price'] ?? ''); ?>" placeholder="15">
+                    <input type="number" step="0.01" min="0" name="price_rows[<?php echo $i; ?>][price]" value="<?php echo esc_attr($row['price'] ?? ''); ?>" placeholder="<?php esc_attr_e('15', 'laundromat'); ?>">
                 </div>
             </div>
             <?php endfor; ?>
@@ -342,10 +342,10 @@ function laundromat_service_meta_box_callback($post)
                     var container = document.getElementById('price-rows-container');
                     var row = document.createElement('div');
                     row.className = 'price-row';
-                    row.innerHTML = '<div class="field-group"><input type="text" name="price_rows[' + rowIndex + '][feature]" placeholder="Detergent included"></div>' +
-                        '<div class="field-group"><input type="number" min="0" name="price_rows[' + rowIndex + '][time]" placeholder="30"></div>' +
-                        '<div class="field-group"><select name="price_rows[' + rowIndex + '][time_unit]"><option value="min">min</option><option value="hours">hours</option></select></div>' +
-                        '<div class="field-group"><input type="number" step="0.01" min="0" name="price_rows[' + rowIndex + '][price]" placeholder="15"></div>';
+                    row.innerHTML = '<div class="field-group"><input type="text" name="price_rows[' + rowIndex + '][feature]" placeholder="<?php echo esc_js(__('Detergent included', 'laundromat')); ?>"></div>' +
+                        '<div class="field-group"><input type="number" min="0" name="price_rows[' + rowIndex + '][time]" placeholder="<?php echo esc_js(__('30', 'laundromat')); ?>"></div>' +
+                        '<div class="field-group"><select name="price_rows[' + rowIndex + '][time_unit]"><option value="min"><?php echo esc_js(__('min', 'laundromat')); ?></option><option value="hours"><?php echo esc_js(__('hours', 'laundromat')); ?></option></select></div>' +
+                        '<div class="field-group"><input type="number" step="0.01" min="0" name="price_rows[' + rowIndex + '][price]" placeholder="<?php echo esc_js(__('15', 'laundromat')); ?>"></div>';
                     container.appendChild(row);
                     rowIndex++;
                 });
@@ -360,11 +360,11 @@ function laundromat_service_meta_box_callback($post)
             <div class="field-row">
                 <div class="field-group">
                     <label for="action_link_text"><?php _e('Link Text', 'laundromat'); ?></label>
-                    <input type="text" id="action_link_text" name="action_link_text" value="<?php echo esc_attr($action_link_text); ?>" placeholder="How to use the washing machines">
+                    <input type="text" id="action_link_text" name="action_link_text" value="<?php echo esc_attr($action_link_text); ?>" placeholder="<?php esc_attr_e('How to use the washing machines', 'laundromat'); ?>">
                 </div>
                 <div class="field-group">
                     <label for="action_link_url"><?php _e('Link URL', 'laundromat'); ?></label>
-                    <input type="text" id="action_link_url" name="action_link_url" value="<?php echo esc_attr($action_link_url); ?>" placeholder="instructions.html">
+                    <input type="text" id="action_link_url" name="action_link_url" value="<?php echo esc_attr($action_link_url); ?>" placeholder="<?php esc_attr_e('instructions.html', 'laundromat'); ?>">
                 </div>
             </div>
         </div>
@@ -390,12 +390,12 @@ function laundromat_instruction_meta_box_callback($post)
     <div class="laundromat-meta-box">
         <div class="field-group">
             <label for="instruction_title"><?php _e('Title', 'laundromat'); ?></label>
-            <input type="text" id="instruction_title" name="instruction_title" value="<?php echo esc_attr($post->post_title); ?>" placeholder="How to use the washing machines">
+            <input type="text" id="instruction_title" name="instruction_title" value="<?php echo esc_attr($post->post_title); ?>" placeholder="<?php esc_attr_e('How to use the washing machines', 'laundromat'); ?>">
         </div>
 
         <div class="field-group">
             <label for="instruction_description"><?php _e('Description', 'laundromat'); ?></label>
-            <textarea id="instruction_description" name="instruction_description" placeholder="Step-by-step instructions..."><?php echo esc_textarea($post->post_content); ?></textarea>
+            <textarea id="instruction_description" name="instruction_description" placeholder="<?php esc_attr_e('Step-by-step instructions...', 'laundromat'); ?>"><?php echo esc_textarea($post->post_content); ?></textarea>
         </div>
     </div>
     <?php
@@ -419,12 +419,12 @@ function laundromat_tip_meta_box_callback($post)
     <div class="laundromat-meta-box">
         <div class="field-group">
             <label for="tip_title"><?php _e('Title', 'laundromat'); ?></label>
-            <input type="text" id="tip_title" name="tip_title" value="<?php echo esc_attr($post->post_title); ?>" placeholder="How to separate laundry">
+            <input type="text" id="tip_title" name="tip_title" value="<?php echo esc_attr($post->post_title); ?>" placeholder="<?php esc_attr_e('How to separate laundry', 'laundromat'); ?>">
         </div>
 
         <div class="field-group">
             <label for="tip_description"><?php _e('Description', 'laundromat'); ?></label>
-            <textarea id="tip_description" name="tip_description" placeholder="Tip content..."><?php echo esc_textarea($post->post_content); ?></textarea>
+            <textarea id="tip_description" name="tip_description" placeholder="<?php esc_attr_e('Tip content...', 'laundromat'); ?>"><?php echo esc_textarea($post->post_content); ?></textarea>
         </div>
     </div>
     <?php
@@ -448,12 +448,12 @@ function laundromat_faq_meta_box_callback($post)
     <div class="laundromat-meta-box">
         <div class="field-group">
             <label for="faq_question"><?php _e('Question', 'laundromat'); ?></label>
-            <input type="text" id="faq_question" name="faq_question" value="<?php echo esc_attr($post->post_title); ?>" placeholder="What are your opening hours?">
+            <input type="text" id="faq_question" name="faq_question" value="<?php echo esc_attr($post->post_title); ?>" placeholder="<?php esc_attr_e('What are your opening hours?', 'laundromat'); ?>">
         </div>
 
         <div class="field-group">
             <label for="faq_answer"><?php _e('Answer', 'laundromat'); ?></label>
-            <textarea id="faq_answer" name="faq_answer" placeholder="The answer to the question..."><?php echo esc_textarea($post->post_content); ?></textarea>
+            <textarea id="faq_answer" name="faq_answer" placeholder="<?php esc_attr_e('The answer to the question...', 'laundromat'); ?>"><?php echo esc_textarea($post->post_content); ?></textarea>
         </div>
     </div>
     <?php
@@ -480,19 +480,19 @@ function laundromat_about_item_meta_box_callback($post)
     <div class="laundromat-meta-box">
         <div class="field-group">
             <label for="about_item_title"><?php _e('Title', 'laundromat'); ?></label>
-            <input type="text" id="about_item_title" name="about_item_title" value="<?php echo esc_attr($post->post_title); ?>" placeholder="365 days">
+            <input type="text" id="about_item_title" name="about_item_title" value="<?php echo esc_attr($post->post_title); ?>" placeholder="<?php esc_attr_e('365 days', 'laundromat'); ?>">
             <p class="description"><?php _e('Main title displayed on the card (e.g., "365 days", ">60 min", "low prices")', 'laundromat'); ?></p>
         </div>
 
         <div class="field-group">
             <label for="secondary_title"><?php _e('Secondary Title', 'laundromat'); ?></label>
-            <input type="text" id="secondary_title" name="secondary_title" value="<?php echo esc_attr($secondary_title); ?>" placeholder="Open 365 days, 07:00–00:00">
+            <input type="text" id="secondary_title" name="secondary_title" value="<?php echo esc_attr($secondary_title); ?>" placeholder="<?php esc_attr_e('Open 365 days, 07:00–00:00', 'laundromat'); ?>">
             <p class="description"><?php _e('Detailed information or subtitle', 'laundromat'); ?></p>
         </div>
 
         <div class="field-group">
             <label for="description"><?php _e('Description', 'laundromat'); ?></label>
-            <textarea id="description" name="description" placeholder="Laundry that fits your life, not the other way around"><?php echo esc_textarea($description); ?></textarea>
+            <textarea id="description" name="description" placeholder="<?php esc_attr_e('Laundry that fits your life, not the other way around', 'laundromat'); ?>"><?php echo esc_textarea($description); ?></textarea>
             <p class="description"><?php _e('Short description or tagline for the card', 'laundromat'); ?></p>
         </div>
 
@@ -524,13 +524,13 @@ function laundromat_review_meta_box_callback($post)
     <div class="laundromat-meta-box">
         <div class="field-group">
             <label for="review_author_name"><?php _e('Author Name', 'laundromat'); ?></label>
-            <input type="text" id="review_author_name" name="review_author_name" value="<?php echo esc_attr($post->post_title); ?>" placeholder="Andrey">
+            <input type="text" id="review_author_name" name="review_author_name" value="<?php echo esc_attr($post->post_title); ?>" placeholder="<?php esc_attr_e('Andrey', 'laundromat'); ?>">
             <p class="description"><?php _e('The name of the person who wrote this review', 'laundromat'); ?></p>
         </div>
 
         <div class="field-group">
             <label for="review_text"><?php _e('Review Text', 'laundromat'); ?></label>
-            <textarea id="review_text" name="review_text" placeholder="Write the review text here..."><?php echo esc_textarea($post->post_content); ?></textarea>
+            <textarea id="review_text" name="review_text" placeholder="<?php esc_attr_e('Write the review text here...', 'laundromat'); ?>"><?php echo esc_textarea($post->post_content); ?></textarea>
             <p class="description"><?php _e('The full text of the review', 'laundromat'); ?></p>
         </div>
 

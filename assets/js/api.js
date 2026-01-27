@@ -178,7 +178,7 @@ const LaundroAPI = (function () {
         key: `tip-${item.id}`,
         image: item.featured_image_url || './assets/images/tips-1.png',
         category: item.category || 'Tips and tricks',
-        title: item.title.rendered,
+        title: item.title?.rendered || '',
         date: item.formatted_date || new Date(item.date).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
@@ -202,7 +202,7 @@ const LaundroAPI = (function () {
         key: `tip-${item.id}`,
         image: item.featured_image_url || './assets/images/tips-1.png',
         category: item.category || 'Tips and tricks',
-        title: item.title.rendered,
+        title: item.title?.rendered || '',
         date: item.formatted_date || new Date(item.date).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
@@ -225,7 +225,7 @@ const LaundroAPI = (function () {
         key: `instruction-${item.id}`,
         image: item.featured_image_url || './assets/images/tips-1.png',
         category: item.category || 'Tips and tricks',
-        title: item.title.rendered,
+        title: item.title?.rendered || '',
         date: item.formatted_date || new Date(item.date).toLocaleDateString('en-US', {
           year: 'numeric',
           month: 'long',
