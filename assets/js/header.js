@@ -70,6 +70,61 @@
   // The setupLangSwitcher function is no longer used here to avoid conflicts
   // Language switching is managed by assets/js/lang-switcher.js
 
+  // Initialize header and mobile menu contact data
+  async function initHeaderContacts() {
+    // Check if API is available
+    if (typeof window.LaundroAPI === 'undefined') {
+      console.warn('[Header] LaundroAPI not available for contact data');
+      return;
+    }
+
+    try {
+      const settings = await window.LaundroAPI.getSettings();
+
+      if (!settings) {
+        console.warn('[Header] No settings data received');
+        return;
+      }
+
+      // Update header phone number
+      if (settings.phone) {
+        const headerPhoneLinks = header.querySelectorAll('a[href^="tel:"]');
+        headerPhoneLinks.forEach((link) => {
+          const cleanPhone = settings.phone.replace(/\s/g, '');
+          link.href = `tel:${cleanPhone}`;
+          link.textContent = settings.phone;
+        });
+      }
+
+      // Update mobile menu contact information
+      const mobileMenu = document.getElementById('mobile-menu-content');
+      if (mobileMenu) {
+        // Update phone
+        if (settings.phone) {
+          const phoneLinks = mobileMenu.querySelectorAll('a[href^="tel:"]');
+          phoneLinks.forEach((link) => {
+            const cleanPhone = settings.phone.replace(/\s/g, '');
+            link.href = `tel:${cleanPhone}`;
+            link.textContent = settings.phone;
+          });
+        }
+
+        // Update email
+        if (settings.email) {
+          const emailLinks = mobileMenu.querySelectorAll('a[href^="mailto:"]');
+          emailLinks.forEach((link) => {
+            link.href = `mailto:${settings.email}`;
+            link.textContent = settings.email;
+          });
+        }
+      }
+
+      console.log('[Header] Header and mobile menu contacts updated');
+    } catch (error) {
+      console.error('[Header] Error loading header contacts:', error);
+    }
+  }
+
   // Initialize language switcher with API data
   async function initLanguageSwitcher() {
     // Check if API is available
@@ -153,9 +208,13 @@
 
   // Initialize on DOM ready
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initLanguageSwitcher);
+    document.addEventListener('DOMContentLoaded', () => {
+      initLanguageSwitcher();
+      initHeaderContacts();
+    });
   } else {
     initLanguageSwitcher();
+    initHeaderContacts();
   }
 
   // Active page detection and styling

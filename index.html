@@ -309,6 +309,14 @@
               <li>
                 <a
                   class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="location.html"
+                >
+                  Our location
+                </a>
+              </li>
+              <li>
+                <a
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
                   href="contact.html"
                 >
                   Contact us
@@ -339,14 +347,14 @@
     </div>
 
     <!-- Main Content with ContentWrapper -->
-    <main id="main-content" class="transition-opacity duration-500">
+    <main id="main-content" class="relative z-10 transition-opacity duration-500">
       <!-- Invisible spacer for hero section -->
       <div aria-hidden="true" class="pointer-events-none invisible h-screen w-full"></div>
 
       <!-- Hero Section -->
       <section
         id="hero-section"
-        class="fixed top-0 left-0 -z-10 w-full overflow-hidden"
+        class="fixed top-0 left-0 z-0 w-full overflow-hidden"
         style="
           height: 100vh;
           transform: translateZ(0);
@@ -365,7 +373,7 @@
         />
 
         <div
-          class="p-container-mobile xl:p-container-tablet 2xl:p-container-desktop relative z-10 flex h-full items-end pb-[60px] text-white md:pb-[35px] xl:pb-[38px] 2xl:pb-[46px]"
+          class="p-container-mobile xl:p-container-tablet 2xl:p-container-desktop relative z-20 flex h-full items-end pb-[60px] text-white md:pb-[35px] xl:pb-[38px] 2xl:pb-[46px]"
         >
           <div class="flex flex-col gap-8 md:w-full md:flex-row md:items-end md:justify-between">
             <h1
@@ -377,16 +385,16 @@
 
             <div
               id="hero-map"
-              class="rounded-card relative h-[83px] w-full max-w-[187px] overflow-hidden bg-[#F6FBFD] md:h-[147px] md:max-w-[157px] lg:h-[147px] lg:max-w-[210px] xl:h-[147px] xl:max-w-[210px] 2xl:h-[206px] 2xl:max-w-[294px]"
+              class="rounded-card relative h-[83px] w-full max-w-[187px] overflow-hidden bg-[#F6FBFD] md:h-[147px] md:max-w-[157px] lg:h-[147px] lg:max-w-[210px] xl:h-[147px] xl:max-w-[210px] 2xl:h-[206px] 2xl:max-w-[294px] cursor-pointer"
             >
               <img
                 alt="Map preview"
-                class="absolute inset-0 h-full w-full object-cover md:hidden"
+                class="absolute inset-0 h-full w-full object-cover md:hidden pointer-events-none"
                 src="./assets/images/mobile-map-preview.png"
               />
               <img
                 alt="Map preview"
-                class="absolute inset-0 hidden h-full w-full object-contain md:block"
+                class="absolute inset-0 hidden h-full w-full object-contain md:block pointer-events-none"
                 src="./assets/images/map-preview.png"
               />
               <a

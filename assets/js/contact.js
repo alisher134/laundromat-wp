@@ -1,4 +1,84 @@
-document.addEventListener('DOMContentLoaded', () => {
+/**
+ * Load contact data from WordPress API and update the contact cards
+ */
+async function loadContactData() {
+  // Check if LaundroAPI is available
+  if (typeof window.LaundroAPI === 'undefined') {
+    console.warn('[Contact Page] LaundroAPI not available');
+    return;
+  }
+
+  try {
+    // Fetch settings from WordPress
+    const settings = await window.LaundroAPI.getSettings();
+
+    if (!settings) {
+      console.warn('[Contact Page] No settings data received from API');
+      return;
+    }
+
+    console.log('[Contact Page] Loaded settings from API:', settings);
+
+    // Update contact cards with API data
+    updateContactCards(settings);
+  } catch (error) {
+    console.error('[Contact Page] Error loading settings:', error);
+  }
+}
+
+/**
+ * Update contact information cards with data from API
+ */
+function updateContactCards(settings) {
+  // Update Address
+  if (settings.address) {
+    const addressElement = document.querySelector('.contact-address');
+    if (addressElement) {
+      addressElement.textContent = settings.address;
+    }
+  }
+
+  // Update Phone
+  if (settings.phone) {
+    const phoneLinks = document.querySelectorAll('.contact-phone');
+    phoneLinks.forEach((link) => {
+      const cleanPhone = settings.phone.replace(/\s/g, '');
+      link.href = `tel:${cleanPhone}`;
+      link.textContent = settings.phone;
+    });
+  }
+
+  // Update Email
+  if (settings.email) {
+    const emailLinks = document.querySelectorAll('.contact-email');
+    emailLinks.forEach((link) => {
+      link.href = `mailto:${settings.email}`;
+      link.textContent = settings.email;
+    });
+  }
+
+  // Update Social Media Links
+  if (settings.facebook) {
+    const facebookLinks = document.querySelectorAll('.contact-facebook');
+    facebookLinks.forEach((link) => {
+      link.href = settings.facebook;
+    });
+  }
+
+  if (settings.instagram) {
+    const instagramLinks = document.querySelectorAll('.contact-instagram');
+    instagramLinks.forEach((link) => {
+      link.href = settings.instagram;
+    });
+  }
+
+  console.log('[Contact Page] Contact cards updated successfully');
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  // Load contact data from WordPress API
+  await loadContactData();
+
   // Animation Observer
   const observerOptions = {
     root: null,

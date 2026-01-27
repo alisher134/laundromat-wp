@@ -4,9 +4,9 @@
   const CARD_CATEGORIES = ['laundry', 'drying', 'specialCleaning'];
 
   /**
-   * Fetch services from API and update price info on cards
+   * Fetch services from API and update all content (titles, descriptions, images, prices)
    */
-  async function loadServicePrices() {
+  async function loadServices() {
     if (typeof LaundroAPI === 'undefined') {
       console.warn('[Services Section] LaundroAPI not available');
       return;
@@ -22,55 +22,110 @@
         servicesByCategory[service.category] = service;
       });
 
-      // Update each card's price info
-      const cards = document.querySelectorAll('[data-service-card]');
-      cards.forEach((card) => {
+      // Update desktop cards (with data-service-card attribute)
+      const desktopCards = document.querySelectorAll('[data-service-card]');
+      desktopCards.forEach((card) => {
         const cardIndex = parseInt(card.getAttribute('data-service-card'), 10);
         const category = CARD_CATEGORIES[cardIndex];
         const service = servicesByCategory[category];
 
-        if (!service || !service.priceRows || service.priceRows.length === 0) return;
+        if (!service) return;
 
-        const priceInfo = card.querySelector('.service-price-info');
-        if (!priceInfo) return;
+        updateCard(card, service);
+      });
 
-        // Get first price row for "from" values
-        const firstRow = service.priceRows[0];
+      // Update mobile cards (without data-service-card, in order)
+      const serviceSection = document.getElementById('service-section');
+      if (serviceSection) {
+        const mobileCards = serviceSection.querySelectorAll('.lg\\:hidden');
+        mobileCards.forEach((card, index) => {
+          const category = CARD_CATEGORIES[index];
+          const service = servicesByCategory[category];
 
-        // Find the lowest price and shortest time across all rows
-        let minPrice = Infinity;
-        let minTime = Infinity;
-        let timeUnit = 'min';
+          if (!service) return;
 
-        service.priceRows.forEach((row) => {
-          if (row.price && parseFloat(row.price) < minPrice) {
-            minPrice = parseFloat(row.price);
-          }
-          if (row.time && parseFloat(row.time) < minTime) {
-            minTime = parseFloat(row.time);
-            timeUnit = row.timeUnit || 'min';
-          }
+          updateCard(card, service);
         });
+      }
 
-        // Update price value
-        const priceValueEl = priceInfo.querySelector('.price-value');
-        if (priceValueEl && minPrice !== Infinity) {
-          priceValueEl.textContent = `${minPrice} $`;
+      console.log('[Services Section] Content updated from API');
+    } catch (error) {
+      console.error('[Services Section] Error loading services:', error);
+    }
+  }
+
+  /**
+   * Update a single service card with API data
+   */
+  function updateCard(card, service) {
+    // Update title
+    const title = card.querySelector('h3');
+    if (title && service.title) {
+      title.textContent = service.title;
+    }
+
+    // Update description
+    const description = card.querySelector('p.text-text\\/60, p.text-text\\/80');
+    if (description && service.description) {
+      // Strip HTML tags from description
+      const cleanDescription = service.description.replace(/<[^>]*>/g, '').trim();
+      if (cleanDescription) {
+        description.textContent = cleanDescription;
+      }
+    }
+
+    // Update image
+    const image = card.querySelector('img');
+    if (image && service.image) {
+      image.src = service.image;
+      image.alt = service.title || 'Service';
+    }
+
+    // Update prices (both mobile static prices and desktop animated prices)
+    if (service.priceRows && service.priceRows.length > 0) {
+      // Find the lowest price and shortest time across all rows
+      let minPrice = Infinity;
+      let minTime = Infinity;
+      let timeUnit = 'min';
+
+      service.priceRows.forEach((row) => {
+        if (row.price && parseFloat(row.price) < minPrice) {
+          minPrice = parseFloat(row.price);
         }
+        if (row.time && parseFloat(row.time) < minTime) {
+          minTime = parseFloat(row.time);
+          timeUnit = row.timeUnit || 'min';
+        }
+      });
 
-        // Update time value
-        const divs = priceInfo.querySelectorAll('div');
-        if (divs.length >= 3 && minTime !== Infinity) {
-          const timeValueEl = divs[2].querySelector('.price-value');
-          if (timeValueEl) {
-            timeValueEl.textContent = `${minTime} ${timeUnit}`;
+      // Update all price displays (both mobile and desktop, both static and animated)
+      const priceElements = card.querySelectorAll('p.text-text');
+      priceElements.forEach((el) => {
+        // Check if this is a price element by looking at its content or siblings
+        const prevSibling = el.previousElementSibling;
+        if (prevSibling && prevSibling.classList.contains('price-label')) {
+          const labelText = prevSibling.textContent.trim();
+          if (labelText === 'Price from' && minPrice !== Infinity) {
+            el.textContent = `${minPrice} $`;
+          } else if (labelText === 'Time from' && minTime !== Infinity) {
+            el.textContent = `${minTime} ${timeUnit}`;
           }
         }
       });
 
-      console.log('[Services Section] Prices updated from API');
-    } catch (error) {
-      console.error('[Services Section] Error loading prices:', error);
+      // Update desktop animated price info
+      const priceInfo = card.querySelector('.service-price-info');
+      if (priceInfo) {
+        const priceValueEls = priceInfo.querySelectorAll('.price-value');
+        if (priceValueEls.length >= 2) {
+          if (minPrice !== Infinity) {
+            priceValueEls[0].textContent = `${minPrice} $`;
+          }
+          if (minTime !== Infinity) {
+            priceValueEls[1].textContent = `${minTime} ${timeUnit}`;
+          }
+        }
+      }
     }
   }
 
@@ -168,11 +223,11 @@
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+      loadServices();
       initServiceCards();
-      loadServicePrices();
     });
   } else {
+    loadServices();
     initServiceCards();
-    loadServicePrices();
   }
 })();

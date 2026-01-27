@@ -18,7 +18,7 @@ add_action('init', 'laundromat_remove_default_editor_support');
 
 function laundromat_remove_default_editor_support()
 {
-    $post_types = ['services', 'instructions', 'faqs', 'about_items', 'reviews'];
+    $post_types = ['services', 'instructions', 'tips', 'faqs', 'about_items', 'reviews'];
     foreach ($post_types as $post_type) {
         remove_post_type_support($post_type, 'title');
         remove_post_type_support($post_type, 'editor');
@@ -68,6 +68,16 @@ function laundromat_add_meta_boxes()
         __('Instruction Details', 'laundromat'),
         'laundromat_instruction_meta_box_callback',
         'instructions',
+        'normal',
+        'high'
+    );
+
+    // Tips Details Meta Box
+    add_meta_box(
+        'tip_details',
+        __('Tip Details', 'laundromat'),
+        'laundromat_tip_meta_box_callback',
+        'tips',
         'normal',
         'high'
     );
@@ -392,6 +402,35 @@ function laundromat_instruction_meta_box_callback($post)
 }
 
 /**
+ * Tip Meta Box Callback
+ */
+function laundromat_tip_meta_box_callback($post)
+{
+    wp_nonce_field('laundromat_tip_meta_box', 'laundromat_tip_meta_box_nonce');
+    ?>
+    <style>
+        .laundromat-meta-box { display: grid; gap: 15px; }
+        .laundromat-meta-box .field-group { display: grid; gap: 5px; }
+        .laundromat-meta-box label { font-weight: 600; }
+        .laundromat-meta-box input[type="text"],
+        .laundromat-meta-box textarea { width: 100%; padding: 8px; }
+        .laundromat-meta-box textarea { min-height: 120px; resize: vertical; }
+    </style>
+    <div class="laundromat-meta-box">
+        <div class="field-group">
+            <label for="tip_title"><?php _e('Title', 'laundromat'); ?></label>
+            <input type="text" id="tip_title" name="tip_title" value="<?php echo esc_attr($post->post_title); ?>" placeholder="How to separate laundry">
+        </div>
+
+        <div class="field-group">
+            <label for="tip_description"><?php _e('Description', 'laundromat'); ?></label>
+            <textarea id="tip_description" name="tip_description" placeholder="Tip content..."><?php echo esc_textarea($post->post_content); ?></textarea>
+        </div>
+    </div>
+    <?php
+}
+
+/**
  * FAQ Meta Box Callback
  */
 function laundromat_faq_meta_box_callback($post)
@@ -608,6 +647,23 @@ function laundromat_save_meta_boxes($post_id)
                 'ID' => $post_id,
                 'post_title' => sanitize_text_field($_POST['instruction_title'] ?? ''),
                 'post_content' => wp_kses_post($_POST['instruction_description'] ?? ''),
+            ]);
+
+            add_action('save_post', 'laundromat_save_meta_boxes');
+        }
+    }
+
+    // Save Tip Meta
+    if (isset($_POST['laundromat_tip_meta_box_nonce']) &&
+        wp_verify_nonce($_POST['laundromat_tip_meta_box_nonce'], 'laundromat_tip_meta_box')) {
+
+        if (isset($_POST['tip_title']) || isset($_POST['tip_description'])) {
+            remove_action('save_post', 'laundromat_save_meta_boxes');
+
+            wp_update_post([
+                'ID' => $post_id,
+                'post_title' => sanitize_text_field($_POST['tip_title'] ?? ''),
+                'post_content' => wp_kses_post($_POST['tip_description'] ?? ''),
             ]);
 
             add_action('save_post', 'laundromat_save_meta_boxes');
