@@ -31,25 +31,14 @@ Each About Item has the following fields:
 
 ## 🚀 Quick Start
 
-### Step 1: Import Sample Data
-To populate the slider with the existing 3 cards from your static HTML:
-
-```bash
-# Using MySQL command line
-mysql -u your_username -p your_database < sample-about-items-images.sql
-
-# Or using phpMyAdmin:
-# 1. Open phpMyAdmin
-# 2. Select your WordPress database
-# 3. Click "SQL" tab
-# 4. Copy and paste contents of sample-about-items-images.sql
-# 5. Click "Go"
-```
+### Step 1: Create About Items in WordPress
+1. Go to **WordPress Admin → About Items → Add New**
+2. Create your slider items with title, secondary title, and description
 
 ### Step 2: Upload Icon Images
-1. Download or create 3 icon images (see `ABOUT-ITEMS-ICONS-GUIDE.md` for help)
+1. Download or create icon images (PNG, 100x100px recommended)
 2. Go to **WordPress Admin → Media → Add New**
-3. Upload your icon images (PNG, 100x100px recommended)
+3. Upload your icon images
 
 ### Step 3: Assign Icons to Items
 1. Go to **About Items** in the left sidebar
@@ -69,7 +58,7 @@ mysql -u your_username -p your_database < sample-about-items-images.sql
 
 ### Method 1: WordPress Admin (Recommended)
 
-1. **Prepare your icon image** (see `ABOUT-ITEMS-ICONS-GUIDE.md` for help)
+1. **Prepare your icon image**
    - Format: PNG with transparent background
    - Size: 100x100px (or any square size)
    - Download from Flaticon, Icons8, or create your own
@@ -131,10 +120,6 @@ const response = await fetch('http://localhost:8080/wp-json/wp/v2/about_items', 
 - **Minimum**: 100x100px (acceptable but may look pixelated on retina displays)
 - **Recommended**: 200x200px (crisp on all screens)
 - **Maximum**: 500x500px (overkill, increases file size)
-
-### See Full Icon Guide
-For detailed instructions on finding, creating, and uploading icons, see:
-**`ABOUT-ITEMS-ICONS-GUIDE.md`**
 
 ## 🌍 Multilingual Support (Polylang)
 
