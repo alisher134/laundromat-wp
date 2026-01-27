@@ -336,26 +336,6 @@ function laundromat_homepage_settings_page_callback()
             ?>
         </form>
 
-        <hr style="margin-top: 30px;">
-
-        <h2><?php _e('REST API Endpoint', 'laundromat'); ?></h2>
-        <p>
-            <?php _e('Access homepage tips via the REST API:', 'laundromat'); ?>
-            <code><?php echo esc_url(rest_url('laundromat/v1/homepage-tips')); ?></code>
-        </p>
-        <p>
-            <?php _e('Add language parameter for language-specific tips:', 'laundromat'); ?>
-            <code><?php echo esc_url(rest_url('laundromat/v1/homepage-tips?lang=el')); ?></code>
-        </p>
-
-        <h3><?php _e('Debug Information', 'laundromat'); ?></h3>
-        <div style="background: #f5f5f5; padding: 15px; border-radius: 4px; font-family: monospace; font-size: 12px;">
-            <?php foreach ($languages as $lang): ?>
-                <?php $selected = get_option('laundromat_homepage_tips_' . $lang['slug'], []); ?>
-                <p><strong><?php echo esc_html($lang['name']); ?> Tip IDs:</strong> <?php echo !empty($selected) ? implode(', ', $selected) : __('None (will show all tips)', 'laundromat'); ?></p>
-            <?php endforeach; ?>
-            <p><strong>Total Published Tips:</strong> <?php echo wp_count_posts('tips')->publish; ?></p>
-        </div>
     </div>
     <?php
 }

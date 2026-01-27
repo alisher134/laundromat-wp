@@ -5,12 +5,19 @@ services:
     image: wordpress:6.4-php8.2-apache
     ports:
       - "8080:80"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       WORDPRESS_DB_HOST: db
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DB_NAME: wordpress
       WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_HOME', 'http://localhost:8080');
+        define('WP_SITEURL', 'http://localhost:8080');
+        define('WP_DEBUG_DISPLAY', false);
+        define('WP_DEBUG_LOG', true);
     volumes:
       - ./wp-content/themes/laundromat:/var/www/html/wp-content/themes/laundromat
       - ./wp-content/plugins:/var/www/html/wp-content/plugins

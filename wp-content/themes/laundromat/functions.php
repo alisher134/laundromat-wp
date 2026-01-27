@@ -133,3 +133,52 @@ function laundromat_add_taxonomies_to_polylang($taxonomies, $is_settings)
     $taxonomies['content_category'] = 'content_category';
     return $taxonomies;
 }
+
+/**
+ * Simplify Admin Menu - Remove items not related to content
+ */
+add_action('admin_menu', 'laundromat_simplify_admin_menu', 999);
+
+function laundromat_simplify_admin_menu()
+{
+    // Remove default WordPress menu items not needed for content management
+    remove_menu_page('edit.php');              // Posts
+    remove_menu_page('edit-comments.php');     // Comments
+    remove_menu_page('themes.php');            // Appearance (headless theme)
+    remove_menu_page('plugins.php');           // Plugins
+    remove_menu_page('tools.php');             // Tools
+    remove_menu_page('options-general.php');   // Settings
+    remove_menu_page('edit.php?post_type=page'); // Pages
+}
+
+/**
+ * Simplify Categories Admin Screen
+ */
+add_action('admin_head', 'laundromat_simplify_category_screen');
+
+function laundromat_simplify_category_screen()
+{
+    $screen = get_current_screen();
+    if ($screen && $screen->taxonomy === 'content_category') {
+        ?>
+        <style>
+            /* Hide description column and field */
+            .column-description,
+            .term-description-wrap { display: none !important; }
+
+            /* Hide slug column and field */
+            .column-slug,
+            .term-slug-wrap { display: none !important; }
+
+            /* Hide parent dropdown */
+            .term-parent-wrap { display: none !important; }
+
+            /* Hide posts count column */
+            .column-posts { display: none !important; }
+
+            /* Clean up the add form */
+            #tag-description { display: none !important; }
+        </style>
+        <?php
+    }
+}
