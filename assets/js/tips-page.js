@@ -315,6 +315,7 @@ function showEmptyState() {
       sortOptionsBtns.forEach((btn) => {
         btn.addEventListener('click', (e) => {
           const val = e.currentTarget.dataset.value;
+          console.log('[Tips Page] Sort changed to:', val);
           currentSort = val;
           currentPage = 1; // RESET pagination
           visibleCount = ITEMS_PER_PAGE; // RESET load more
@@ -336,13 +337,32 @@ function showEmptyState() {
     }
 
     // 2. Sort
+    console.log('[Tips Page] Sorting with currentSort:', currentSort, 'Items:', filtered.length);
     filtered.sort((a, b) => {
-      if (currentSort === 'latest' || currentSort === '') return new Date(b.date) - new Date(a.date);
-      if (currentSort === 'oldest') return new Date(a.date) - new Date(b.date);
+      if (currentSort === 'latest' || currentSort === '') {
+        // Use date_raw if available (original date string), otherwise parse formatted date
+        const dateA = a.date_raw ? new Date(a.date_raw) : new Date(a.date);
+        const dateB = b.date_raw ? new Date(b.date_raw) : new Date(b.date);
+        const result = dateB - dateA;
+        if (isNaN(result)) {
+          console.warn('[Tips Page] Invalid date comparison:', { a: a.date, a_raw: a.date_raw, b: b.date, b_raw: b.date_raw });
+        }
+        return result;
+      }
+      if (currentSort === 'oldest') {
+        const dateA = a.date_raw ? new Date(a.date_raw) : new Date(a.date);
+        const dateB = b.date_raw ? new Date(b.date_raw) : new Date(b.date);
+        const result = dateA - dateB;
+        if (isNaN(result)) {
+          console.warn('[Tips Page] Invalid date comparison:', { a: a.date, a_raw: a.date_raw, b: b.date, b_raw: b.date_raw });
+        }
+        return result;
+      }
       if (currentSort === 'title-asc') return a.title.localeCompare(b.title);
       if (currentSort === 'title-desc') return b.title.localeCompare(a.title);
       return 0;
     });
+    console.log('[Tips Page] After sorting, first 3 items:', filtered.slice(0, 3).map(item => ({ title: item.title, date: item.date, date_raw: item.date_raw })));
 
     // Store filtered data globally for pagination
     window.filteredData = filtered;
@@ -514,7 +534,7 @@ function showEmptyState() {
 
   function createDesktopCardHtml(item, index) {
     // Phase 7: Handle BigImage layout
-    const isBigImage = item.bigImage || (index % 5 === 0);
+    const isBigImage = item.bigImage || false; // Removed automatic big image for first card
     const bigImageClass = isBigImage ? 'lg:row-span-2' : '';
     const heightClass = isBigImage ? 'lg:h-[576px] 2xl:h-[796px]' : 'lg:h-[278px] 2xl:h-[390px]';
     const paddingClass = isBigImage ? 'p-0' : '';

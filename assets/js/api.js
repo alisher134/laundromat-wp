@@ -187,6 +187,7 @@ const LaundroAPI = (function () {
           month: 'long',
           day: 'numeric',
         }),
+        date_raw: item.date, // Keep original date for sorting
         content: item.content?.rendered || '',
       }));
     },
@@ -211,6 +212,7 @@ const LaundroAPI = (function () {
           month: 'long',
           day: 'numeric',
         }),
+        date_raw: item.date, // Keep original date for sorting
         content: item.content?.rendered || '',
       }));
     },
@@ -234,6 +236,7 @@ const LaundroAPI = (function () {
           month: 'long',
           day: 'numeric',
         }),
+        date_raw: item.date, // Keep original date for sorting
         content: item.content?.rendered || '',
       }));
     },
