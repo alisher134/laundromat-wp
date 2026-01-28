@@ -50,25 +50,33 @@ async function loadDataFromAPI() {
       LaundroAPI.getInstructions()
     ]);
 
+    console.log('[Tips Data] API Response:', { categories, tips, instructions });
+
     if (categories && categories.length > 0) {
       CATEGORIES = categories;
       categoriesLoadedFromAPI = true;
       console.log('[Tips Data] Loaded', categories.length, 'categories from API');
+    } else {
+      console.warn('[Tips Data] No categories returned from API or empty array');
     }
 
     if (tips && tips.length > 0) {
       TIPS_DATA = tips;
       console.log('[Tips Data] Loaded', tips.length, 'tips from API');
+    } else {
+      console.warn('[Tips Data] No tips returned from API. Response:', tips);
     }
 
     if (instructions && instructions.length > 0) {
       INSTRUCTIONS_DATA = instructions;
       console.log('[Tips Data] Loaded', instructions.length, 'instructions from API');
+    } else {
+      console.warn('[Tips Data] No instructions returned from API. Response:', instructions);
     }
 
     dataLoadedFromAPI = true;
 
-    // Dispatch event when data is ready
+    // Dispatch event when data is ready (even if empty)
     window.dispatchEvent(new CustomEvent('laundromatDataReady', {
       detail: { tips: TIPS_DATA, instructions: INSTRUCTIONS_DATA, categories: CATEGORIES, fromAPI: true }
     }));

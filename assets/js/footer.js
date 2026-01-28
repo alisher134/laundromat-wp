@@ -4,7 +4,34 @@ document.addEventListener('DOMContentLoaded', () => {
   const newsletterForm = document.getElementById('newsletter-form');
   const bottomBar = document.getElementById('footer-bottom-bar');
 
-  if (!footer || !formContainer || !bottomBar || !newsletterForm) return;
+  console.log('[Footer] Checking footer elements:', {
+    footer: !!footer,
+    formContainer: !!formContainer,
+    newsletterForm: !!newsletterForm,
+    bottomBar: !!bottomBar
+  });
+
+  if (!footer) {
+    console.error('[Footer] Footer element not found!');
+    return;
+  }
+
+  if (!formContainer) {
+    console.warn('[Footer] #footer-form-container not found');
+  }
+
+  if (!newsletterForm) {
+    console.warn('[Footer] #newsletter-form not found');
+  }
+
+  if (!bottomBar) {
+    console.warn('[Footer] #footer-bottom-bar not found');
+  }
+
+  if (!footer || !formContainer || !bottomBar || !newsletterForm) {
+    console.warn('[Footer] Some footer elements are missing, animations disabled but footer should still be visible');
+    return;
+  }
 
   // Spring physics constants matching Next.js (stiffness: 80, damping: 25, mass: 0.8)
   const springConfig = {

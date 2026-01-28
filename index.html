@@ -12,7 +12,7 @@
     <link href="./assets/css/output.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css" />
   </head>
-  <body>
+  <body class="bg-surface selection:bg-brand flex min-h-screen flex-col justify-between font-sans selection:text-white">
     <!-- Preloader -->
     <div
       id="preloader"
@@ -347,7 +347,7 @@
     </div>
 
     <!-- Main Content with ContentWrapper -->
-    <main id="main-content" class="relative z-10 transition-opacity duration-500">
+    <main id="main-content" class="relative z-10 flex-grow transition-opacity duration-500">
       <!-- Invisible spacer for hero section -->
       <div aria-hidden="true" class="pointer-events-none invisible h-screen w-full"></div>
 
@@ -2974,7 +2974,8 @@
     </main>
 
     <footer
-      class="xl:px-container-tablet xl:pb-container-tablet 2xl:px-container-desktop 2xl:pb-container-desktop relative bg-white px-[6px] pt-[120px] pb-[6px] md:pt-[164px] xl:pt-[200px] 2xl:pt-[256px]"
+      class="xl:px-container-tablet xl:pb-container-tablet 2xl:px-container-desktop 2xl:pb-container-desktop relative z-20 bg-white px-[6px] pt-[120px] pb-[6px] md:pt-[164px] xl:pt-[200px] 2xl:pt-[256px]"
+      style="display: block !important; visibility: visible !important; opacity: 1 !important;"
     >
       <div class="pointer-events-none absolute inset-0 bg-[#C7D8E3]/20"></div>
 

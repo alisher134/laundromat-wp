@@ -80,9 +80,12 @@ const LaundroAPI = (function () {
     });
 
     // Add language parameter if Polylang is being used
-    if (currentLang) {
-      queryParams.set('lang', currentLang);
-    }
+    // Only add if explicitly requested or if we detect Polylang is active
+    // For now, we'll skip lang parameter to avoid filtering issues
+    // Uncomment the line below if Polylang is properly configured
+    // if (currentLang) {
+    //   queryParams.set('lang', currentLang);
+    // }
 
     return '?' + queryParams.toString();
   }
@@ -259,26 +262,50 @@ const LaundroAPI = (function () {
       const data = await fetchJSON(`${CONFIG.WP_API}/services${buildQuery()}`);
       if (!data) return null;
 
-      return data.map((item) => ({
-        id: item.id,
-        title: item.title?.rendered || '',
-        slug: item.slug || '',
-        description: item.content?.rendered || '',
-        category: item.meta?.service_category || 'laundry',
-        image: item.featured_image_url || '',
-        // Price rows array: each row has { feature, time, time_unit, price }
-        priceRows: (item.price_rows || []).map((row) => ({
-          feature: row.feature || '',
-          time: row.time || '',
-          timeUnit: row.time_unit || 'min',
-          price: row.price || '',
-        })),
-        // Action link: { text, url }
-        actionLink: {
-          text: item.action_link?.text || '',
-          url: item.action_link?.url || '',
-        },
-      }));
+      log('Raw services data from API:', data);
+
+      return data.map((item) => {
+        // Handle price_rows - it might be a JSON string or already an array
+        let priceRows = [];
+        if (item.price_rows) {
+          if (typeof item.price_rows === 'string') {
+            try {
+              priceRows = JSON.parse(item.price_rows);
+            } catch (e) {
+              console.warn('[LaundroAPI] Failed to parse price_rows JSON:', e);
+            }
+          } else if (Array.isArray(item.price_rows)) {
+            priceRows = item.price_rows;
+          }
+        }
+
+        // Handle meta fields - they might be in item.meta or directly in item
+        const serviceCategory = item.meta?.service_category || item.service_category || 'laundry';
+        const actionLinkText = item.meta?.action_link_text || item.action_link_text || '';
+        const actionLinkUrl = item.meta?.action_link_url || item.action_link_url || '';
+
+        const mapped = {
+          id: item.id,
+          title: item.title?.rendered || '',
+          slug: item.slug || '',
+          description: item.content?.rendered || '',
+          category: serviceCategory,
+          image: item.featured_image_url || item.featured_media_url || '',
+          priceRows: priceRows.map((row) => ({
+            feature: row.feature || '',
+            time: row.time || '',
+            timeUnit: row.time_unit || 'min',
+            price: row.price || '',
+          })),
+          actionLink: {
+            text: actionLinkText,
+            url: actionLinkUrl,
+          },
+        };
+
+        log('Mapped service:', mapped);
+        return mapped;
+      });
     },
 
     /**

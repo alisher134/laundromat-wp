@@ -63,9 +63,35 @@ add_filter('rest_reviews_query', 'laundromat_filter_rest_by_lang', 10, 2);
 function laundromat_filter_rest_by_lang($args, $request)
 {
     $lang = $request->get_param('lang');
-    if (!empty($lang) && function_exists('pll_current_language')) {
-        $args['lang'] = sanitize_text_field($lang);
+    
+    // Only filter by language if Polylang is active and properly configured
+    // Check if Polylang is fully loaded and configured
+    if (!empty($lang) && function_exists('pll_current_language') && function_exists('PLL') && isset(PLL()->model)) {
+        try {
+            // Polylang uses tax_query to filter by language
+            // Get language term ID
+            $language = PLL()->model->get_language(sanitize_text_field($lang));
+            if ($language && isset($language->term_id)) {
+                // Polylang stores language as a taxonomy term
+                // We need to add tax_query to filter by language
+                if (!isset($args['tax_query'])) {
+                    $args['tax_query'] = [];
+                }
+                $args['tax_query'][] = [
+                    'taxonomy' => 'language',
+                    'field' => 'term_id',
+                    'terms' => $language->term_id,
+                ];
+            }
+        } catch (Exception $e) {
+            // If Polylang is not properly configured, ignore language filter
+            // This allows the API to return all posts regardless of language
+        }
     }
+    // If lang parameter is provided but Polylang is not active/configured, ignore it
+    // This allows the API to return all posts regardless of language setting
+    // This is important for development when Polylang might not be fully set up
+    
     return $args;
 }
 
