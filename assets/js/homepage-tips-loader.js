@@ -6,10 +6,11 @@
  */
 (function () {
   // Only run on homepage
-  const isHomepage = window.location.pathname === '/' ||
-                     window.location.pathname === '/index.html' ||
-                     window.location.pathname.endsWith('/laundromat-wp/') ||
-                     window.location.pathname.endsWith('/laundromat-wp/index.html');
+  const isHomepage =
+    window.location.pathname === '/' ||
+    window.location.pathname === '/index.html' ||
+    window.location.pathname.endsWith('/laundromat-wp/') ||
+    window.location.pathname.endsWith('/laundromat-wp/index.html');
 
   if (!isHomepage) {
     return;
@@ -38,7 +39,7 @@
           isBigImage
             ? `
             <div class="relative h-[277px] w-full origin-top-left overflow-hidden lg:mb-10 2xl:mb-12 2xl:h-[390px] shrink-0">
-              <img alt="${item.title}" class="scroll-scale-image rounded-t-[12px] object-cover object-top 2xl:rounded-t-[16px] w-full h-full origin-top-left" style="transform: scale(0.8);" src="${item.image}" />
+              <img alt="${item.title}" class="scroll-scale-image rounded-t-[12px] object-cover object-top 2xl:rounded-t-[16px] w-full h-full origin-top-left" src="${item.image_large || item.image}" />
             </div>
           `
             : ''
@@ -52,7 +53,7 @@
             !isBigImage
               ? `
               <div class="relative h-[87px] w-[149px] shrink-0 overflow-hidden md:h-[99px] md:w-[149px] lg:h-[127px] lg:w-[186px] 2xl:h-[177px] 2xl:w-[258px]">
-                <img alt="${item.title}" class="scroll-scale-image rounded-[6px] object-cover w-full h-full origin-top-left" style="transform: scale(0.8);" src="${item.image}" />
+                <img alt="${item.title}" class="scroll-scale-image rounded-[6px] object-cover w-full h-full origin-top-left" src="${item.image}" />
               </div>
             `
               : ''
@@ -191,7 +192,6 @@
       }, 100);
 
       console.log('[Homepage Tips] ✓ Load complete!');
-
     } catch (error) {
       console.error('[Homepage Tips] ❌ Failed to load tips:', error);
       console.error('[Homepage Tips] Error details:', error.message, error.stack);

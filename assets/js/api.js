@@ -14,8 +14,7 @@ const LaundroAPI = (function () {
       : isLocal
         ? 'http://localhost:8080'
         : '';
-  const apiBase =
-    wpPath.startsWith('http') ? wpPath + '/wp-json' : window.location.origin + (wpPath || '') + '/wp-json';
+  const apiBase = wpPath.startsWith('http') ? wpPath + '/wp-json' : window.location.origin + (wpPath || '') + '/wp-json';
 
   const CONFIG = {
     API_BASE: apiBase,
@@ -27,7 +26,7 @@ const LaundroAPI = (function () {
   // Current language (for Polylang support)
   // Auto-detect language from URL path
   function detectLanguage() {
-    const pathParts = window.location.pathname.split('/').filter(p => p);
+    const pathParts = window.location.pathname.split('/').filter((p) => p);
     // Check if we're in the /el/ directory
     if (pathParts.includes('el')) {
       return 'el';
@@ -188,11 +187,13 @@ const LaundroAPI = (function () {
         image: item.featured_image_url || './assets/images/tips-1.png',
         category: item.category || 'Tips and tricks',
         title: item.title?.rendered || '',
-        date: item.formatted_date || new Date(item.date).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }),
+        date:
+          item.formatted_date ||
+          new Date(item.date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }),
         content: item.content?.rendered || '',
       }));
     },
@@ -212,11 +213,13 @@ const LaundroAPI = (function () {
         image: item.featured_image_url || './assets/images/tips-1.png',
         category: item.category || 'Tips and tricks',
         title: item.title?.rendered || '',
-        date: item.formatted_date || new Date(item.date).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }),
+        date:
+          item.formatted_date ||
+          new Date(item.date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }),
         content: item.content?.rendered || '',
       }));
     },
@@ -235,11 +238,13 @@ const LaundroAPI = (function () {
         image: item.featured_image_url || './assets/images/tips-1.png',
         category: item.category || 'Tips and tricks',
         title: item.title?.rendered || '',
-        date: item.formatted_date || new Date(item.date).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }),
+        date:
+          item.formatted_date ||
+          new Date(item.date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }),
         content: item.content?.rendered || '',
       }));
     },
@@ -363,11 +368,13 @@ const LaundroAPI = (function () {
         content: data.content?.rendered || '',
         image: data.featured_image_url || './assets/images/tips-1.png',
         category: data.category || 'Tips and tricks',
-        date: data.formatted_date || new Date(data.date).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }),
+        date:
+          data.formatted_date ||
+          new Date(data.date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }),
       };
     },
 
@@ -387,11 +394,13 @@ const LaundroAPI = (function () {
         content: data.content?.rendered || '',
         image: data.featured_image_url || './assets/images/tips-1.png',
         category: data.category || 'Instructions',
-        date: data.formatted_date || new Date(data.date).toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }),
+        date:
+          data.formatted_date ||
+          new Date(data.date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }),
       };
     },
 

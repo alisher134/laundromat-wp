@@ -115,6 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
   let animationFrameId = null;
 
   function initScrollAnimations() {
+    cardAnimations.clear();
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+
     const cards = document.querySelectorAll('.tips-card');
     
     if (cards.length === 0) {
@@ -199,6 +205,12 @@ document.addEventListener('DOMContentLoaded', () => {
       updateAnimations();
     }
   }
+
+  // Re-init scroll animations when homepage tips are loaded from WordPress (replaces static HTML)
+  window.addEventListener('homepageTipsLoaded', () => {
+    initScrollAnimations();
+    initTipsSlider();
+  });
 
   // --- Rendering Filters ---
   function renderFilters() {
