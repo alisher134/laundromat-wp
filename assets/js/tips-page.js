@@ -99,7 +99,7 @@ function showEmptyState() {
   if (sliderMobile) sliderMobile.innerHTML = emptyHtml;
 }
 
-(function() {
+(function () {
   let activeCategory = 'all';
   let currentSort = '';
   let currentPage = 1;
@@ -133,15 +133,17 @@ function showEmptyState() {
   function initScrollAnimations() {
     const images = document.querySelectorAll('.scroll-scale-image');
 
+    // On tips/instructions use scale(1) always so images fill the container width/height the user set (no scroll-scale animation)
+    const TIPS_PAGE_SCALE = 1;
+
     images.forEach((img) => {
       if (!imageSprings.has(img)) {
         const spring = new Spring(SPRING_CONFIGS.TIPS);
-        const initialScale = getImageScrollProgress(img);
-        spring.current = initialScale;
-        spring.target = initialScale;
+        spring.current = TIPS_PAGE_SCALE;
+        spring.target = TIPS_PAGE_SCALE;
         spring.velocity = 0;
         imageSprings.set(img, spring);
-        img.style.transform = `scale(${initialScale})`;
+        img.style.transform = `scale(${TIPS_PAGE_SCALE})`;
         img.style.transformOrigin = 'top left';
         img.style.willChange = 'transform';
       }
@@ -153,23 +155,18 @@ function showEmptyState() {
       lastTime = currentTime;
 
       images.forEach((img) => {
-        const targetScale = getImageScrollProgress(img);
         const spring = imageSprings.get(img);
-
         if (spring) {
-          spring.setTarget(targetScale);
+          spring.setTarget(TIPS_PAGE_SCALE);
           const smoothScale = spring.update(deltaTime);
           img.style.transform = `scale(${smoothScale})`;
         }
       });
 
-      const needsUpdate = Array.from(imageSprings.values()).some(
-        (spring) => {
-          const springValue = spring.getValue();
-          return Math.abs(springValue - spring.target) > 0.001 || 
-                 Math.abs(spring.velocity) > 0.001;
-        }
-      );
+      const needsUpdate = Array.from(imageSprings.values()).some((spring) => {
+        const springValue = spring.getValue();
+        return Math.abs(springValue - spring.target) > 0.001 || Math.abs(spring.velocity) > 0.001;
+      });
 
       if (needsUpdate) {
         animationFrameId = requestAnimationFrame(updateAnimations);
@@ -513,11 +510,11 @@ function showEmptyState() {
   }
 
   function createDesktopCardHtml(item, index) {
-    // Phase 7: Handle BigImage layout
-    const isBigImage = item.bigImage || (index % 5 === 0);
-    const bigImageClass = isBigImage ? 'lg:row-span-2' : '';
-    const heightClass = isBigImage ? 'lg:h-[576px] 2xl:h-[796px]' : 'lg:h-[278px] 2xl:h-[390px]';
-    const paddingClass = isBigImage ? 'p-0' : '';
+    // No big card on tips/instructions pages — all cards same size
+    const isBigImage = false;
+    const bigImageClass = '';
+    const heightClass = 'lg:h-[278px] 2xl:h-[390px]';
+    const paddingClass = '';
 
     // Phase 3: Add query parameters to links
     const itemType = isInstructionsPage ? 'instruction' : 'tip';
