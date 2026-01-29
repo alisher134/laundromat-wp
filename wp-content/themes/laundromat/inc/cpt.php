@@ -37,7 +37,7 @@ function laundromat_register_cpts()
         'show_in_menu' => true,
         'show_in_rest' => true,
         'rest_base' => 'locations',
-        'supports' => ['title', 'thumbnail'],
+        'supports' => ['title', 'thumbnail', 'page-attributes'],
         'menu_icon' => 'dashicons-location',
         'menu_position' => 5,
     ]);
@@ -62,7 +62,7 @@ function laundromat_register_cpts()
         'show_in_menu' => true,
         'show_in_rest' => true,
         'rest_base' => 'tips',
-        'supports' => ['title', 'editor', 'thumbnail'],
+        'supports' => ['title', 'editor', 'thumbnail', 'page-attributes'],
         'menu_icon' => 'dashicons-lightbulb',
         'menu_position' => 6,
         'taxonomies' => ['content_category'],
@@ -88,7 +88,7 @@ function laundromat_register_cpts()
         'show_in_menu' => true,
         'show_in_rest' => true,
         'rest_base' => 'instructions',
-        'supports' => ['title', 'editor', 'thumbnail'],
+        'supports' => ['title', 'editor', 'thumbnail', 'page-attributes'],
         'menu_icon' => 'dashicons-book',
         'menu_position' => 7,
         'taxonomies' => ['content_category'],
@@ -114,7 +114,7 @@ function laundromat_register_cpts()
         'show_in_menu' => true,
         'show_in_rest' => true,
         'rest_base' => 'faqs',
-        'supports' => ['title', 'editor'],
+        'supports' => ['title', 'editor', 'page-attributes'],
         'menu_icon' => 'dashicons-editor-help',
         'menu_position' => 8,
     ]);
@@ -139,7 +139,7 @@ function laundromat_register_cpts()
         'show_in_menu' => true,
         'show_in_rest' => true,
         'rest_base' => 'services',
-        'supports' => ['title', 'editor', 'thumbnail'],
+        'supports' => ['title', 'editor', 'thumbnail', 'page-attributes'],
         'menu_icon' => 'dashicons-archive',
         'menu_position' => 9,
     ]);
@@ -164,7 +164,7 @@ function laundromat_register_cpts()
         'show_in_menu' => true,
         'show_in_rest' => true,
         'rest_base' => 'about_items',
-        'supports' => ['title', 'thumbnail'],
+        'supports' => ['title', 'thumbnail', 'page-attributes'],
         'menu_icon' => 'dashicons-info',
         'menu_position' => 10,
     ]);
@@ -189,7 +189,7 @@ function laundromat_register_cpts()
         'show_in_menu' => true,
         'show_in_rest' => true,
         'rest_base' => 'reviews',
-        'supports' => ['title', 'editor', 'thumbnail'],
+        'supports' => ['title', 'editor', 'thumbnail', 'page-attributes'],
         'menu_icon' => 'dashicons-star-filled',
         'menu_position' => 11,
     ]);

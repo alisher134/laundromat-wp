@@ -66,6 +66,14 @@ function laundromat_filter_rest_by_lang($args, $request)
     if (!empty($lang) && function_exists('pll_current_language')) {
         $args['lang'] = sanitize_text_field($lang);
     }
+
+    // Default to menu_order sorting for sortable CPTs (only for frontend API requests)
+    // Skip if this is an admin context or if orderby is already specified
+    if (!is_admin() && !$request->get_param('orderby')) {
+        $args['orderby'] = 'menu_order';
+        $args['order'] = 'ASC';
+    }
+
     return $args;
 }
 

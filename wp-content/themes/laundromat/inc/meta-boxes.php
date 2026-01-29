@@ -26,6 +26,145 @@ function laundromat_remove_default_editor_support()
 }
 
 /**
+ * Remove default featured image metabox for CPTs with inline upload
+ */
+add_action('add_meta_boxes', 'laundromat_remove_default_thumbnail_metabox', 99);
+
+function laundromat_remove_default_thumbnail_metabox()
+{
+    $post_types = ['services', 'instructions', 'tips', 'about_items', 'reviews'];
+    foreach ($post_types as $post_type) {
+        remove_meta_box('postimagediv', $post_type, 'side');
+    }
+}
+
+/**
+ * Enqueue media uploader scripts for custom post types
+ */
+add_action('admin_enqueue_scripts', 'laundromat_enqueue_media_uploader');
+
+function laundromat_enqueue_media_uploader($hook)
+{
+    global $post_type;
+
+    $post_types_with_upload = ['services', 'instructions', 'tips', 'about_items', 'reviews'];
+
+    if (($hook === 'post.php' || $hook === 'post-new.php') && in_array($post_type, $post_types_with_upload)) {
+        wp_enqueue_media();
+    }
+}
+
+/**
+ * Render inline image upload field
+ */
+function laundromat_render_image_upload_field($post_id, $label = 'Image', $description = '')
+{
+    $thumbnail_id = get_post_thumbnail_id($post_id);
+    $thumbnail_url = $thumbnail_id ? wp_get_attachment_image_url($thumbnail_id, 'medium') : '';
+    ?>
+    <div class="field-group laundromat-image-upload">
+        <label><?php echo esc_html($label); ?></label>
+        <div class="image-upload-container">
+            <div class="image-preview" <?php echo $thumbnail_url ? '' : 'style="display:none;"'; ?>>
+                <img src="<?php echo esc_url($thumbnail_url); ?>" alt="">
+                <button type="button" class="remove-image button-link">&times;</button>
+            </div>
+            <div class="image-upload-buttons" <?php echo $thumbnail_url ? 'style="display:none;"' : ''; ?>>
+                <button type="button" class="upload-image button button-secondary">
+                    <?php _e('Upload Image', 'laundromat'); ?>
+                </button>
+            </div>
+            <input type="hidden" name="_thumbnail_id" value="<?php echo esc_attr($thumbnail_id); ?>">
+        </div>
+        <?php if ($description): ?>
+            <p class="description"><?php echo esc_html($description); ?></p>
+        <?php endif; ?>
+    </div>
+
+    <style>
+        .laundromat-image-upload .image-upload-container {
+            margin-top: 8px;
+        }
+        .laundromat-image-upload .image-preview {
+            position: relative;
+            display: inline-block;
+            max-width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f9f9f9;
+        }
+        .laundromat-image-upload .image-preview img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+        .laundromat-image-upload .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 24px;
+            height: 24px;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 22px;
+            text-align: center;
+            text-decoration: none;
+        }
+        .laundromat-image-upload .remove-image:hover {
+            background: rgba(200,0,0,0.8);
+        }
+        .laundromat-image-upload .upload-image {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+    </style>
+
+    <script>
+    jQuery(document).ready(function($) {
+        if (window.laundromatImageUploadInitialized) return;
+        window.laundromatImageUploadInitialized = true;
+
+        $(document).on('click', '.laundromat-image-upload .upload-image', function(e) {
+            e.preventDefault();
+            var container = $(this).closest('.image-upload-container');
+            var frame = wp.media({
+                title: '<?php echo esc_js(__('Select Image', 'laundromat')); ?>',
+                button: { text: '<?php echo esc_js(__('Use this image', 'laundromat')); ?>' },
+                multiple: false
+            });
+
+            frame.on('select', function() {
+                var attachment = frame.state().get('selection').first().toJSON();
+                var imgUrl = attachment.sizes && attachment.sizes.medium ? attachment.sizes.medium.url : attachment.url;
+                container.find('.image-preview img').attr('src', imgUrl);
+                container.find('.image-preview').show();
+                container.find('.image-upload-buttons').hide();
+                container.find('input[name="_thumbnail_id"]').val(attachment.id);
+            });
+
+            frame.open();
+        });
+
+        $(document).on('click', '.laundromat-image-upload .remove-image', function(e) {
+            e.preventDefault();
+            var container = $(this).closest('.image-upload-container');
+            container.find('.image-preview').hide();
+            container.find('.image-preview img').attr('src', '');
+            container.find('.image-upload-buttons').show();
+            container.find('input[name="_thumbnail_id"]').val('');
+        });
+    });
+    </script>
+    <?php
+}
+
+/**
  * Add Meta Boxes
  */
 add_action('add_meta_boxes', 'laundromat_add_meta_boxes');
@@ -290,7 +429,21 @@ function laundromat_service_meta_box_callback($post)
 
         <div class="field-group">
             <label for="service_description"><?php _e('Description', 'laundromat'); ?></label>
-            <textarea id="service_description" name="service_description" placeholder="<?php esc_attr_e('Service description...', 'laundromat'); ?>"><?php echo esc_textarea($post->post_content); ?></textarea>
+            <?php
+            wp_editor($post->post_content, 'service_description', [
+                'textarea_name' => 'service_description',
+                'textarea_rows' => 8,
+                'media_buttons' => false,
+                'teeny' => false,
+                'quicktags' => true,
+                'tinymce' => [
+                    'toolbar1' => 'formatselect,bold,italic,underline,bullist,numlist,link,unlink,removeformat',
+                    'toolbar2' => '',
+                    'block_formats' => 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4',
+                ],
+            ]);
+            ?>
+            <p class="description"><?php _e('Use the formatting buttons above to add headings, lists, and links.', 'laundromat'); ?></p>
         </div>
 
         <div class="field-group">
@@ -368,6 +521,8 @@ function laundromat_service_meta_box_callback($post)
                 </div>
             </div>
         </div>
+
+        <?php laundromat_render_image_upload_field($post->ID, __('Service Image', 'laundromat'), __('Image displayed on the service card. Recommended size: 600x400px.', 'laundromat')); ?>
     </div>
     <?php
 }
@@ -394,9 +549,25 @@ function laundromat_instruction_meta_box_callback($post)
         </div>
 
         <div class="field-group">
-            <label for="instruction_description"><?php _e('Description', 'laundromat'); ?></label>
-            <textarea id="instruction_description" name="instruction_description" placeholder="<?php esc_attr_e('Step-by-step instructions...', 'laundromat'); ?>"><?php echo esc_textarea($post->post_content); ?></textarea>
+            <label for="instruction_description"><?php _e('Content', 'laundromat'); ?></label>
+            <?php
+            wp_editor($post->post_content, 'instruction_description', [
+                'textarea_name' => 'instruction_description',
+                'textarea_rows' => 12,
+                'media_buttons' => true,
+                'teeny' => false,
+                'quicktags' => true,
+                'tinymce' => [
+                    'toolbar1' => 'formatselect,bold,italic,underline,bullist,numlist,link,unlink,removeformat',
+                    'toolbar2' => '',
+                    'block_formats' => 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4',
+                ],
+            ]);
+            ?>
+            <p class="description"><?php _e('Use the formatting buttons above to add headings, lists, links, and images.', 'laundromat'); ?></p>
         </div>
+
+        <?php laundromat_render_image_upload_field($post->ID, __('Featured Image', 'laundromat'), __('Main image for the instruction. Recommended size: 800x600px.', 'laundromat')); ?>
     </div>
     <?php
 }
@@ -423,9 +594,25 @@ function laundromat_tip_meta_box_callback($post)
         </div>
 
         <div class="field-group">
-            <label for="tip_description"><?php _e('Description', 'laundromat'); ?></label>
-            <textarea id="tip_description" name="tip_description" placeholder="<?php esc_attr_e('Tip content...', 'laundromat'); ?>"><?php echo esc_textarea($post->post_content); ?></textarea>
+            <label for="tip_description"><?php _e('Content', 'laundromat'); ?></label>
+            <?php
+            wp_editor($post->post_content, 'tip_description', [
+                'textarea_name' => 'tip_description',
+                'textarea_rows' => 12,
+                'media_buttons' => true,
+                'teeny' => false,
+                'quicktags' => true,
+                'tinymce' => [
+                    'toolbar1' => 'formatselect,bold,italic,underline,bullist,numlist,link,unlink,removeformat',
+                    'toolbar2' => '',
+                    'block_formats' => 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4',
+                ],
+            ]);
+            ?>
+            <p class="description"><?php _e('Use the formatting buttons above to add headings, lists, links, and images.', 'laundromat'); ?></p>
         </div>
+
+        <?php laundromat_render_image_upload_field($post->ID, __('Featured Image', 'laundromat'), __('Main image for the tip. Recommended size: 800x600px.', 'laundromat')); ?>
     </div>
     <?php
 }
@@ -496,12 +683,7 @@ function laundromat_about_item_meta_box_callback($post)
             <p class="description"><?php _e('Short description or tagline for the card', 'laundromat'); ?></p>
         </div>
 
-        <div class="field-group">
-            <p class="description" style="margin-top: 10px; padding: 10px; background: #f0f6fc; border-left: 4px solid #3a6d90;">
-                <strong><?php _e('Icon Image:', 'laundromat'); ?></strong>
-                <?php _e('Use the "Featured Image" box on the right to upload an icon. Recommended size: 100x100px, PNG with transparent background.', 'laundromat'); ?>
-            </p>
-        </div>
+        <?php laundromat_render_image_upload_field($post->ID, __('Icon Image', 'laundromat'), __('Icon displayed on the card. Recommended size: 100x100px, PNG with transparent background.', 'laundromat')); ?>
     </div>
     <?php
 }
@@ -534,12 +716,7 @@ function laundromat_review_meta_box_callback($post)
             <p class="description"><?php _e('The full text of the review', 'laundromat'); ?></p>
         </div>
 
-        <div class="field-group">
-            <p class="description" style="margin-top: 10px; padding: 10px; background: #f0f6fc; border-left: 4px solid #3a6d90;">
-                <strong><?php _e('Profile Photo:', 'laundromat'); ?></strong>
-                <?php _e('Use the "Featured Image" box on the right to upload a profile photo. Recommended size: 80x80px or larger. If no image is provided, a default user icon will be displayed.', 'laundromat'); ?>
-            </p>
-        </div>
+        <?php laundromat_render_image_upload_field($post->ID, __('Profile Photo', 'laundromat'), __('Author photo. Recommended size: 80x80px or larger. If not provided, a default icon will be shown.', 'laundromat')); ?>
     </div>
     <?php
 }
@@ -559,6 +736,17 @@ function laundromat_save_meta_boxes($post_id)
     // Check permissions
     if (!current_user_can('edit_post', $post_id)) {
         return;
+    }
+
+    // Save thumbnail for CPTs with inline image upload
+    $post_types_with_upload = ['services', 'instructions', 'tips', 'about_items', 'reviews'];
+    if (in_array(get_post_type($post_id), $post_types_with_upload) && isset($_POST['_thumbnail_id'])) {
+        $thumbnail_id = intval($_POST['_thumbnail_id']);
+        if ($thumbnail_id > 0) {
+            set_post_thumbnail($post_id, $thumbnail_id);
+        } else {
+            delete_post_thumbnail($post_id);
+        }
     }
 
     // Save Location Meta
