@@ -113,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const cardAnimations = new Map();
   let lastTime = performance.now();
   let animationFrameId = null;
+  let scrollListenersAdded = false;
 
   function initScrollAnimations() {
     cardAnimations.clear();
@@ -122,87 +123,87 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const cards = document.querySelectorAll('.tips-card');
-    
+
     if (cards.length === 0) {
       setTimeout(() => {
         const retryCards = document.querySelectorAll('.tips-card');
-        if (retryCards.length > 0) {
-          initScrollAnimations();
-        }
+        if (retryCards.length > 0) initScrollAnimations();
       }, 200);
       return;
     }
 
     cards.forEach((card) => {
-      if (cardAnimations.has(card)) return;
-      
       const images = card.querySelectorAll('.scroll-scale-image');
       if (images.length === 0) return;
-      
+
       const spring = new Spring(SPRING_CONFIGS.TIPS);
       spring.current = 0.8;
       spring.target = 0.8;
-      
+
       images.forEach((img) => {
         img.style.transformOrigin = 'top left';
         img.style.transform = 'scale(0.8)';
         img.style.willChange = 'transform';
       });
-      
-      cardAnimations.set(card, {
-        spring,
-        images: Array.from(images),
-      });
+
+      cardAnimations.set(card, { spring, images: Array.from(images) });
     });
 
-    function updateAnimations() {
-      const currentTime = performance.now();
-      const deltaTime = currentTime - lastTime;
-      lastTime = currentTime;
-
-      cardAnimations.forEach((animation, card) => {
-        const scrollProgress = getCardScrollProgressStartCenter(card);
-        const targetScale = transformProgressToScale(scrollProgress);
-        
-        animation.spring.setTarget(targetScale);
-        const smoothScale = animation.spring.update(deltaTime);
-        
-        animation.images.forEach((img) => {
-          img.style.transform = `scale(${smoothScale})`;
-          img.style.transformOrigin = 'top left';
-        });
-      });
-      const needsUpdate = Array.from(cardAnimations.values()).some(
-        (anim) => {
-          const spring = anim.spring;
-          return Math.abs(spring.current - spring.target) > 0.001 || Math.abs(spring.velocity) > 0.001;
-        }
-      );
-
-      if (needsUpdate) {
-        animationFrameId = requestAnimationFrame(updateAnimations);
-      } else {
-        animationFrameId = null;
-      }
+    if (!scrollListenersAdded) {
+      scrollListenersAdded = true;
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
     }
 
-    function onScroll() {
-      if (!animationFrameId) {
-        animationFrameId = requestAnimationFrame(updateAnimations);
-      }
-    }
-
-    // Add event listeners
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-    
-    // Initial call to start animations immediately
     onScroll();
-    
-    // Force first update to ensure animations start
     if (cardAnimations.size > 0) {
       lastTime = performance.now();
       updateAnimations();
+    }
+  }
+
+  function updateAnimations() {
+    const currentTime = performance.now();
+    const deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
+
+    cardAnimations.forEach((animation, card) => {
+      if (!document.contains(card)) {
+        cardAnimations.delete(card);
+        return;
+      }
+      const scrollProgress = getCardScrollProgressStartCenter(card);
+      const targetScale = transformProgressToScale(scrollProgress);
+      animation.spring.setTarget(targetScale);
+      const smoothScale = animation.spring.update(deltaTime);
+      animation.images.forEach((img) => {
+        img.style.transform = `scale(${smoothScale})`;
+        img.style.transformOrigin = 'top left';
+      });
+    });
+
+    const needsUpdate = Array.from(cardAnimations.values()).some(
+      (anim) =>
+        Math.abs(anim.spring.current - anim.spring.target) > 0.001 ||
+        Math.abs(anim.spring.velocity) > 0.001
+    );
+
+    if (needsUpdate) {
+      animationFrameId = requestAnimationFrame(updateAnimations);
+    } else {
+      animationFrameId = null;
+      cardAnimations.forEach((anim) => {
+        anim.images.forEach((img) => {
+          img.style.willChange = 'auto';
+        });
+      });
+    }
+  }
+
+  function onScroll() {
+    if (!animationFrameId) {
+      lastTime = performance.now();
+      animationFrameId = requestAnimationFrame(updateAnimations);
     }
   }
 

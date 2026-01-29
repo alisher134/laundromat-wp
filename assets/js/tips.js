@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const imageSprings = new Map();
   let lastTime = performance.now();
   let animationFrameId = null;
+  let scrollListenersAdded = false;
 
   initPage();
 
@@ -31,7 +32,44 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function initScrollAnimations() {
+    if (animationFrameId) {
+      cancelAnimationFrame(animationFrameId);
+      animationFrameId = null;
+    }
+
     const images = document.querySelectorAll('.scroll-scale-image');
+    images.forEach((img) => {
+      if (!imageSprings.has(img)) {
+        const spring = new Spring(SPRING_CONFIGS.TIPS);
+        const initialScale = getImageScrollProgress(img);
+        spring.current = initialScale;
+        spring.target = initialScale;
+        spring.velocity = 0;
+        imageSprings.set(img, spring);
+        img.style.transform = `scale(${initialScale})`;
+        img.style.transformOrigin = 'top left';
+        img.style.willChange = 'transform';
+      }
+    });
+
+    if (!scrollListenersAdded) {
+      scrollListenersAdded = true;
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+    }
+
+    onScroll();
+  }
+
+  function updateAnimations() {
+    const currentTime = performance.now();
+    const deltaTime = currentTime - lastTime;
+    lastTime = currentTime;
+
+    const images = document.querySelectorAll('.scroll-scale-image');
+    imageSprings.forEach((spring, img) => {
+      if (!document.contains(img)) imageSprings.delete(img);
+    });
 
     images.forEach((img) => {
       if (!imageSprings.has(img)) {
@@ -39,50 +77,37 @@ document.addEventListener('DOMContentLoaded', () => {
         const initialScale = getImageScrollProgress(img);
         spring.current = initialScale;
         spring.target = initialScale;
+        spring.velocity = 0;
         imageSprings.set(img, spring);
-        img.style.transform = `scale(${initialScale})`;
-        img.style.transition = 'transform 0.1s linear';
+        img.style.transformOrigin = 'top left';
+        img.style.willChange = 'transform';
+      }
+      const targetScale = getImageScrollProgress(img);
+      const spring = imageSprings.get(img);
+      if (spring) {
+        spring.setTarget(targetScale);
+        const smoothScale = spring.update(deltaTime);
+        img.style.transform = `scale(${smoothScale})`;
       }
     });
 
-    function updateAnimations() {
-      const currentTime = performance.now();
-      const deltaTime = currentTime - lastTime;
-      lastTime = currentTime;
+    const needsUpdate = Array.from(imageSprings.values()).some(
+      (spring) =>
+        Math.abs(spring.getValue() - spring.target) > 0.001 || Math.abs(spring.velocity) > 0.001
+    );
 
-      images.forEach((img) => {
-        const targetScale = getImageScrollProgress(img);
-        const spring = imageSprings.get(img);
-
-        if (spring) {
-          spring.setTarget(targetScale);
-          const smoothScale = spring.update(deltaTime);
-          img.style.transform = `scale(${smoothScale})`;
-        }
-      });
-
-      const needsUpdate = Array.from(imageSprings.values()).some(
-        (spring) => Math.abs(spring.getValue() - spring.target) > 0.001,
-      );
-
-      if (needsUpdate) {
-        animationFrameId = requestAnimationFrame(updateAnimations);
-      } else {
-        animationFrameId = null;
-      }
+    if (needsUpdate) {
+      animationFrameId = requestAnimationFrame(updateAnimations);
+    } else {
+      animationFrameId = null;
     }
+  }
 
-    function onScroll() {
-      if (!animationFrameId) {
-        animationFrameId = requestAnimationFrame(updateAnimations);
-      }
+  function onScroll() {
+    if (!animationFrameId) {
+      lastTime = performance.now();
+      animationFrameId = requestAnimationFrame(updateAnimations);
     }
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
-
-    // Initial call
-    onScroll();
   }
 
   // --- Rendering Filters ---

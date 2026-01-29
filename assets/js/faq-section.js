@@ -3,6 +3,7 @@
   let lastTime = performance.now();
   let animationFrameId = null;
   let isAnimating = false;
+  let faqSectionScrollListenersAdded = false;
 
   // Load FAQs from API and render them
   async function loadFAQsFromAPI() {
@@ -121,6 +122,12 @@
     section.style.opacity = '0.3';
 
     function updateSection() {
+      if (!document.contains(section)) {
+        animationFrameId = null;
+        isAnimating = false;
+        section.style.willChange = 'auto';
+        return;
+      }
       const currentTime = performance.now();
       const deltaTime = currentTime - lastTime;
       lastTime = currentTime;
@@ -158,8 +165,11 @@
       }
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
+    if (!faqSectionScrollListenersAdded) {
+      faqSectionScrollListenersAdded = true;
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+    }
 
     onScroll();
   }

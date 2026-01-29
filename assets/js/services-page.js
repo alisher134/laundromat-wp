@@ -155,6 +155,8 @@
     }
   }
 
+  let serviceCardsScrollListenersAdded = false;
+
   function initServiceCards() {
     const cards = document.querySelectorAll('[data-service-card]');
     if (cards.length === 0) return;
@@ -163,7 +165,7 @@
     let lastTime = performance.now();
     let animationFrameId = null;
 
-    cards.forEach((card, index) => {
+    cards.forEach((card) => {
       const wrapper = card.querySelector('.service-card-wrapper');
       const imageWrapper = card.querySelector('.service-image-wrapper');
       const priceInfo = card.querySelector('.service-price-info');
@@ -187,7 +189,12 @@
       const breakpoint = getBreakpoint();
       let needsUpdate = false;
 
-      springs.forEach(({ spring, card, wrapper, imageWrapper, priceInfo }) => {
+      springs.forEach((entry, card) => {
+        if (!document.contains(card)) {
+          springs.delete(card);
+          return;
+        }
+        const { spring, wrapper, imageWrapper, priceInfo } = entry;
         const scrollProgress = getScrollProgressCenter(card);
         spring.setTarget(scrollProgress);
         const smoothProgress = spring.update(deltaTime);
@@ -234,16 +241,24 @@
       }
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', () => {
-      const breakpoint = getBreakpoint();
-      springs.forEach(({ imageWrapper }) => {
-        const smallSize = CARD_SIZES.small[breakpoint];
-        imageWrapper.style.height = `${smallSize.height}px`;
-        imageWrapper.style.width = `${smallSize.width}px`;
+    if (!serviceCardsScrollListenersAdded) {
+      serviceCardsScrollListenersAdded = true;
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', () => {
+        const breakpoint = getBreakpoint();
+        springs.forEach((entry, card) => {
+          if (!document.contains(card)) {
+            springs.delete(card);
+            return;
+          }
+          const { imageWrapper } = entry;
+          const smallSize = CARD_SIZES.small[breakpoint];
+          imageWrapper.style.height = `${smallSize.height}px`;
+          imageWrapper.style.width = `${smallSize.width}px`;
+        });
+        onScroll();
       });
-      onScroll();
-    });
+    }
 
     onScroll();
   }

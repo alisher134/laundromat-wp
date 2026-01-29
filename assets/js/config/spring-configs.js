@@ -1,8 +1,8 @@
 const SPRING_CONFIGS = {
-  FAQ: { stiffness: 35, damping: 20, mass: 1.2 },
-  SERVICES: { stiffness: 35, damping: 18, mass: 1.3 },
-  LOCATION: { stiffness: 80, damping: 25, mass: 0.8 },
-  REVIEWS_GRID: { stiffness: 120, damping: 35, mass: 0.8 },
-  REVIEWS_CARD: { stiffness: 120, damping: 35, mass: 0.8 },
-  TIPS: { stiffness: 55, damping: 16, mass: 0.85 },
+  FAQ: { stiffness: 28, damping: 22, mass: 1 },
+  SERVICES: { stiffness: 28, damping: 20, mass: 1.1 },
+  LOCATION: { stiffness: 65, damping: 28, mass: 0.9 },
+  REVIEWS_GRID: { stiffness: 90, damping: 32, mass: 0.9 },
+  REVIEWS_CARD: { stiffness: 90, damping: 32, mass: 0.9 },
+  TIPS: { stiffness: 42, damping: 20, mass: 0.9 },
 };

@@ -223,6 +223,7 @@
 
   let resizeTimeout;
   const handleResize = () => {
+    if (!sliderEl || !document.contains(sliderEl)) return;
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
       initSlider();

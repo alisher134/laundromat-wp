@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   const onScroll = () => {
+    if (!formContainer || !document.contains(formContainer)) return;
     const rect = formContainer.getBoundingClientRect();
     const windowHeight = window.innerHeight;
 

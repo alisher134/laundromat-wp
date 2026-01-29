@@ -228,30 +228,34 @@
     }
   }
 
+  let desktopGridRAF = null;
+  let desktopGridScrollListenersAdded = false;
+
   function initDesktopGrid() {
     const grid = document.getElementById('reviews-grid');
     if (!grid) return;
+
+    if (desktopGridRAF) {
+      cancelAnimationFrame(desktopGridRAF);
+      desktopGridRAF = null;
+    }
 
     const cards = grid.querySelectorAll('.review-card');
     if (cards.length === 0) return;
 
     const gridSpring = new Spring(SPRING_CONFIGS.REVIEWS_GRID);
-
     const cardSprings = new Map();
     let lastTime = performance.now();
-    let animationFrameId = null;
 
     cards.forEach((card) => {
       const icon = card.querySelector('.review-icon');
       if (!icon) return;
 
       const cardSpring = new Spring(SPRING_CONFIGS.REVIEWS_CARD);
-
       card.style.opacity = '0';
       card.style.transform = 'translateY(30px)';
       icon.style.opacity = '0';
       icon.style.transform = 'scale(0)';
-
       cardSprings.set(card, { spring: cardSpring, icon, card });
     });
 
@@ -270,6 +274,10 @@
       grid.style.transform = `translateY(${gridY}px)`;
 
       cardSprings.forEach(({ spring, icon, card }) => {
+        if (!document.contains(card)) {
+          cardSprings.delete(card);
+          return;
+        }
         const cardProgress = getCardScrollProgress(card);
         spring.setTarget(cardProgress);
         const cardSmoothProgress = spring.update(deltaTime);
@@ -294,20 +302,25 @@
       const gridSpringValue = gridSpring.getValue();
       const gridVelocity = gridSpring.velocity;
       if (Math.abs(gridSpringValue - gridProgress) > 0.001 || Math.abs(gridVelocity) > 0.001 || needsUpdate) {
-        animationFrameId = requestAnimationFrame(updateGrid);
+        desktopGridRAF = requestAnimationFrame(updateGrid);
       } else {
-        animationFrameId = null;
+        desktopGridRAF = null;
       }
     }
 
     function onScroll() {
-      if (!animationFrameId) {
-        animationFrameId = requestAnimationFrame(updateGrid);
+      if (!desktopGridRAF) {
+        lastTime = performance.now();
+        desktopGridRAF = requestAnimationFrame(updateGrid);
       }
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll, { passive: true });
+    if (!desktopGridScrollListenersAdded) {
+      desktopGridScrollListenersAdded = true;
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+    }
+
     onScroll();
   }
 

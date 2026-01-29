@@ -185,6 +185,7 @@
   let markersOpacitySpring = null;
   let lastTime = performance.now();
   let animationFrameId = null;
+  let mapAnimationScrollListenersAdded = false;
 
   function initMapAnimation() {
     const mapContainer = document.getElementById('location-map-container');
@@ -231,6 +232,10 @@
     });
 
     function updateMapAnimation() {
+      if (!document.contains(mapContainer) || !document.contains(desktopMap)) {
+        animationFrameId = null;
+        return;
+      }
       const currentTime = performance.now();
       const deltaTime = currentTime - lastTime;
       lastTime = currentTime;
@@ -309,8 +314,11 @@
       }
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onResize, { passive: true });
+    if (!mapAnimationScrollListenersAdded) {
+      mapAnimationScrollListenersAdded = true;
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onResize, { passive: true });
+    }
     onScroll();
   }
 

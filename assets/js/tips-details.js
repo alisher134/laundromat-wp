@@ -321,8 +321,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.classList.add('is-visible');
           obs.unobserve(entry.target);
+          const el = entry.target;
+          requestAnimationFrame(() => {
+            el.classList.add('is-visible');
+          });
         }
       });
     }, observerOptions);

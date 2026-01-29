@@ -78,3 +78,13 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Tips details: same motion as other pages but no overshoot (no jump) */
+.page-tips-details .animate-fade-up {
+  animation: fade-in-up-small 1s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+.page-tips-details .reveal-on-scroll {
+  transition:
+    opacity 0.8s cubic-bezier(0.25, 0.1, 0.25, 1),
+    transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
