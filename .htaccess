@@ -1,0 +1,28 @@
+# Option B: WordPress in root, static files take priority
+# Upload this file to public_html/ together with index.html and WordPress files.
+# Requires Apache with mod_rewrite.
+
+RewriteEngine On
+RewriteBase /
+
+# WordPress API — pass to WordPress
+RewriteRule ^wp-json(/.*)?$ index.php [L]
+
+# WordPress admin and core — pass through (no rewrite)
+RewriteRule ^wp-admin(/.*)?$ - [L]
+RewriteRule ^wp-login\.php$ - [L]
+RewriteRule ^wp-includes(/.*)?$ - [L]
+RewriteRule ^wp-content(/.*)?$ - [L]
+RewriteRule ^wp-cron\.php$ - [L]
+RewriteRule ^xmlrpc\.php$ - [L]
+RewriteRule ^wp-config\.php$ - [L]
+RewriteRule ^readme\.html$ - [L]
+RewriteRule ^license\.txt$ - [L]
+
+# If the request is for an existing file or directory, serve it (static files win)
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Everything else → static index.html (SPA-style fallback for clean URLs)
+RewriteRule ^ index.html [L]

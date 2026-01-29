@@ -5,14 +5,23 @@
  * Data is fetched and transformed to match the existing frontend data structures.
  */
 const LaundroAPI = (function () {
-  // Configuration
+  // Path to WordPress (no trailing slash). Set window.LAUNDROMAT_WP_PATH before this script to override.
+  // Option B (WP in root): use '' so API = origin + '/wp-json'. Option A (WP in /wp): use '/wp'.
+  const isLocal = /localhost|127\.0\.0\.1/i.test(window.location.hostname);
+  const wpPath =
+    typeof window !== 'undefined' && window.LAUNDROMAT_WP_PATH != null
+      ? window.LAUNDROMAT_WP_PATH
+      : isLocal
+        ? 'http://localhost:8080'
+        : '';
+  const apiBase =
+    wpPath.startsWith('http') ? wpPath + '/wp-json' : window.location.origin + (wpPath || '') + '/wp-json';
+
   const CONFIG = {
-    // Change this to your WordPress installation URL
-    API_BASE: 'http://localhost:8080/wp-json',
+    API_BASE: apiBase,
     WP_API: '/wp/v2',
     CUSTOM_API: '/laundromat/v1',
-    // Set to true to enable console logging
-    DEBUG: true,
+    DEBUG: /localhost|127\.0\.0\.1/i.test(window.location.hostname),
   };
 
   // Current language (for Polylang support)
