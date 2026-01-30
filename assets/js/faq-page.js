@@ -1,8 +1,9 @@
 (function () {
-  // FAQ data - loaded from API
+  // FAQ data
   let faqs = [];
-  let categories = [{ key: 'all', label: 'All questions' }];
+  let categories = [];
   let activeCategory = 'all';
+  let mobileSlider = null;
 
   let sectionSpring = null;
   let lastTime = performance.now();
@@ -10,37 +11,144 @@
   let isAnimating = false;
   let faqPageScrollListenersAdded = false;
 
-  // Load FAQs from API
-  async function loadFAQsFromAPI() {
+  // Init
+  function init() {
+    initSectionAnimation();
+    loadData();
+
+    // Trigger entrance animations after a short delay
+    setTimeout(triggerEntranceAnimations, 100);
+  }
+
+  // Load Categories and FAQs
+  async function loadData() {
     if (typeof LaundroAPI === 'undefined') {
-      console.log('[FAQ] LaundroAPI not available, cannot load data');
+      console.error('[FAQ] LaundroAPI not available');
       showEmptyState();
       return;
     }
 
     try {
-      console.log('[FAQ] Loading data from WordPress API...');
+      // Parallel fetch
+      const [apiCategories, apiFaqs] = await Promise.all([LaundroAPI.getFAQCategories(), LaundroAPI.getFAQs()]);
 
-      const apiFaqs = await LaundroAPI.getFAQs();
+      // Process Categories
+      if (apiCategories && Array.isArray(apiCategories)) {
+        categories = apiCategories;
+        // Ensure "All" exists or is added if not coming from backend (backend usually sends it or we add it)
+        //Backend "laundromat_get_faq_categories" adds "All" with key='all'
+      } else {
+        categories = [{ key: 'all', label: 'All', id: 0 }];
+      }
 
+      renderCategories();
+
+      // Process FAQs
       if (apiFaqs && apiFaqs.length > 0) {
         faqs = apiFaqs;
-        console.log('[FAQ] Loaded', apiFaqs.length, 'FAQs from API');
-
-        // Render FAQs
         renderFAQs(faqs);
-
-        // Initialize accordion after rendering
-        initAccordion();
-
-        // Trigger entrance animations
-        triggerEntranceAnimations();
+        // initAccordion called inside renderFAQs
+        // triggerEntranceAnimations called in init
       } else {
         showEmptyState();
       }
     } catch (error) {
-      console.error('[FAQ] Failed to load from API:', error);
+      console.error('[FAQ] Failed to load data:', error);
       showEmptyState();
+    }
+  }
+
+  // Render Categories
+  function renderCategories() {
+    const desktopContainer = document.getElementById('desktop-categories');
+    const mobileContainer = document.getElementById('mobile-categories-slider');
+
+    if (!desktopContainer && !mobileContainer) return;
+
+    const html = categories
+      .map((cat) => {
+        const isActive = cat.key === activeCategory;
+        const activeClass = 'border-transparent bg-brand/6 text-brand';
+        const inactiveClass = 'border-text/20 text-text';
+
+        return `
+        <button 
+          class="category-btn keen-slider__slide inline-flex cursor-pointer items-center justify-center rounded-[12px] border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg min-w-fit ${isActive ? activeClass : inactiveClass}"
+          data-key="${cat.key}"
+        >
+          ${cat.label}
+        </button>
+      `;
+      })
+      .join('');
+
+    if (desktopContainer) {
+      desktopContainer.innerHTML = html;
+      desktopContainer.classList.remove('hidden');
+      desktopContainer.classList.add('flex', 'flex-wrap', 'justify-center', 'gap-2');
+    }
+
+    if (mobileContainer) {
+      mobileContainer.innerHTML = html;
+      initMobileSlider();
+    }
+
+    initCategoryInteractions();
+  }
+
+  function initMobileSlider() {
+    const sliderEl = document.getElementById('mobile-categories-slider');
+    if (!sliderEl) return;
+
+    if (mobileSlider) mobileSlider.destroy();
+
+    mobileSlider = new KeenSlider(sliderEl, {
+      mode: 'free-snap',
+      slides: {
+        perView: 'auto',
+        spacing: 8,
+      },
+    });
+  }
+
+  function initCategoryInteractions() {
+    document.querySelectorAll('.category-btn').forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        const key = e.currentTarget.dataset.key;
+        if (key === activeCategory) return;
+
+        activeCategory = key;
+
+        // Update UI
+        renderCategories(); // Re-renders to update active classes
+
+        // Fetch new data
+        await fetchFAQsByCategory(key);
+      });
+    });
+  }
+
+  async function fetchFAQsByCategory(categoryKey) {
+    const container = document.getElementById('faq-accordion');
+    if (container) {
+      container.style.opacity = '0.5'; // Loading indication
+    }
+
+    try {
+      const params = categoryKey === 'all' ? {} : { faq_category: categoryKey };
+      const newFaqs = await LaundroAPI.getFAQs(params);
+
+      if (newFaqs && newFaqs.length > 0) {
+        renderFAQs(newFaqs);
+      } else {
+        renderFAQs([]); // Show empty
+      }
+    } catch (error) {
+      console.error('Error fetching filtered FAQs:', error);
+    } finally {
+      if (container) {
+        container.style.opacity = '1';
+      }
     }
   }
 
@@ -49,16 +157,19 @@
     const container = document.getElementById('faq-accordion');
     if (!container) return;
 
-    if (faqsToRender.length === 0) {
+    if (!faqsToRender || faqsToRender.length === 0) {
       showEmptyState();
+      container.innerHTML = '';
       return;
     }
 
     hideEmptyState();
 
-    const html = faqsToRender.map((faq, index) => {
-      const number = String(index + 1).padStart(2, '0');
-      return `
+    const html = faqsToRender
+      .map((faq, index) => {
+        const number = String(index + 1).padStart(2, '0');
+        // NOTE: We rely on the existing CSS classes and structure
+        return `
         <div
           class="faq-item group overflow-hidden rounded-[11px] border border-transparent bg-white backdrop-blur-[30px] md:rounded-[16px] xl:rounded-[11px] 2xl:rounded-[16px]"
           data-state="closed"
@@ -121,9 +232,11 @@
           </div>
         </div>
       `;
-    }).join('');
+      })
+      .join('');
 
     container.innerHTML = html;
+    initAccordion();
   }
 
   // Show empty state
@@ -133,10 +246,14 @@
 
     if (emptyMessage) {
       emptyMessage.classList.remove('hidden');
-      emptyMessage.classList.remove('opacity-0', 'translate-y-[100px]');
+      setTimeout(() => {
+        emptyMessage.classList.remove('opacity-0', 'translate-y-[100px]');
+      }, 10);
     }
     if (accordionWrapper) {
-      accordionWrapper.classList.add('hidden');
+      // Don't fully hide it, just clear content or let renderFAQs handle it
+      // but if we want to hide the whole wrapper:
+      // accordionWrapper.classList.add('hidden');
     }
   }
 
@@ -147,6 +264,7 @@
 
     if (emptyMessage) {
       emptyMessage.classList.add('hidden');
+      emptyMessage.classList.add('opacity-0', 'translate-y-[100px]'); // reset generic anim setup
     }
     if (accordionWrapper) {
       accordionWrapper.classList.remove('hidden');
@@ -158,32 +276,32 @@
     // Title animation
     const title = document.getElementById('faq-title');
     if (title) {
-      setTimeout(() => {
-        title.classList.remove('opacity-0', 'translate-y-[100px]');
-      }, 100);
+      title.classList.remove('opacity-0', 'translate-y-[100px]');
     }
 
     // Categories animation
     const categoriesWrapper = document.getElementById('categories-wrapper');
     if (categoriesWrapper) {
-      setTimeout(() => {
-        categoriesWrapper.classList.remove('opacity-0', 'translate-y-[80px]');
-      }, 200);
+      categoriesWrapper.classList.remove('opacity-0', 'translate-y-[80px]');
     }
 
     // Accordion animation
     const accordionWrapper = document.getElementById('accordion-container-wrapper');
     if (accordionWrapper) {
-      setTimeout(() => {
-        accordionWrapper.classList.remove('opacity-0', 'translate-y-[150px]');
-      }, 300);
+      accordionWrapper.classList.remove('opacity-0', 'translate-y-[150px]');
     }
   }
 
   function initSectionAnimation() {
-    const section = document.getElementById('faqs-section');
+    const section = document.getElementById('faqs-section'); // Note: ID might need verification globally but it's not in faq.html main tag?
+    // In faq.html main doesn't have ID 'faqs-section'.
+    // It seems 'faqs-section' might be from home page or other references.
+    // The previous code had it, but unique to faq.html page, maybe not needed or should target 'main'.
+    // Let's target main or just return if not found to avoid errors
     if (!section) return;
 
+    // ... (Keep existing Spring logic if section exists, or remove if unused in standalone page)
+    // For now, keeping it safe
     sectionSpring = new Spring(SPRING_CONFIGS.FAQ);
 
     section.style.willChange = 'transform, opacity';
@@ -214,8 +332,7 @@
       const springValue = sectionSpring.getValue();
       const velocity = sectionSpring.velocity;
 
-      const needsUpdate = Math.abs(springValue - scrollProgress) > 0.001 ||
-                         Math.abs(velocity) > 0.001;
+      const needsUpdate = Math.abs(springValue - scrollProgress) > 0.001 || Math.abs(velocity) > 0.001;
 
       if (needsUpdate) {
         animationFrameId = requestAnimationFrame(updateSection);
@@ -254,13 +371,16 @@
 
       if (!trigger || !content) return;
 
+      // Initial state
       content.style.height = '0';
       content.style.opacity = '0';
       item.setAttribute('data-state', 'closed');
 
-      trigger.addEventListener('click', () => {
+      trigger.onclick = () => {
+        // Using onclick to replace previous listeners clearly
         const isOpen = item.getAttribute('data-state') === 'open';
 
+        // Close others
         items.forEach((otherItem) => {
           if (otherItem !== item && otherItem.getAttribute('data-state') === 'open') {
             const otherContent = otherItem.querySelector('.accordion-content');
@@ -271,9 +391,7 @@
               otherItem.setAttribute('data-state', 'closed');
               otherContent.style.height = '0';
               otherContent.style.opacity = '0';
-              if (otherIcon) {
-                otherIcon.style.transform = '';
-              }
+              if (otherIcon) otherIcon.style.transform = '';
               if (otherIconBox) {
                 otherIconBox.classList.remove('bg-brand/20');
                 otherIconBox.classList.add('bg-brand/10');
@@ -282,13 +400,12 @@
           }
         });
 
+        // Toggle current
         if (isOpen) {
           item.setAttribute('data-state', 'closed');
           content.style.height = '0';
           content.style.opacity = '0';
-          if (icon) {
-            icon.style.transform = '';
-          }
+          if (icon) icon.style.transform = '';
           if (iconBox) {
             iconBox.classList.remove('bg-brand/20');
             iconBox.classList.add('bg-brand/10');
@@ -300,26 +417,14 @@
             content.style.height = inner.offsetHeight + 'px';
           }
           content.style.opacity = '1';
-          if (icon) {
-            icon.style.transform = 'rotate(45deg)';
-          }
+          if (icon) icon.style.transform = 'rotate(45deg)';
           if (iconBox) {
             iconBox.classList.remove('bg-brand/10');
             iconBox.classList.add('bg-brand/20');
           }
         }
-      });
+      };
     });
-  }
-
-  function init() {
-    initSectionAnimation();
-
-    // Load FAQs from API
-    loadFAQsFromAPI();
-
-    // Trigger entrance animations after a short delay
-    setTimeout(triggerEntranceAnimations, 100);
   }
 
   if (document.readyState === 'loading') {

@@ -11,9 +11,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   try {
     if (typeof LaundroAPI !== 'undefined') {
       const apiData = await LaundroAPI.getPrivacyPolicy();
-      if (apiData && apiData.title) {
+      if (apiData && (apiData.title || apiData.content)) {
         pageData = {
-          title: apiData.title,
+          title: apiData.title || 'Privacy Policy', // Fallback title
           content: apiData.content || '',
         };
       }

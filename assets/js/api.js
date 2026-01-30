@@ -251,10 +251,11 @@ const LaundroAPI = (function () {
 
     /**
      * Fetch FAQs and map to existing frontend format
+     * @param {Object} params - Query parameters (e.g. { faq_category: 'slug' })
      * @returns {Promise<Array|null>}
      */
-    async getFAQs() {
-      const data = await fetchJSON(`${CONFIG.WP_API}/faqs${buildQuery()}`);
+    async getFAQs(params = {}) {
+      const data = await fetchJSON(`${CONFIG.WP_API}/faqs${buildQuery(params)}`);
       if (!data) return null;
 
       return data.map((item, index) => ({
@@ -342,6 +343,14 @@ const LaundroAPI = (function () {
      */
     async getCategories() {
       return await fetchJSON(`${CONFIG.CUSTOM_API}/categories`);
+    },
+
+    /**
+     * Fetch FAQ categories
+     * @returns {Promise<Array|null>}
+     */
+    async getFAQCategories() {
+      return await fetchJSON(`${CONFIG.CUSTOM_API}/faq-categories`);
     },
 
     /**

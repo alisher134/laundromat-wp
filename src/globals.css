@@ -3,6 +3,7 @@
 @source '../*.html';
 @source '../assets/js/**/*.js';
 @import 'tw-animate-css';
+@plugin '@tailwindcss/typography';
 
 @custom-variant dark (&:is(.dark *));
 
