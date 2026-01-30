@@ -1,5 +1,4 @@
 (function () {
-
   // Map card index to service category
   const CARD_CATEGORIES = ['laundry', 'drying', 'specialCleaning'];
 
@@ -16,10 +15,12 @@
       const services = await LaundroAPI.getServices();
       if (!services || services.length === 0) return;
 
-      // Map services by category
+      // Map services by category (API returns newest first, so we only take the first one for each category)
       const servicesByCategory = {};
       services.forEach((service) => {
-        servicesByCategory[service.category] = service;
+        if (!servicesByCategory[service.category]) {
+          servicesByCategory[service.category] = service;
+        }
       });
 
       // Update desktop cards (with data-service-card attribute)
@@ -143,7 +144,7 @@
       const wrapper = card.querySelector('.service-card-wrapper');
       const imageWrapper = card.querySelector('.service-image-wrapper');
       const priceInfo = card.querySelector('.service-price-info');
-      
+
       if (!wrapper || !imageWrapper) return;
 
       const spring = new Spring(SPRING_CONFIGS.SERVICES);
@@ -172,23 +173,21 @@
         const scrollProgress = getScrollProgressCenter(card);
         spring.setTarget(scrollProgress);
         const smoothProgress = spring.update(deltaTime);
-        
+
         const expandProgress = transformProgress(smoothProgress, [0, 0.8], [0, 1]);
-        
+
         const smallSize = CARD_SIZES.small[breakpoint];
         const largeSize = CARD_SIZES.large[breakpoint];
-        
+
         const height = transformProgress(expandProgress, [0, 0.9], [smallSize.height, largeSize.height]);
         const width = transformProgress(expandProgress, [0, 1], [smallSize.width, largeSize.width]);
         const isActiveProgress = transformProgress(expandProgress, [0, 0.4], [0, 1], true);
         const justifyContentValue = expandProgress < 0.3 ? 'flex-start' : '';
-        const paddingBottomValue = transformProgress(expandProgress, [0, 0.3], [12, 0]);
 
         imageWrapper.style.height = `${height}px`;
         imageWrapper.style.width = `${width}px`;
         wrapper.style.justifyContent = justifyContentValue;
-        wrapper.style.paddingBottom = `${paddingBottomValue}px`;
-        
+
         if (priceInfo) {
           priceInfo.style.opacity = isActiveProgress;
           priceInfo.style.display = isActiveProgress > 0 ? 'flex' : 'none';
