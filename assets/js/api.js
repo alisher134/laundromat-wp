@@ -452,6 +452,22 @@ const LaundroAPI = (function () {
         return false;
       }
     },
+
+    /**
+     * Fetch Privacy Policy page
+     * @returns {Promise<Object|null>}
+     */
+    async getPrivacyPolicy() {
+      return await fetchJSON(`${CONFIG.CUSTOM_API}/legal/privacy-policy${buildQuery()}`);
+    },
+
+    /**
+     * Fetch Personal Data page
+     * @returns {Promise<Object|null>}
+     */
+    async getPersonalData() {
+      return await fetchJSON(`${CONFIG.CUSTOM_API}/legal/personal-data${buildQuery()}`);
+    },
   };
 })();
 
