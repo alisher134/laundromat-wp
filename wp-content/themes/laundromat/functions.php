@@ -20,6 +20,7 @@ require_once get_template_directory() . '/inc/rest-api.php';
 require_once get_template_directory() . '/inc/options-page.php';
 require_once get_template_directory() . '/inc/homepage-settings.php';
 require_once get_template_directory() . '/inc/sorting.php';
+require_once get_template_directory() . '/inc/legal-pages.php';
 
 /**
  * Theme Setup
@@ -132,6 +133,7 @@ add_filter('pll_get_taxonomies', 'laundromat_add_taxonomies_to_polylang', 10, 2)
 function laundromat_add_taxonomies_to_polylang($taxonomies, $is_settings)
 {
     $taxonomies['content_category'] = 'content_category';
+    $taxonomies['faq_category'] = 'faq_category';
     return $taxonomies;
 }
 
@@ -160,7 +162,7 @@ add_action('admin_head', 'laundromat_simplify_category_screen');
 function laundromat_simplify_category_screen()
 {
     $screen = get_current_screen();
-    if ($screen && $screen->taxonomy === 'content_category') {
+    if ($screen && in_array($screen->taxonomy, ['content_category', 'faq_category'])) {
         ?>
         <style>
             /* Hide description column and field */

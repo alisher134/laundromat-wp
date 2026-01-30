@@ -74,6 +74,18 @@ function laundromat_filter_rest_by_lang($args, $request)
         $args['order'] = 'ASC';
     }
 
+    // Filter FAQs by category if faq_category parameter is provided
+    $faq_category = $request->get_param('faq_category');
+    if (!empty($faq_category)) {
+        $args['tax_query'] = [
+            [
+                'taxonomy' => 'faq_category',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($faq_category),
+            ],
+        ];
+    }
+
     return $args;
 }
 
@@ -175,6 +187,18 @@ function laundromat_enhance_faq_response($response, $post, $request)
 
     // Strip HTML from content for plain text answer
     $response->data['answer'] = wp_strip_all_tags($content);
+
+    // Add FAQ category
+    $terms = wp_get_post_terms($post->ID, 'faq_category');
+    if (!is_wp_error($terms) && !empty($terms)) {
+        $response->data['category'] = $terms[0]->name;
+        $response->data['category_slug'] = $terms[0]->slug;
+        $response->data['category_id'] = $terms[0]->term_id;
+    } else {
+        $response->data['category'] = '';
+        $response->data['category_slug'] = '';
+        $response->data['category_id'] = 0;
+    }
 
     return $response;
 }
@@ -312,6 +336,13 @@ function laundromat_register_rest_routes()
         'permission_callback' => '__return_true',
     ]);
 
+    // FAQ Categories endpoint for frontend
+    register_rest_route('laundromat/v1', '/faq-categories', [
+        'methods' => 'GET',
+        'callback' => 'laundromat_get_faq_categories',
+        'permission_callback' => '__return_true',
+    ]);
+
     // Homepage Tips endpoint - returns only selected tips
     register_rest_route('laundromat/v1', '/homepage-tips', [
         'methods' => 'GET',
@@ -330,6 +361,19 @@ function laundromat_register_rest_routes()
     register_rest_route('laundromat/v1', '/strings', [
         'methods' => 'GET',
         'callback' => 'laundromat_get_translated_strings',
+        'permission_callback' => '__return_true',
+    ]);
+
+    // Legal Pages endpoints
+    register_rest_route('laundromat/v1', '/legal/privacy-policy', [
+        'methods' => 'GET',
+        'callback' => 'laundromat_get_privacy_policy',
+        'permission_callback' => '__return_true',
+    ]);
+
+    register_rest_route('laundromat/v1', '/legal/personal-data', [
+        'methods' => 'GET',
+        'callback' => 'laundromat_get_personal_data',
         'permission_callback' => '__return_true',
     ]);
 }
@@ -485,6 +529,44 @@ function laundromat_get_categories()
         $categories[] = [
             'key' => $term->slug,
             'label' => $term->name,
+        ];
+    }
+
+    return $categories;
+}
+
+/**
+ * Get FAQ Categories
+ */
+function laundromat_get_faq_categories($request)
+{
+    $lang = $request->get_param('lang');
+
+    $args = [
+        'taxonomy' => 'faq_category',
+        'hide_empty' => false,
+    ];
+
+    // Add language filter for Polylang
+    if ($lang && function_exists('pll_current_language')) {
+        $args['lang'] = $lang;
+    }
+
+    $terms = get_terms($args);
+
+    if (is_wp_error($terms)) {
+        return [];
+    }
+
+    $categories = [
+        ['key' => 'all', 'label' => __('All', 'laundromat'), 'id' => 0],
+    ];
+
+    foreach ($terms as $term) {
+        $categories[] = [
+            'key' => $term->slug,
+            'label' => $term->name,
+            'id' => $term->term_id,
         ];
     }
 
@@ -759,5 +841,66 @@ function laundromat_get_translated_strings($request)
     return [
         'lang' => $lang ?: (function_exists('pll_current_language') ? pll_current_language('slug') : 'en'),
         'strings' => $translated,
+    ];
+}
+
+/**
+ * Get Privacy Policy page content
+ */
+function laundromat_get_privacy_policy($request)
+{
+    return laundromat_get_legal_page('privacy_policy', $request);
+}
+
+/**
+ * Get Personal Data page content
+ */
+function laundromat_get_personal_data($request)
+{
+    return laundromat_get_legal_page('personal_data', $request);
+}
+
+/**
+ * Helper function to get legal page content
+ */
+function laundromat_get_legal_page($page_key, $request)
+{
+    $lang = $request->get_param('lang');
+
+    // Determine language suffix
+    $lang_suffix = '';
+    if ($lang) {
+        $lang_suffix = '_' . sanitize_text_field($lang);
+    } elseif (function_exists('pll_current_language')) {
+        $current_lang = pll_current_language('slug');
+        if ($current_lang) {
+            $lang_suffix = '_' . $current_lang;
+            $lang = $current_lang;
+        }
+    }
+
+    // Default to English if no language specified
+    if (empty($lang_suffix)) {
+        $lang_suffix = '_en';
+        $lang = 'en';
+    }
+
+    // Get title and content
+    $title = get_option('laundromat_' . $page_key . '_title' . $lang_suffix, '');
+    $content = get_option('laundromat_' . $page_key . '_content' . $lang_suffix, '');
+
+    // Fallback to English if content is empty
+    if (empty($content) && $lang_suffix !== '_en') {
+        $title = get_option('laundromat_' . $page_key . '_title_en', '');
+        $content = get_option('laundromat_' . $page_key . '_content_en', '');
+    }
+
+    // Apply content filters for shortcodes, formatting, etc.
+    $content = apply_filters('the_content', $content);
+
+    return [
+        'title' => $title,
+        'content' => $content,
+        'lang' => $lang,
     ];
 }

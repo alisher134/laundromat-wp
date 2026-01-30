@@ -117,6 +117,7 @@ function laundromat_register_cpts()
         'supports' => ['title', 'editor', 'page-attributes'],
         'menu_icon' => 'dashicons-editor-help',
         'menu_position' => 8,
+        'taxonomies' => ['faq_category'],
     ]);
 
     // Services CPT
@@ -229,6 +230,26 @@ function laundromat_register_cpts()
             'update_item' => __('Update Category', 'laundromat'),
             'add_new_item' => __('Add New Category', 'laundromat'),
             'new_item_name' => __('New Category Name', 'laundromat'),
+            'menu_name' => __('Categories', 'laundromat'),
+        ],
+        'public' => false,
+        'show_ui' => true,
+        'show_in_rest' => true,
+        'hierarchical' => true,
+        'show_admin_column' => true,
+    ]);
+
+    // FAQ Category Taxonomy
+    register_taxonomy('faq_category', ['faqs'], [
+        'labels' => [
+            'name' => __('FAQ Categories', 'laundromat'),
+            'singular_name' => __('FAQ Category', 'laundromat'),
+            'search_items' => __('Search FAQ Categories', 'laundromat'),
+            'all_items' => __('All FAQ Categories', 'laundromat'),
+            'edit_item' => __('Edit FAQ Category', 'laundromat'),
+            'update_item' => __('Update FAQ Category', 'laundromat'),
+            'add_new_item' => __('Add New FAQ Category', 'laundromat'),
+            'new_item_name' => __('New FAQ Category Name', 'laundromat'),
             'menu_name' => __('Categories', 'laundromat'),
         ],
         'public' => false,
