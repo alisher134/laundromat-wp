@@ -5,12 +5,12 @@
   // Header scroll effect
   function handleScroll() {
     // Use viewport height threshold like on main page
-    const scrollThreshold = window.innerHeight * 0.9;
+    const scrollThreshold = window.innerHeight * 0.1;
     const isScrolled = window.scrollY > scrollThreshold;
 
     if (isScrolled) {
       header.classList.add('bg-white/30', 'backdrop-blur-sm');
-      
+
       // For pages with data-theme="dark", change text color to dark when scrolled
       if (header.dataset.theme === 'dark') {
         // Change text color to dark
@@ -163,7 +163,7 @@
     if (!button || !dropdown) return;
 
     // Find current language object
-    const currentLanguage = languages.find(lang => lang.code === currentLang);
+    const currentLanguage = languages.find((lang) => lang.code === currentLang);
     if (!currentLanguage) return;
 
     // Update button text to show current language
@@ -178,7 +178,7 @@
     // Clear dropdown and populate with languages
     dropdown.innerHTML = '';
 
-    languages.forEach(lang => {
+    languages.forEach((lang) => {
       const li = document.createElement('li');
       const link = document.createElement('a');
 
@@ -195,9 +195,11 @@
       } else {
         // Header style - matches existing dropdown buttons
         if (lang.is_current) {
-          link.className = 'paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 font-semibold transition';
+          link.className =
+            'paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 font-semibold transition';
         } else {
-          link.className = 'paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition';
+          link.className =
+            'paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition';
         }
       }
 
@@ -221,14 +223,14 @@
   function setActivePage() {
     const currentPath = window.location.pathname;
     const currentPage = currentPath.split('/').pop() || 'index.html';
-    
+
     // Find all navigation links in header
     const navLinks = header.querySelectorAll('nav a[href]');
-    
+
     navLinks.forEach((link) => {
       const href = link.getAttribute('href');
       const linkPage = href.split('/').pop();
-      
+
       // Check if this link matches current page
       if (linkPage === currentPage) {
         // Set active styles
@@ -265,7 +267,7 @@
       mobileLinks.forEach((link) => {
         const href = link.getAttribute('href');
         const linkPage = href.split('/').pop();
-        
+
         if (linkPage === currentPage) {
           link.classList.remove('text-text', 'hover:text-brand');
           link.classList.add('text-brand', 'font-semibold');
