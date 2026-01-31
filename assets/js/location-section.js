@@ -20,7 +20,7 @@
 
       const [apiLocations, apiPositions] = await Promise.all([
         LaundroAPI.getLocations(),
-        LaundroAPI.getLocationPositions()
+        LaundroAPI.getLocationPositions(),
       ]);
 
       if (apiLocations && apiLocations.length > 0) {
@@ -48,12 +48,13 @@
     // Update mobile map markers
     const mobileMapContainer = document.querySelector('#location-map-container > div:not([id])');
     if (mobileMapContainer && LOCATIONS_POSITIONS.mobile.length > 0) {
-      const mobileMarkersHTML = locations.map((location) => {
-        const position = LOCATIONS_POSITIONS.mobile.find(p => p.id === location.id) || { top: '0%', left: '0%' };
-        return `
+      const mobileMarkersHTML = locations
+        .map((location, index) => {
+          const position = LOCATIONS_POSITIONS.mobile.find((p) => p.id === location.id) || { top: '0%', left: '0%' };
+          return `
           <div
             class="location-marker absolute z-10 flex -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center transition-transform hover:scale-110"
-            data-location-id="${location.id}"
+            data-location-index="${index}"
             style="top: ${position.top}; left: ${position.left}"
           >
             <svg width="18" height="18" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" class="location-marker-outline">
@@ -66,23 +67,25 @@
             </svg>
           </div>
         `;
-      }).join('');
+        })
+        .join('');
 
       // Find existing markers container or create new one
       const existingMarkers = mobileMapContainer.querySelectorAll('.location-marker');
-      existingMarkers.forEach(marker => marker.remove());
+      existingMarkers.forEach((marker) => marker.remove());
       mobileMapContainer.insertAdjacentHTML('beforeend', mobileMarkersHTML);
     }
 
     // Update desktop map markers
     const desktopMap = document.getElementById('location-map-desktop');
     if (desktopMap && LOCATIONS_POSITIONS.desktop.length > 0) {
-      const desktopMarkersHTML = locations.map((location) => {
-        const position = LOCATIONS_POSITIONS.desktop.find(p => p.id === location.id) || { top: '0%', left: '0%' };
-        return `
+      const desktopMarkersHTML = locations
+        .map((location, index) => {
+          const position = LOCATIONS_POSITIONS.desktop.find((p) => p.id === location.id) || { top: '0%', left: '0%' };
+          return `
           <div
             class="location-marker absolute z-10 flex -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center transition-transform hover:scale-110"
-            data-location-id="${location.id}"
+            data-location-index="${index}"
             style="top: ${position.top}; left: ${position.left}; opacity: 0"
           >
             <svg width="18" height="18" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" class="location-marker-outline">
@@ -95,11 +98,12 @@
             </svg>
           </div>
         `;
-      }).join('');
+        })
+        .join('');
 
       // Remove existing markers and add new ones
       const existingMarkers = desktopMap.querySelectorAll('.location-marker');
-      existingMarkers.forEach(marker => marker.remove());
+      existingMarkers.forEach((marker) => marker.remove());
       desktopMap.insertAdjacentHTML('beforeend', desktopMarkersHTML);
     }
   }
@@ -110,10 +114,12 @@
     if (!sliderContainer || locations.length === 0) return;
 
     // Generate HTML for all location cards
-    const cardsHTML = locations.map((location) => `
+    const cardsHTML = locations
+      .map(
+        (location, index) => `
       <div
         class="location-slide keen-slider__slide group hover:border-brand rounded-card border-text/16 max-w-[306px] shrink-0 cursor-pointer border bg-white/10 px-[20px] py-4 backdrop-blur-[30px] transition-colors duration-200 md:max-w-[306px] 2xl:max-w-[430px] 2xl:rounded-[16px] 2xl:p-6"
-        data-location-index="${location.id}"
+        data-location-index="${index}"
       >
         <div class="mb-[31px] flex items-center justify-between md:mb-[27px] 2xl:mb-[41px]">
           <h2
@@ -163,7 +169,9 @@
           </div>
         </div>
       </div>
-    `).join('');
+    `,
+      )
+      .join('');
 
     // Replace slider content
     sliderContainer.innerHTML = cardsHTML;
@@ -196,17 +204,17 @@
 
     mapSpring = new Spring(SPRING_CONFIGS.LOCATION);
     markersOpacitySpring = new Spring(SPRING_CONFIGS.LOCATION);
-    
+
     mapSpring.current = 0;
     mapSpring.target = 0;
     markersOpacitySpring.current = 0;
     markersOpacitySpring.target = 0;
-    
+
     const initialMapY = 150;
     const width = window.innerWidth;
     let baseTranslateX = 0;
     let baseTranslateY = 0;
-    
+
     if (width >= 1536) {
       baseTranslateX = 800;
       baseTranslateY = 0;
@@ -223,9 +231,9 @@
       baseTranslateX = -50;
       baseTranslateY = 0;
     }
-    
+
     desktopMap.style.transform = `translateX(${baseTranslateX}px) translateY(${baseTranslateY + initialMapY}px)`;
-    
+
     const desktopMarkers = document.querySelectorAll('#location-map-desktop .location-marker');
     desktopMarkers.forEach((marker) => {
       marker.style.opacity = '0';
@@ -243,22 +251,22 @@
       const mapProgress = getMapScrollProgress(mapContainer);
       mapSpring.setTarget(mapProgress);
       markersOpacitySpring.setTarget(mapProgress);
-      
+
       const smoothMapProgress = mapSpring.update(deltaTime);
       const smoothMarkersProgress = markersOpacitySpring.update(deltaTime);
-      
+
       const mapY = transformProgress(smoothMapProgress, [0, 1], [150, 0]);
       const markersOpacity = transformProgress(smoothMarkersProgress, [0.95, 1], [0, 1], true);
-      
+
       // Apply map Y transform
       // In Next.js, Framer Motion applies y as translateY() which is added to existing transforms
       // Base transforms from Next.js: -translate-x-[50px] md:translate-x-[53px] md:translate-y-[-100px] lg:translate-x-[183px] lg:translate-y-[-100px] xl:translate-x-[503px] xl:translate-y-[-50px] 2xl:translate-x-[800px]
       // We apply all transforms via inline styles to match exactly
-      
+
       const width = window.innerWidth;
       let baseTranslateX = 0;
       let baseTranslateY = 0;
-      
+
       if (width >= 1536) {
         baseTranslateX = 800;
         baseTranslateY = 0;
@@ -275,9 +283,9 @@
         baseTranslateX = -50;
         baseTranslateY = 0;
       }
-      
+
       desktopMap.style.transform = `translateX(${baseTranslateX}px) translateY(${baseTranslateY + mapY}px)`;
-      
+
       const desktopMarkers = document.querySelectorAll('#location-map-desktop .location-marker');
       desktopMarkers.forEach((marker) => {
         marker.style.opacity = markersOpacity;
@@ -287,8 +295,8 @@
       const mapSpringVelocity = mapSpring.velocity;
       const markersSpringValue = markersOpacitySpring.getValue();
       const markersSpringVelocity = markersOpacitySpring.velocity;
-      
-      const needsUpdate = 
+
+      const needsUpdate =
         Math.abs(mapSpringValue - mapProgress) > 0.001 ||
         Math.abs(mapSpringVelocity) > 0.001 ||
         Math.abs(markersSpringValue - mapProgress) > 0.001 ||
@@ -306,7 +314,7 @@
         animationFrameId = requestAnimationFrame(updateMapAnimation);
       }
     }
-    
+
     function onResize() {
       lastTime = performance.now();
       if (!animationFrameId) {
@@ -354,7 +362,7 @@
       if (!sliderInstance) return;
       const track = sliderInstance.track.details;
       if (!track) return;
-      
+
       if (prevBtn) {
         prevBtn.disabled = track.rel === 0;
         prevBtn.setAttribute('aria-disabled', track.rel === 0);
@@ -380,7 +388,7 @@
       if (!sliderInstance) return;
       const track = sliderInstance.track.details;
       if (!track) return;
-      
+
       const currentSlideIndex = track.rel;
       if (activeLocationIndex !== currentSlideIndex) {
         activeLocationIndex = currentSlideIndex;
@@ -407,7 +415,7 @@
       const cardIndex = parseInt(card.getAttribute('data-location-index'));
       const isActive = activeLocationIndex === cardIndex;
       const title = card.querySelector('.location-title');
-      
+
       if (isActive) {
         card.classList.add('border-brand');
         card.classList.remove('border-text/16');
@@ -430,14 +438,14 @@
   function updateStaticMarkers() {
     const mobileMarkers = document.querySelectorAll('#location-map-container > div:not([id]) .location-marker');
     const desktopMarkers = document.querySelectorAll('#location-map-desktop .location-marker');
-    
+
     [...mobileMarkers, ...desktopMarkers].forEach((marker) => {
-      const markerId = parseInt(marker.getAttribute('data-location-id'));
-      const isActive = activeLocationIndex === markerId;
-      
+      const markerIndex = parseInt(marker.getAttribute('data-location-index'));
+      const isActive = activeLocationIndex === markerIndex;
+
       const outlineIcon = marker.querySelector('.location-marker-outline');
       const filledIcon = marker.querySelector('.location-marker-filled');
-      
+
       if (isActive) {
         if (outlineIcon) outlineIcon.style.display = 'none';
         if (filledIcon) filledIcon.style.display = 'block';
@@ -452,10 +460,10 @@
   function handleLocationSelect(index, shouldMoveSlider = false) {
     if (activeLocationIndex === index) return;
     activeLocationIndex = index;
-    
+
     updateActiveCards();
     updateStaticMarkers();
-    
+
     if (shouldMoveSlider && sliderInstance) {
       sliderInstance.moveToIdx(index);
     }
@@ -463,23 +471,41 @@
 
   // Initialize click handlers
   function initClickHandlers() {
-    // Desktop cards
-    const desktopCards = document.querySelectorAll('.location-slide');
-    desktopCards.forEach((card) => {
-      card.addEventListener('click', () => {
-        const cardIndex = parseInt(card.getAttribute('data-location-index'));
-        handleLocationSelect(cardIndex, false);
+    // Desktop cards (slider items) & Mobile Cards - handle via Event Delegation on the slider container
+    const sliderContainer = document.getElementById('location-slider');
+    if (sliderContainer) {
+      sliderContainer.addEventListener('click', (e) => {
+        const card = e.target.closest('.location-slide');
+        if (card) {
+          const index = parseInt(card.getAttribute('data-location-index'));
+          handleLocationSelect(index, false);
+        }
       });
-    });
+    }
 
-    // Map markers
-    const markers = document.querySelectorAll('.location-marker');
-    markers.forEach((marker) => {
-      marker.addEventListener('click', () => {
-        const markerId = parseInt(marker.getAttribute('data-location-id'));
-        handleLocationSelect(markerId, true);
+    // Map markers - Event Delegation for Mobile Map
+    const mobileMapContainer = document.querySelector('#location-map-container > div:not([id])');
+    if (mobileMapContainer) {
+      mobileMapContainer.addEventListener('click', (e) => {
+        const marker = e.target.closest('.location-marker');
+        if (marker) {
+          const index = parseInt(marker.getAttribute('data-location-index'));
+          handleLocationSelect(index, true);
+        }
       });
-    });
+    }
+
+    // Map markers - Event Delegation for Desktop Map
+    const desktopMap = document.getElementById('location-map-desktop');
+    if (desktopMap) {
+      desktopMap.addEventListener('click', (e) => {
+        const marker = e.target.closest('.location-marker');
+        if (marker) {
+          const index = parseInt(marker.getAttribute('data-location-index'));
+          handleLocationSelect(index, true);
+        }
+      });
+    }
   }
 
   // Initialize all components
