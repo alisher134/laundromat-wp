@@ -62,6 +62,13 @@
         burgerIcon.classList.add('text-white');
       }
     }
+
+    // Hide hero section when scrolling down to prevent it from showing in footer
+    if (window.scrollY > window.innerHeight) {
+      heroSection.style.visibility = 'hidden';
+    } else {
+      heroSection.style.visibility = 'visible';
+    }
   }
 
   window.addEventListener('scroll', handleScroll);

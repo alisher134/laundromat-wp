@@ -89,4 +89,18 @@
   // Initialize viewport height immediately
   setViewportHeight();
   window.addEventListener('resize', setViewportHeight);
+
+  // Hide hero section when scrolling down to prevent it from showing in footer
+  function handleHeroVisibility() {
+    if (heroSection) {
+      if (window.scrollY > window.innerHeight) {
+        heroSection.style.visibility = 'hidden';
+      } else {
+        heroSection.style.visibility = 'visible';
+      }
+    }
+  }
+
+  window.addEventListener('scroll', handleHeroVisibility);
+  handleHeroVisibility();
 })();
