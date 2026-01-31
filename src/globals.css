@@ -84,6 +84,7 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    -webkit-user-select: none;
   }
   body {
     @apply text-foreground bg-[#C7D8E333];
@@ -363,6 +364,14 @@
   .bg-notfound {
     background-image: url('../images/notfound-background.png');
   }
+}
+
+.safari-video-fix {
+  border: none;
+  outline: none;
+  background: transparent;
+  display: block;
+  -webkit-appearance: none;
 }
 
 .footer-circle-1 {
