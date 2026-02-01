@@ -348,3 +348,196 @@ function laundromat_make_order_column_sortable($columns)
     return $columns;
 }
 
+/**
+ * ==========================================
+ * TAXONOMY SORTING (Categories)
+ * ==========================================
+ */
+
+function laundromat_get_sortable_taxonomies()
+{
+    return ['faq_category'];
+}
+
+/**
+ * Enqueue scripts for taxonomy terms list
+ */
+add_action('admin_enqueue_scripts', 'laundromat_enqueue_taxonomy_sortable_scripts');
+
+function laundromat_enqueue_taxonomy_sortable_scripts($hook)
+{
+    // Taxonomy list page is edit-tags.php
+    if ($hook !== 'edit-tags.php') {
+        return;
+    }
+
+    $screen = get_current_screen();
+    $sortable_taxonomies = laundromat_get_sortable_taxonomies();
+
+    if ($screen && in_array($screen->taxonomy, $sortable_taxonomies)) {
+        wp_enqueue_script('jquery-ui-sortable');
+    }
+}
+
+/**
+ * Add sortable functionality to term list table
+ */
+add_action('admin_footer-edit-tags.php', 'laundromat_taxonomy_sortable_scripts');
+
+function laundromat_taxonomy_sortable_scripts()
+{
+    $screen = get_current_screen();
+    $sortable_taxonomies = laundromat_get_sortable_taxonomies();
+
+    if (!$screen || !in_array($screen->taxonomy, $sortable_taxonomies)) {
+        return;
+    }
+
+    $nonce = wp_create_nonce('laundromat_term_sort_order');
+    ?>
+    <script>
+    jQuery(document).ready(function($) {
+        var $table = $('#the-list');
+        // Notice element
+        var $notice = $('<div class="laundromat-sort-notice"><span class="spinner is-active"></span><span class="text"><?php echo esc_js(__('Saving category order...', 'laundromat')); ?></span></div>');
+        $('body').append($notice);
+
+        // Styling (inline to simplify dependency)
+        $('head').append('<style>.laundromat-sort-notice { position: fixed; bottom: 30px; right: 30px; padding: 12px 20px; background: #1d2327; color: #fff; border-radius: 4px; font-size: 13px; z-index: 99999; display: flex; align-items: center; gap: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.3); opacity: 0; transform: translateY(20px); transition: all 0.3s ease; } .laundromat-sort-notice.visible { opacity: 1; transform: translateY(0); } .laundromat-sort-notice.success { background: #00a32a; } .laundromat-sort-notice.error { background: #d63638; } .laundromat-sort-notice .spinner { float: none; margin: 0; filter: brightness(0) invert(1); } .wp-list-table tbody tr { cursor: grab; } .wp-list-table tbody tr:active { cursor: grabbing; } .wp-list-table tbody tr.ui-sortable-helper { background: #fff !important; box-shadow: 0 3px 15px rgba(0,0,0,0.2); display: table; width: 100%; } .wp-list-table tbody tr.ui-sortable-helper td { border-top: 1px solid #c3c4c7; }</style>');
+
+        // Initialize sortable on the term list
+        $table.sortable({
+            items: 'tr',
+            axis: 'y',
+            helper: function(e, tr) {
+                var $originals = tr.children();
+                var $helper = tr.clone();
+                $helper.children().each(function(index) {
+                    $(this).width($originals.eq(index).outerWidth());
+                });
+                return $helper;
+            },
+            update: function(e, ui) {
+                saveTermOrder();
+            }
+        });
+
+        function saveTermOrder() {
+            $notice.removeClass('success error').addClass('visible');
+            $notice.find('.text').text('<?php echo esc_js(__('Saving category order...', 'laundromat')); ?>');
+            $notice.find('.spinner').show();
+
+            var order = [];
+            $table.find('tr').each(function() {
+                var id = $(this).attr('id');
+                if (id && id.indexOf('tag-') === 0) {
+                    order.push(id.replace('tag-', ''));
+                }
+            });
+
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'laundromat_save_term_order',
+                    taxonomy: '<?php echo esc_js($screen->taxonomy); ?>',
+                    order: order,
+                    nonce: '<?php echo $nonce; ?>'
+                },
+                success: function(response) {
+                    $notice.find('.spinner').hide();
+                    if (response.success) {
+                        $notice.addClass('success');
+                        $notice.find('.text').text('<?php echo esc_js(__('Order saved!', 'laundromat')); ?>');
+                    } else {
+                        $notice.addClass('error');
+                        $notice.find('.text').text('<?php echo esc_js(__('Error saving order', 'laundromat')); ?>');
+                    }
+                    setTimeout(function() { $notice.removeClass('visible'); }, 2000);
+                },
+                error: function() {
+                    $notice.find('.spinner').hide();
+                    $notice.addClass('error');
+                    $notice.find('.text').text('<?php echo esc_js(__('Error saving order', 'laundromat')); ?>');
+                    setTimeout(function() { $notice.removeClass('visible'); }, 2000);
+                }
+            });
+        }
+    });
+    </script>
+    <?php
+}
+
+/**
+ * AJAX handler for saving term order
+ */
+add_action('wp_ajax_laundromat_save_term_order', 'laundromat_ajax_save_term_order');
+
+function laundromat_ajax_save_term_order()
+{
+    if (!wp_verify_nonce($_POST['nonce'] ?? '', 'laundromat_term_sort_order')) {
+        wp_send_json_error(['message' => 'Invalid nonce']);
+    }
+
+    if (!current_user_can('manage_categories')) {
+        wp_send_json_error(['message' => 'Permission denied']);
+    }
+
+    $taxonomy = sanitize_text_field($_POST['taxonomy'] ?? '');
+    $order = $_POST['order'] ?? [];
+
+    $sortable_taxonomies = laundromat_get_sortable_taxonomies();
+    if (!in_array($taxonomy, $sortable_taxonomies)) {
+        wp_send_json_error(['message' => 'Invalid taxonomy']);
+    }
+
+    foreach ($order as $index => $term_id) {
+        $term_id = intval($term_id);
+        if ($term_id > 0) {
+            update_term_meta($term_id, '_sort_order', $index);
+        }
+    }
+
+    wp_send_json_success(['message' => 'Order saved']);
+}
+
+/**
+ * Apply custom sort order to frontend queries
+ */
+add_action('pre_get_terms', 'laundromat_apply_term_order');
+
+function laundromat_apply_term_order($query)
+{
+    if (is_admin()) {
+        return;
+    }
+
+    $taxonomies = $query->query_vars['taxonomy'];
+    
+    if (is_string($taxonomies)) {
+        $taxonomies = [$taxonomies];
+    }
+    
+    $sortable = laundromat_get_sortable_taxonomies();
+    $should_sort = false;
+    
+    if (is_array($taxonomies)) {
+        foreach ($taxonomies as $tax) {
+            if (in_array($tax, $sortable)) {
+                $should_sort = true;
+                break;
+            }
+        }
+    }
+
+    if ($should_sort) {
+        $orderby = $query->query_vars['orderby'] ?? '';
+        
+        if (empty($orderby) || $orderby === 'name' || $orderby === 'id' || $orderby === 'none') {
+            $query->query_vars['orderby'] = 'meta_value_num';
+            $query->query_vars['meta_key'] = '_sort_order';
+            $query->query_vars['order'] = 'ASC';
+        }
+    }
+}
+

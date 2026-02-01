@@ -334,7 +334,7 @@ const LaundroAPI = (function () {
      * @returns {Promise<Object|null>}
      */
     async getSettings() {
-      return await fetchJSON(`${CONFIG.CUSTOM_API}/settings`);
+      return await fetchJSON(`${CONFIG.CUSTOM_API}/settings${buildQuery()}`);
     },
 
     /**
@@ -342,7 +342,7 @@ const LaundroAPI = (function () {
      * @returns {Promise<Array|null>}
      */
     async getCategories() {
-      return await fetchJSON(`${CONFIG.CUSTOM_API}/categories`);
+      return await fetchJSON(`${CONFIG.CUSTOM_API}/categories${buildQuery()}`);
     },
 
     /**
@@ -350,7 +350,7 @@ const LaundroAPI = (function () {
      * @returns {Promise<Array|null>}
      */
     async getFAQCategories() {
-      return await fetchJSON(`${CONFIG.CUSTOM_API}/faq-categories`);
+      return await fetchJSON(`${CONFIG.CUSTOM_API}/faq-categories${buildQuery()}`);
     },
 
     /**
@@ -358,7 +358,7 @@ const LaundroAPI = (function () {
      * @returns {Promise<Object|null>}
      */
     async getLanguages() {
-      return await fetchJSON(`${CONFIG.CUSTOM_API}/languages`);
+      return await fetchJSON(`${CONFIG.CUSTOM_API}/languages${buildQuery()}`);
     },
 
     /**
