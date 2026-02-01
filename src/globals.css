@@ -125,6 +125,7 @@
     100% {
       transform: perspective(1200px) translateY(0) translateZ(0) rotateX(0deg) scale(1);
       border-radius: 0px;
+      opacity: 1;
     }
   }
 
@@ -139,6 +140,11 @@
 
   .hero-entrance {
     animation: hero-lift var(--animation-hero-duration) var(--animation-hero-easing) forwards;
+    will-change: transform, opacity, border-radius;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
   }
 
   .hero-fade {
@@ -370,8 +376,13 @@
   border: none;
   outline: none;
   background: transparent;
+  box-shadow: none;
+  -webkit-box-shadow: none;
+  filter: none;
   display: block;
   -webkit-appearance: none;
+  clip-path: inset(0.5px);
+  border-radius: 0;
 }
 
 .footer-circle-1 {

@@ -21,7 +21,7 @@
     >
       <video
         autoplay
-        class="pointer-events-none size-[100px]"
+        class="safari-video-fix pointer-events-none size-[100px]"
         loop
         muted
         playsinline
@@ -239,7 +239,7 @@
 
               <ul
                 id="lang-dropdown-mobile"
-                class="absolute left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-brand/20 bg-white text-center shadow-xl"
+                class="border-brand/20 absolute left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border bg-white text-center shadow-xl"
               >
                 <li>
                   <button
@@ -377,16 +377,16 @@
 
             <div
               id="hero-map"
-              class="rounded-card relative h-[83px] w-full max-w-[187px] overflow-hidden bg-[#F6FBFD] md:h-[147px] md:max-w-[157px] lg:h-[147px] lg:max-w-[210px] xl:h-[147px] xl:max-w-[210px] 2xl:h-[206px] 2xl:max-w-[294px] cursor-pointer"
+              class="rounded-card relative h-[83px] w-full max-w-[187px] cursor-pointer overflow-hidden bg-[#F6FBFD] md:h-[147px] md:max-w-[157px] lg:h-[147px] lg:max-w-[210px] xl:h-[147px] xl:max-w-[210px] 2xl:h-[206px] 2xl:max-w-[294px]"
             >
               <img
                 alt="Map preview"
-                class="absolute inset-0 h-full w-full object-cover md:hidden pointer-events-none"
+                class="pointer-events-none absolute inset-0 h-full w-full object-cover md:hidden"
                 src="../assets/images/mobile-map-preview.png"
               />
               <img
                 alt="Map preview"
-                class="absolute inset-0 hidden h-full w-full object-contain md:block pointer-events-none"
+                class="pointer-events-none absolute inset-0 hidden h-full w-full object-contain md:block"
                 src="../assets/images/map-preview.png"
               />
               <a
@@ -539,7 +539,7 @@
                           </svg>
                         </span>
                         <h3
-                          class="text-text hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
+                          class="text-text line-clamp-2 hidden overflow-hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
                         >
                           365 days
                         </h3>
@@ -548,7 +548,9 @@
                       <div
                         class="md:border-l-text/20 md:flex md:h-full md:flex-col md:justify-end md:border-l md:pl-[32px] 2xl:pl-[48px]"
                       >
-                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] block md:hidden">365 days</h3>
+                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] line-clamp-2 block overflow-hidden md:hidden">
+                          365 days
+                        </h3>
                         <div class="bg-text/20 block h-px w-full md:hidden"></div>
                         <p
                           class="text-text mt-[22px] mb-3 max-w-[214px] text-lg leading-[124%] font-normal tracking-[-0.01em] md:mb-[33px] md:text-[19px] md:leading-[124%] md:tracking-[-0.04em] 2xl:mb-[46px] 2xl:max-w-[302px] 2xl:text-[28px]"
@@ -586,7 +588,7 @@
                           </svg>
                         </span>
                         <h3
-                          class="text-text hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
+                          class="text-text line-clamp-2 hidden overflow-hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
                         >
                           &gt;60 min
                         </h3>
@@ -595,7 +597,9 @@
                       <div
                         class="md:border-l-text/20 md:flex md:h-full md:flex-col md:justify-end md:border-l md:pl-[32px] 2xl:pl-[48px]"
                       >
-                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] block md:hidden">&gt;60 min</h3>
+                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] line-clamp-2 block overflow-hidden md:hidden">
+                          &gt;60 min
+                        </h3>
                         <div class="bg-text/20 block h-px w-full md:hidden"></div>
                         <p
                           class="text-text mt-[22px] mb-3 max-w-[214px] text-lg leading-[124%] font-normal tracking-[-0.01em] md:mb-[33px] md:text-[19px] md:leading-[124%] md:tracking-[-0.04em] 2xl:mb-[46px] 2xl:max-w-[302px] 2xl:text-[28px]"
@@ -636,7 +640,7 @@
                           </svg>
                         </span>
                         <h3
-                          class="text-text hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
+                          class="text-text line-clamp-2 hidden overflow-hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
                         >
                           low prices
                         </h3>
@@ -645,7 +649,9 @@
                       <div
                         class="md:border-l-text/20 md:flex md:h-full md:flex-col md:justify-end md:border-l md:pl-[32px] 2xl:pl-[48px]"
                       >
-                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] block md:hidden">low prices</h3>
+                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] line-clamp-2 block overflow-hidden md:hidden">
+                          low prices
+                        </h3>
                         <div class="bg-text/20 block h-px w-full md:hidden"></div>
                         <p
                           class="text-text mt-[22px] mb-3 max-w-[214px] text-lg leading-[124%] font-normal tracking-[-0.01em] md:mb-[33px] md:text-[19px] md:leading-[124%] md:tracking-[-0.04em] 2xl:mb-[46px] 2xl:max-w-[302px] 2xl:text-[28px]"
@@ -679,7 +685,7 @@
                           </svg>
                         </span>
                         <h3
-                          class="text-text hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
+                          class="text-text line-clamp-2 hidden overflow-hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
                         >
                           always there
                         </h3>
@@ -688,7 +694,9 @@
                       <div
                         class="md:border-l-text/20 md:flex md:h-full md:flex-col md:justify-end md:border-l md:pl-[32px] 2xl:pl-[48px]"
                       >
-                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] block md:hidden">always there</h3>
+                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] line-clamp-2 block overflow-hidden md:hidden">
+                          always there
+                        </h3>
                         <div class="bg-text/20 block h-px w-full md:hidden"></div>
                         <p
                           class="text-text mt-[22px] mb-3 max-w-[214px] text-lg leading-[124%] font-normal tracking-[-0.01em] md:mb-[33px] md:text-[19px] md:leading-[124%] md:tracking-[-0.04em] 2xl:mb-[46px] 2xl:max-w-[302px] 2xl:text-[28px]"
@@ -846,15 +854,15 @@
 
             <!-- Service 1: Wash (Desktop) -->
             <div class="border-t-text/16 hidden border-t lg:block" data-service-card="0">
-              <div class="service-card-wrapper flex items-start lg:py-3 xl:py-4 2xl:py-4">
+              <div class="service-card-wrapper flex items-stretch lg:py-3 xl:py-4 2xl:py-4">
                 <div class="lg:min-w-[400px] xl:min-w-[558px] 2xl:min-w-[777px]">
                   <h3
-                    class="text-text mb-7 max-w-[290px] text-[45px] leading-[110%] font-normal tracking-[-0.04em] lg:mt-5 xl:mt-[27px] xl:mb-[75px] 2xl:mt-10 2xl:mb-[75px] 2xl:text-[64px]"
+                    class="text-text mb-7 line-clamp-2 max-w-[290px] overflow-hidden text-[45px] leading-[110%] font-normal tracking-[-0.04em] lg:mt-5 xl:mt-[27px] xl:mb-[75px] 2xl:mt-10 2xl:mb-[75px] 2xl:text-[64px]"
                   >
                     Laundry service
                   </h3>
                   <p
-                    class="text-text/80 mb-[46px] max-w-[326px] text-base leading-[132%] font-normal tracking-[-0.01em] 2xl:mb-[56px] 2xl:max-w-[455px] 2xl:text-[21px]"
+                    class="text-text/80 mb-[46px] line-clamp-3 h-[63px] max-w-[326px] overflow-hidden text-base leading-[132%] font-normal tracking-[-0.01em] 2xl:mb-[56px] 2xl:min-h-[87px] 2xl:max-w-[455px] 2xl:text-[21px]"
                   >
                     Wash your clothes quickly and efficiently, 365 days a year, with our technologically advanced washing
                     machines
@@ -887,7 +895,7 @@
                     </div>
                   </a>
                   <div
-                    class="service-price-info mt-[100px] flex items-stretch gap-7 lg:mt-[100px] xl:mt-[133px] xl:h-[77px] 2xl:mt-[200px] 2xl:h-[101px] 2xl:gap-[46px]"
+                    class="service-price-info mt-[135px] flex items-stretch gap-7 lg:mt-[135px] xl:mt-[135px] xl:h-[77px] 2xl:mt-[200px] 2xl:h-[101px] 2xl:gap-[46px]"
                     style="opacity: 0; display: none"
                   >
                     <div>
@@ -987,15 +995,15 @@
 
             <!-- Service 2: Dry (Desktop) -->
             <div class="border-t-text/16 hidden border-t lg:block" data-service-card="1">
-              <div class="service-card-wrapper flex items-start lg:py-3 xl:py-4 2xl:py-4">
+              <div class="service-card-wrapper flex items-stretch lg:py-3 xl:py-4 2xl:py-4">
                 <div class="lg:min-w-[400px] xl:min-w-[558px] 2xl:min-w-[777px]">
                   <h3
-                    class="text-text mb-7 max-w-[290px] text-[45px] leading-[110%] font-normal tracking-[-0.04em] lg:mt-5 xl:mt-[27px] xl:mb-[75px] 2xl:mt-10 2xl:mb-[75px] 2xl:text-[64px]"
+                    class="text-text mb-7 line-clamp-2 max-w-[290px] overflow-hidden text-[45px] leading-[110%] font-normal tracking-[-0.04em] lg:mt-5 xl:mt-[27px] xl:mb-[75px] 2xl:mt-10 2xl:mb-[75px] 2xl:text-[64px]"
                   >
                     Drying service
                   </h3>
                   <p
-                    class="text-text/80 mb-[46px] max-w-[326px] text-base leading-[132%] font-normal tracking-[-0.01em] 2xl:mb-[56px] 2xl:max-w-[455px] 2xl:text-[21px]"
+                    class="text-text/80 mb-[46px] line-clamp-3 h-[63px] max-w-[326px] overflow-hidden text-base leading-[132%] font-normal tracking-[-0.01em] 2xl:mb-[56px] 2xl:min-h-[87px] 2xl:max-w-[455px] 2xl:text-[21px]"
                   >
                     Dry your clothes quickly and efficiently, 365 days a year, with our technologically advanced dryers
                   </p>
@@ -1027,7 +1035,7 @@
                     </div>
                   </a>
                   <div
-                    class="service-price-info mt-[100px] flex items-stretch gap-7 lg:mt-[100px] xl:mt-[133px] xl:h-[77px] 2xl:mt-[200px] 2xl:h-[101px] 2xl:gap-[46px]"
+                    class="service-price-info mt-[135px] flex items-stretch gap-7 lg:mt-[135px] xl:mt-[135px] xl:h-[77px] 2xl:mt-[200px] 2xl:h-[101px] 2xl:gap-[46px]"
                     style="opacity: 0; display: none"
                   >
                     <div>
@@ -1128,15 +1136,15 @@
 
             <!-- Service 3: Special cleaning (Desktop) -->
             <div class="border-t-text/16 border-b-text/16 hidden border-t border-b lg:block" data-service-card="2">
-              <div class="service-card-wrapper flex items-start lg:py-3 xl:py-4 2xl:py-4">
+              <div class="service-card-wrapper flex items-stretch lg:py-3 xl:py-4 2xl:py-4">
                 <div class="lg:min-w-[400px] xl:min-w-[558px] 2xl:min-w-[777px]">
                   <h3
-                    class="text-text mb-7 max-w-[290px] text-[45px] leading-[110%] font-normal tracking-[-0.04em] lg:mt-5 xl:mt-[27px] xl:mb-[75px] 2xl:mt-10 2xl:mb-[75px] 2xl:text-[64px]"
+                    class="text-text mb-7 line-clamp-2 max-w-[290px] overflow-hidden text-[45px] leading-[110%] font-normal tracking-[-0.04em] lg:mt-5 xl:mt-[27px] xl:mb-[75px] 2xl:mt-10 2xl:mb-[75px] 2xl:text-[64px]"
                   >
                     Special cleaning
                   </h3>
                   <p
-                    class="text-text/80 mb-[46px] max-w-[326px] text-base leading-[132%] font-normal tracking-[-0.01em] 2xl:mb-[56px] 2xl:max-w-[455px] 2xl:text-[21px]"
+                    class="text-text/80 mb-[46px] line-clamp-3 h-[63px] max-w-[326px] overflow-hidden text-base leading-[132%] font-normal tracking-[-0.01em] 2xl:mb-[56px] 2xl:min-h-[87px] 2xl:max-w-[455px] 2xl:text-[21px]"
                   >
                     Our machines handle large or delicate items like duvets, blankets, and pillows — please follow
                     instructions for best results
@@ -1169,7 +1177,7 @@
                     </div>
                   </a>
                   <div
-                    class="service-price-info mt-[100px] flex items-stretch gap-7 lg:mt-[100px] xl:mt-[133px] xl:h-[77px] 2xl:mt-[200px] 2xl:h-[101px] 2xl:gap-[46px]"
+                    class="service-price-info mt-[135px] flex items-stretch gap-7 lg:mt-[135px] xl:mt-[135px] xl:h-[77px] 2xl:mt-[200px] 2xl:h-[101px] 2xl:gap-[46px]"
                     style="opacity: 0; display: none"
                   >
                     <div>
@@ -1863,7 +1871,9 @@
                       fill="currentColor"
                     />
                   </svg>
-                  <h4 class="text-text mb-[2px] text-sm leading-[132%] font-normal tracking-[-0.01em]">Αξιολόγηση Google</h4>
+                  <h4 class="text-text mb-[2px] text-sm leading-[132%] font-normal tracking-[-0.01em]">
+                    Αξιολόγηση Google
+                  </h4>
                   <p class="paragraph-body-xs text-text/60 text-xs">233 reviews <span class="text-brand">(4.8)</span></p>
                 </div>
               </div>

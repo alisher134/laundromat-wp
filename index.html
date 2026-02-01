@@ -21,7 +21,7 @@
     >
       <video
         autoplay
-        class="pointer-events-none size-[100px]"
+        class="safari-video-fix pointer-events-none size-[100px]"
         loop
         muted
         playsinline
@@ -352,24 +352,11 @@
       <div aria-hidden="true" class="pointer-events-none invisible h-screen w-full"></div>
 
       <!-- Hero Section -->
-      <section
-        id="hero-section"
-        class="fixed top-0 left-0 z-0 w-full overflow-hidden"
-        style="
-          height: 100vh;
-          transform: translateZ(0);
-          will-change: transform;
-          -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
-          opacity: 0;
-          transition: opacity 0.3s ease-in-out;
-        "
-      >
+      <section id="hero-section" class="fixed top-0 left-0 z-0 w-full overflow-hidden" style="height: 100vh; opacity: 0">
         <img
           alt="Laundromat hero background"
           class="absolute inset-0 h-full w-full object-cover object-top"
           src="./assets/images/hero-background.png"
-          style="transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden"
         />
 
         <div
@@ -547,7 +534,7 @@
                           </svg>
                         </span>
                         <h3
-                          class="text-text hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
+                          class="text-text line-clamp-2 hidden overflow-hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
                         >
                           365 days
                         </h3>
@@ -556,7 +543,9 @@
                       <div
                         class="md:border-l-text/20 md:flex md:h-full md:flex-col md:justify-end md:border-l md:pl-[32px] 2xl:pl-[48px]"
                       >
-                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] block md:hidden">365 days</h3>
+                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] line-clamp-2 block overflow-hidden md:hidden">
+                          365 days
+                        </h3>
                         <div class="bg-text/20 block h-px w-full md:hidden"></div>
                         <p
                           class="text-text mt-[22px] mb-3 max-w-[214px] text-lg leading-[124%] font-normal tracking-[-0.01em] md:mb-[33px] md:text-[19px] md:leading-[124%] md:tracking-[-0.04em] 2xl:mb-[46px] 2xl:max-w-[302px] 2xl:text-[28px]"
@@ -594,7 +583,7 @@
                           </svg>
                         </span>
                         <h3
-                          class="text-text hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
+                          class="text-text line-clamp-2 hidden overflow-hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
                         >
                           &gt;60 min
                         </h3>
@@ -603,7 +592,9 @@
                       <div
                         class="md:border-l-text/20 md:flex md:h-full md:flex-col md:justify-end md:border-l md:pl-[32px] 2xl:pl-[48px]"
                       >
-                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] block md:hidden">&gt;60 min</h3>
+                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] line-clamp-2 block overflow-hidden md:hidden">
+                          &gt;60 min
+                        </h3>
                         <div class="bg-text/20 block h-px w-full md:hidden"></div>
                         <p
                           class="text-text mt-[22px] mb-3 max-w-[214px] text-lg leading-[124%] font-normal tracking-[-0.01em] md:mb-[33px] md:text-[19px] md:leading-[124%] md:tracking-[-0.04em] 2xl:mb-[46px] 2xl:max-w-[302px] 2xl:text-[28px]"
@@ -644,7 +635,7 @@
                           </svg>
                         </span>
                         <h3
-                          class="text-text hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
+                          class="text-text line-clamp-2 hidden overflow-hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
                         >
                           low prices
                         </h3>
@@ -653,7 +644,9 @@
                       <div
                         class="md:border-l-text/20 md:flex md:h-full md:flex-col md:justify-end md:border-l md:pl-[32px] 2xl:pl-[48px]"
                       >
-                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] block md:hidden">low prices</h3>
+                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] line-clamp-2 block overflow-hidden md:hidden">
+                          low prices
+                        </h3>
                         <div class="bg-text/20 block h-px w-full md:hidden"></div>
                         <p
                           class="text-text mt-[22px] mb-3 max-w-[214px] text-lg leading-[124%] font-normal tracking-[-0.01em] md:mb-[33px] md:text-[19px] md:leading-[124%] md:tracking-[-0.04em] 2xl:mb-[46px] 2xl:max-w-[302px] 2xl:text-[28px]"
@@ -687,7 +680,7 @@
                           </svg>
                         </span>
                         <h3
-                          class="text-text hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
+                          class="text-text line-clamp-2 hidden overflow-hidden text-[42px] leading-[110%] font-normal tracking-[-0.04em] md:block md:max-w-[144px] 2xl:max-w-[203px] 2xl:text-[64px]"
                         >
                           always there
                         </h3>
@@ -696,7 +689,9 @@
                       <div
                         class="md:border-l-text/20 md:flex md:h-full md:flex-col md:justify-end md:border-l md:pl-[32px] 2xl:pl-[48px]"
                       >
-                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] block md:hidden">always there</h3>
+                        <h3 class="paragraph-heading-md mt-[74px] mb-[20px] line-clamp-2 block overflow-hidden md:hidden">
+                          always there
+                        </h3>
                         <div class="bg-text/20 block h-px w-full md:hidden"></div>
                         <p
                           class="text-text mt-[22px] mb-3 max-w-[214px] text-lg leading-[124%] font-normal tracking-[-0.01em] md:mb-[33px] md:text-[19px] md:leading-[124%] md:tracking-[-0.04em] 2xl:mb-[46px] 2xl:max-w-[302px] 2xl:text-[28px]"
@@ -855,57 +850,59 @@
             <!-- Service 1: Wash (Desktop) -->
             <div class="border-t-text/16 hidden border-t lg:block" data-service-card="0">
               <div class="service-card-wrapper flex items-stretch lg:pt-3 xl:pt-4 2xl:pt-4">
-                <div class="flex flex-col lg:min-w-[400px] xl:min-w-[558px] 2xl:min-w-[777px]">
+                <div class="lg:min-w-[400px] xl:min-w-[558px] 2xl:min-w-[777px]">
                   <h3
-                    class="text-text mb-7 max-w-[240px] text-[45px] leading-[110%] font-normal tracking-[-0.04em] lg:mt-5 xl:mt-[27px] xl:mb-[75px] 2xl:mt-10 2xl:mb-[75px] 2xl:text-[64px]"
+                    class="text-text mb-7 line-clamp-2 max-w-[240px] overflow-hidden text-[45px] leading-[110%] font-normal tracking-[-0.04em] lg:mt-5 xl:mt-[27px] xl:mb-[75px] 2xl:mt-10 2xl:mb-[75px] 2xl:text-[64px]"
                   >
                     Laundry service
                   </h3>
                   <p
-                    class="text-text/80 mb-[46px] max-w-[326px] text-base leading-[132%] font-normal tracking-[-0.01em] 2xl:mb-[56px] 2xl:max-w-[455px] 2xl:text-[21px]"
+                    class="text-text/80 mb-[46px] line-clamp-3 h-[63px] max-w-[326px] overflow-hidden text-base leading-[132%] font-normal tracking-[-0.01em] 2xl:mb-[56px] 2xl:min-h-[87px] 2xl:max-w-[455px] 2xl:text-[21px]"
                   >
                     Wash your clothes quickly and efficiently, 365 days a year, with our technologically advanced washing
                     machines
                   </p>
-                  <a
-                    href="services.html"
-                    class="group border-text/20 focus-visible:ring-brand flex min-h-[75px] max-w-[196px] min-w-[196px] flex-none cursor-pointer flex-col rounded-[7px] border pt-[14px] pr-3 pb-3 pl-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:min-h-[106px] md:max-w-[328px] md:min-w-[328px] xl:min-h-[75px] xl:max-w-[233px] xl:min-w-[233px] 2xl:min-h-[106px] 2xl:max-w-[328px] 2xl:min-w-[328px] 2xl:rounded-[10px] 2xl:pt-[18px] 2xl:pr-[14px] 2xl:pb-[14px] 2xl:pl-5"
-                  >
-                    <p
-                      class="text-text group-hover:text-brand text-sm leading-[132%] font-medium tracking-[-0.01em] transition-colors 2xl:text-lg"
+                  <div class="">
+                    <a
+                      href="services.html"
+                      class="group border-text/20 focus-visible:ring-brand flex min-h-[75px] max-w-[196px] min-w-[196px] flex-none cursor-pointer flex-col rounded-[7px] border pt-[14px] pr-3 pb-3 pl-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:min-h-[106px] md:max-w-[328px] md:min-w-[328px] xl:min-h-[75px] xl:max-w-[233px] xl:min-w-[233px] 2xl:min-h-[106px] 2xl:max-w-[328px] 2xl:min-w-[328px] 2xl:rounded-[10px] 2xl:pt-[18px] 2xl:pr-[14px] 2xl:pb-[14px] 2xl:pl-5"
                     >
-                      Learn more
-                    </p>
-                    <div class="mt-auto flex justify-end">
-                      <span class="bg-brand flex size-[17px] items-center justify-center rounded-full 2xl:size-[22px]">
-                        <svg
-                          aria-hidden
-                          class="size-[6px] text-white 2xl:size-[8px]"
-                          viewBox="0 0 7 8"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M0.401367 5.81156C0.944808 6.43139 1.70294 6.82143 2.5225 6.90285C3.34207 6.98426 4.16193 6.75098 4.81634 6.25014C5.47075 5.74931 5.9109 5.01829 6.04781 4.20487C6.18471 3.39146 6.00817 2.55631 5.55385 1.86828M5.21495 1.43853C4.7966 0.99123 4.26066 0.671323 3.6688 0.515625"
-                            stroke="currentColor"
-                            stroke-width="1.06719"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                  </a>
-                  <div
-                    class="service-price-info mt-auto flex items-stretch gap-7 xl:h-[77px] 2xl:h-[101px] 2xl:gap-[46px]"
-                    style="opacity: 0; display: none"
-                  >
-                    <div>
-                      <p class="price-label">Price from</p>
-                      <p class="price-value">15 $</p>
-                    </div>
-                    <div class="bg-text/16 w-px"></div>
-                    <div>
-                      <p class="price-label">Time from</p>
-                      <p class="price-value">30 min</p>
+                      <p
+                        class="text-text group-hover:text-brand text-sm leading-[132%] font-medium tracking-[-0.01em] transition-colors 2xl:text-lg"
+                      >
+                        Learn more
+                      </p>
+                      <div class="mt-auto flex justify-end">
+                        <span class="bg-brand flex size-[17px] items-center justify-center rounded-full 2xl:size-[22px]">
+                          <svg
+                            aria-hidden
+                            class="size-[6px] text-white 2xl:size-[8px]"
+                            viewBox="0 0 7 8"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0.401367 5.81156C0.944808 6.43139 1.70294 6.82143 2.5225 6.90285C3.34207 6.98426 4.16193 6.75098 4.81634 6.25014C5.47075 5.74931 5.9109 5.01829 6.04781 4.20487C6.18471 3.39146 6.00817 2.55631 5.55385 1.86828M5.21495 1.43853C4.7966 0.99123 4.26066 0.671323 3.6688 0.515625"
+                              stroke="currentColor"
+                              stroke-width="1.06719"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </a>
+                    <div
+                      class="service-price-info mt-[135px] flex items-stretch gap-7 xl:h-[77px] 2xl:mt-[200px] 2xl:h-[101px] 2xl:gap-[46px]"
+                      style="opacity: 0; display: none"
+                    >
+                      <div>
+                        <p class="price-label">Price from</p>
+                        <p class="price-value">15 $</p>
+                      </div>
+                      <div class="bg-text/16 w-px"></div>
+                      <div>
+                        <p class="price-label">Time from</p>
+                        <p class="price-value">30 min</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -996,56 +993,58 @@
             <!-- Service 2: Dry (Desktop) -->
             <div class="border-t-text/16 hidden border-t lg:block" data-service-card="1">
               <div class="service-card-wrapper flex items-stretch lg:pt-3 xl:pt-4 2xl:pt-4">
-                <div class="flex flex-col lg:min-w-[400px] xl:min-w-[558px] 2xl:min-w-[777px]">
+                <div class="lg:min-w-[400px] xl:min-w-[558px] 2xl:min-w-[777px]">
                   <h3
-                    class="text-text mb-7 max-w-[240px] text-[45px] leading-[110%] font-normal tracking-[-0.04em] lg:mt-5 xl:mt-[27px] xl:mb-[75px] 2xl:mt-10 2xl:mb-[75px] 2xl:text-[64px]"
+                    class="text-text mb-7 line-clamp-2 max-w-[240px] overflow-hidden text-[45px] leading-[110%] font-normal tracking-[-0.04em] lg:mt-5 xl:mt-[27px] xl:mb-[75px] 2xl:mt-10 2xl:mb-[75px] 2xl:text-[64px]"
                   >
                     Drying service
                   </h3>
                   <p
-                    class="text-text/80 mb-[46px] max-w-[326px] text-base leading-[132%] font-normal tracking-[-0.01em] 2xl:mb-[56px] 2xl:max-w-[455px] 2xl:text-[21px]"
+                    class="text-text/80 mb-[46px] line-clamp-3 h-[63px] max-w-[326px] overflow-hidden text-base leading-[132%] font-normal tracking-[-0.01em] 2xl:mb-[56px] 2xl:min-h-[87px] 2xl:max-w-[455px] 2xl:text-[21px]"
                   >
                     Dry your clothes quickly and efficiently, 365 days a year, with our technologically advanced dryers
                   </p>
-                  <a
-                    href="services.html"
-                    class="group border-text/20 focus-visible:ring-brand flex min-h-[75px] max-w-[196px] min-w-[196px] flex-none cursor-pointer flex-col rounded-[7px] border pt-[14px] pr-3 pb-3 pl-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:min-h-[106px] md:max-w-[328px] md:min-w-[328px] xl:min-h-[75px] xl:max-w-[233px] xl:min-w-[233px] 2xl:min-h-[106px] 2xl:max-w-[328px] 2xl:min-w-[328px] 2xl:rounded-[10px] 2xl:pt-[18px] 2xl:pr-[14px] 2xl:pb-[14px] 2xl:pl-5"
-                  >
-                    <p
-                      class="text-text group-hover:text-brand text-sm leading-[132%] font-medium tracking-[-0.01em] transition-colors 2xl:text-lg"
+                  <div class="">
+                    <a
+                      href="services.html"
+                      class="group border-text/20 focus-visible:ring-brand flex min-h-[75px] max-w-[196px] min-w-[196px] flex-none cursor-pointer flex-col rounded-[7px] border pt-[14px] pr-3 pb-3 pl-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:min-h-[106px] md:max-w-[328px] md:min-w-[328px] xl:min-h-[75px] xl:max-w-[233px] xl:min-w-[233px] 2xl:min-h-[106px] 2xl:max-w-[328px] 2xl:min-w-[328px] 2xl:rounded-[10px] 2xl:pt-[18px] 2xl:pr-[14px] 2xl:pb-[14px] 2xl:pl-5"
                     >
-                      Learn more
-                    </p>
-                    <div class="mt-auto flex justify-end">
-                      <span class="bg-brand flex size-[17px] items-center justify-center rounded-full 2xl:size-[22px]">
-                        <svg
-                          aria-hidden
-                          class="size-[6px] text-white 2xl:size-[8px]"
-                          viewBox="0 0 7 8"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M0.401367 5.81156C0.944808 6.43139 1.70294 6.82143 2.5225 6.90285C3.34207 6.98426 4.16193 6.75098 4.81634 6.25014C5.47075 5.74931 5.9109 5.01829 6.04781 4.20487C6.18471 3.39146 6.00817 2.55631 5.55385 1.86828M5.21495 1.43853C4.7966 0.99123 4.26066 0.671323 3.6688 0.515625"
-                            stroke="currentColor"
-                            stroke-width="1.06719"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                  </a>
-                  <div
-                    class="service-price-info mt-auto flex items-stretch gap-7 xl:h-[77px] 2xl:h-[101px] 2xl:gap-[46px]"
-                    style="opacity: 0; display: none"
-                  >
-                    <div>
-                      <p class="price-label">Price from</p>
-                      <p class="price-value">15 $</p>
-                    </div>
-                    <div class="bg-text/16 w-px"></div>
-                    <div>
-                      <p class="price-label">Time from</p>
-                      <p class="price-value">30 min</p>
+                      <p
+                        class="text-text group-hover:text-brand text-sm leading-[132%] font-medium tracking-[-0.01em] transition-colors 2xl:text-lg"
+                      >
+                        Learn more
+                      </p>
+                      <div class="mt-auto flex justify-end">
+                        <span class="bg-brand flex size-[17px] items-center justify-center rounded-full 2xl:size-[22px]">
+                          <svg
+                            aria-hidden
+                            class="size-[6px] text-white 2xl:size-[8px]"
+                            viewBox="0 0 7 8"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0.401367 5.81156C0.944808 6.43139 1.70294 6.82143 2.5225 6.90285C3.34207 6.98426 4.16193 6.75098 4.81634 6.25014C5.47075 5.74931 5.9109 5.01829 6.04781 4.20487C6.18471 3.39146 6.00817 2.55631 5.55385 1.86828M5.21495 1.43853C4.7966 0.99123 4.26066 0.671323 3.6688 0.515625"
+                              stroke="currentColor"
+                              stroke-width="1.06719"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </a>
+                    <div
+                      class="service-price-info mt-[135px] flex items-stretch gap-7 xl:h-[77px] 2xl:mt-[200px] 2xl:h-[101px] 2xl:gap-[46px]"
+                      style="opacity: 0; display: none"
+                    >
+                      <div>
+                        <p class="price-label">Price from</p>
+                        <p class="price-value">15 $</p>
+                      </div>
+                      <div class="bg-text/16 w-px"></div>
+                      <div>
+                        <p class="price-label">Time from</p>
+                        <p class="price-value">30 min</p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1137,57 +1136,59 @@
             <!-- Service 3: Special cleaning (Desktop) -->
             <div class="border-t-text/16 border-b-text/16 hidden border-t border-b lg:block" data-service-card="2">
               <div class="service-card-wrapper flex items-stretch lg:pt-3 xl:pt-4 2xl:pt-4">
-                <div class="flex flex-col lg:min-w-[400px] xl:min-w-[558px] 2xl:min-w-[777px]">
+                <div class="lg:min-w-[400px] xl:min-w-[558px] 2xl:min-w-[777px]">
                   <h3
-                    class="text-text mb-7 max-w-[240px] text-[45px] leading-[110%] font-normal tracking-[-0.04em] lg:mt-5 xl:mt-[27px] xl:mb-[75px] 2xl:mt-10 2xl:mb-[75px] 2xl:text-[64px]"
+                    class="text-text mb-7 line-clamp-2 max-w-[240px] overflow-hidden text-[45px] leading-[110%] font-normal tracking-[-0.04em] lg:mt-5 xl:mt-[27px] xl:mb-[75px] 2xl:mt-10 2xl:mb-[75px] 2xl:text-[64px]"
                   >
                     Special cleaning
                   </h3>
                   <p
-                    class="text-text/80 mb-[46px] max-w-[326px] text-base leading-[132%] font-normal tracking-[-0.01em] 2xl:mb-[56px] 2xl:max-w-[455px] 2xl:text-[21px]"
+                    class="text-text/80 mb-[46px] line-clamp-3 h-[63px] max-w-[326px] overflow-hidden text-base leading-[132%] font-normal tracking-[-0.01em] 2xl:mb-[56px] 2xl:min-h-[87px] 2xl:max-w-[455px] 2xl:text-[21px]"
                   >
                     Our machines handle large or delicate items like duvets, blankets, and pillows — please follow
                     instructions for best results
                   </p>
-                  <a
-                    href="services.html"
-                    class="group border-text/20 focus-visible:ring-brand flex min-h-[75px] max-w-[196px] min-w-[196px] flex-none cursor-pointer flex-col rounded-[7px] border pt-[14px] pr-3 pb-3 pl-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:min-h-[106px] md:max-w-[328px] md:min-w-[328px] xl:min-h-[75px] xl:max-w-[233px] xl:min-w-[233px] 2xl:min-h-[106px] 2xl:max-w-[328px] 2xl:min-w-[328px] 2xl:rounded-[10px] 2xl:pt-[18px] 2xl:pr-[14px] 2xl:pb-[14px] 2xl:pl-5"
-                  >
-                    <p
-                      class="text-text group-hover:text-brand text-sm leading-[132%] font-medium tracking-[-0.01em] transition-colors 2xl:text-lg"
+                  <div class="">
+                    <a
+                      href="services.html"
+                      class="group border-text/20 focus-visible:ring-brand flex min-h-[75px] max-w-[196px] min-w-[196px] flex-none cursor-pointer flex-col rounded-[7px] border pt-[14px] pr-3 pb-3 pl-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:min-h-[106px] md:max-w-[328px] md:min-w-[328px] xl:min-h-[75px] xl:max-w-[233px] xl:min-w-[233px] 2xl:min-h-[106px] 2xl:max-w-[328px] 2xl:min-w-[328px] 2xl:rounded-[10px] 2xl:pt-[18px] 2xl:pr-[14px] 2xl:pb-[14px] 2xl:pl-5"
                     >
-                      Learn more
-                    </p>
-                    <div class="mt-auto flex justify-end">
-                      <span class="bg-brand flex size-[17px] items-center justify-center rounded-full 2xl:size-[22px]">
-                        <svg
-                          aria-hidden
-                          class="size-[6px] text-white 2xl:size-[8px]"
-                          viewBox="0 0 7 8"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M0.401367 5.81156C0.944808 6.43139 1.70294 6.82143 2.5225 6.90285C3.34207 6.98426 4.16193 6.75098 4.81634 6.25014C5.47075 5.74931 5.9109 5.01829 6.04781 4.20487C6.18471 3.39146 6.00817 2.55631 5.55385 1.86828M5.21495 1.43853C4.7966 0.99123 4.26066 0.671323 3.6688 0.515625"
-                            stroke="currentColor"
-                            stroke-width="1.06719"
-                          />
-                        </svg>
-                      </span>
-                    </div>
-                  </a>
-                  <div
-                    class="service-price-info mt-auto flex items-stretch gap-7 xl:h-[77px] 2xl:h-[101px] 2xl:gap-[46px]"
-                    style="opacity: 0; display: none"
-                  >
-                    <div>
-                      <p class="price-label">Price from</p>
-                      <p class="price-value">15 $</p>
-                    </div>
-                    <div class="bg-text/16 w-px"></div>
-                    <div>
-                      <p class="price-label">Time from</p>
-                      <p class="price-value">30 min</p>
+                      <p
+                        class="text-text group-hover:text-brand text-sm leading-[132%] font-medium tracking-[-0.01em] transition-colors 2xl:text-lg"
+                      >
+                        Learn more
+                      </p>
+                      <div class="mt-auto flex justify-end">
+                        <span class="bg-brand flex size-[17px] items-center justify-center rounded-full 2xl:size-[22px]">
+                          <svg
+                            aria-hidden
+                            class="size-[6px] text-white 2xl:size-[8px]"
+                            viewBox="0 0 7 8"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M0.401367 5.81156C0.944808 6.43139 1.70294 6.82143 2.5225 6.90285C3.34207 6.98426 4.16193 6.75098 4.81634 6.25014C5.47075 5.74931 5.9109 5.01829 6.04781 4.20487C6.18471 3.39146 6.00817 2.55631 5.55385 1.86828M5.21495 1.43853C4.7966 0.99123 4.26066 0.671323 3.6688 0.515625"
+                              stroke="currentColor"
+                              stroke-width="1.06719"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </a>
+                    <div
+                      class="service-price-info mt-[135px] flex items-stretch gap-7 xl:h-[77px] 2xl:mt-[200px] 2xl:h-[101px] 2xl:gap-[46px]"
+                      style="opacity: 0; display: none"
+                    >
+                      <div>
+                        <p class="price-label">Price from</p>
+                        <p class="price-value">15 $</p>
+                      </div>
+                      <div class="bg-text/16 w-px"></div>
+                      <div>
+                        <p class="price-label">Time from</p>
+                        <p class="price-value">30 min</p>
+                      </div>
                     </div>
                   </div>
                 </div>
