@@ -204,9 +204,9 @@
         let borderDrawProgress = 0;
         if (i < entries.length - 1) {
           // Non-last card: Border draws when NEXT card starts its expansion
-          // Balanced range: 0 to 0.2
+          // Balanced range: 0 to 0.4
           const nextEntry = entries[i + 1];
-          borderDrawProgress = transformProgress(nextEntry.smoothProgress, [0, 0.2], [0, 1], true);
+          borderDrawProgress = transformProgress(nextEntry.smoothProgress, [0, 0.4], [0, 1], true);
         } else {
           // Last card: Border draws after its OWN expansion
           // Balanced range: 0.8 to 1.0

@@ -604,10 +604,13 @@ function laundromat_get_languages()
     $formatted_languages = [];
 
     foreach ($languages as $lang) {
+        // Remove trailing slash from URL
+        $url = rtrim($lang['url'], '/');
+        
         $formatted_languages[] = [
             'code' => $lang['slug'],
             'name' => $lang['name'],
-            'url' => $lang['url'],
+            'url' => $url,
             'flag' => $lang['flag'] ?? '',
             'is_current' => $lang['slug'] === $current_lang,
         ];
