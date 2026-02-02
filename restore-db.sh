@@ -21,7 +21,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "✓ Database restored successfully"
         echo "  Login at: http://localhost:8080/wp-admin"
         echo "  Username: LaundromatAdmin"
-        echo "  Password: de^uoMXo8W(j#hfxW8"
+        echo "  Password: Laundromat2025"
     else
         echo "✗ Database restore failed"
         echo "  Make sure Docker containers are running: docker compose up -d"
