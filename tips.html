@@ -210,44 +210,127 @@
     </header>
 
     <!-- Mobile Menu Overlay (Same as other pages) -->
-    <div id="mobile-menu" class="invisible fixed inset-0 z-50" style="pointer-events: none">
+        <div id="mobile-menu" class="invisible fixed inset-0 z-50" style="pointer-events: none">
       <div id="mobile-menu-overlay" class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300"></div>
+
       <div
         id="mobile-menu-content"
         class="absolute inset-y-0 right-0 flex w-full translate-x-full flex-col overflow-hidden border-none bg-white p-0 shadow-lg transition-transform duration-500 ease-in-out"
       >
-        <!-- Mobile Menu Content ... -->
         <div class="relative h-[280px] w-full shrink-0 overflow-hidden">
-          <!-- Simplified for brevity, will be handled by mobile-menu.js if included or just copied -->
           <img
             alt=""
             aria-hidden="true"
-            class="absolute inset-0 h-full w-full translate-x-[-100px] translate-y-[-40px] rotate-170 object-cover"
+            class="absolute top-0 left-0 h-full w-full translate-x-[-100px] translate-y-[-40px] rotate-[170deg] object-contain"
             src="./assets/images/mobile-circle.png"
           />
+
           <div class="absolute top-4 right-4 z-10 flex items-center gap-5">
+            <div class="relative" id="lang-switcher-mobile">
+              <button
+                id="lang-button-mobile"
+                class="text-text flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
+                type="button"
+              >
+                <span class="leading-[132%] tracking-[-0.01em]">En</span>
+                <span class="bg-brand/8 rounded-[6px] px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 4" class="text-brand h-[3px] w-[5px]">
+                    <path stroke="currentColor" stroke-linecap="round" d="m.5.5 2.49 2.134L5.48.5"></path>
+                  </svg>
+                </span>
+              </button>
+
+              <ul
+                id="lang-dropdown-mobile"
+                class="absolute left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white/90 text-center shadow-xl backdrop-blur"
+              >
+                <li>
+                  <button
+                    class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 font-semibold transition"
+                    type="button"
+                  >
+                    En
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                    type="button"
+                  >
+                    Gr
+                  </button>
+                </li>
+              </ul>
+            </div>
+
             <button
               id="mobile-menu-close"
               aria-label="Close menu"
-              class="border-brand/30 flex h-10 w-10 touch-manipulation items-center justify-center rounded-[10px] border transition-transform active:scale-95"
+              class="border-text/20 flex h-10 w-10 touch-manipulation items-center justify-center rounded-[10px] border transition-transform active:scale-95"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 11 11" class="text-brand h-[13px] w-[13px]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 11 11"
+                aria-hidden="true"
+                class="text-text/60 h-[13px] w-[13px]"
+              >
                 <path stroke="currentColor" stroke-linecap="round" d="m.5.5 9.486 9.486m-9.486 0L9.986.5"></path>
               </svg>
             </button>
           </div>
         </div>
-        <div class="flex flex-1 flex-col justify-between overflow-y-auto px-4 pb-6">
-          <nav>
-            <ul class="space-y-3">
-              <li><a class="text-text hover:text-brand block py-1 text-[28px]" href="services.html">Services</a></li>
+
+        <div class="flex flex-1 flex-col justify-between overflow-y-auto px-4 pb-12">
+          <nav aria-label="Main navigation">
+            <p class="paragraph-body-xs text-text/50 mb-6">Menu</p>
+            <ul class="space-y-4">
               <li>
-                <a class="text-text hover:text-brand block py-1 text-[28px]" href="instructions.html">Instructions</a>
+                <a
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[36px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="location.html"
+                >
+                  Our location
+                </a>
               </li>
-              <li><a class="text-text hover:text-brand block py-1 text-[28px]" href="tips.html">Laundry tips</a></li>
-              <li><a class="text-text hover:text-brand block py-1 text-[28px]" href="contact.html">Contact us</a></li>
+              <li>
+                <a
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[36px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="tips.html"
+                >
+                  Blog
+                </a>
+              </li>
+              <li>
+                <a
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[36px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="contact.html"
+                >
+                  Contacts
+                </a>
+              </li>
+              <li>
+                <a
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[36px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="faq.html"
+                >
+                  FAQ
+                </a>
+              </li>
             </ul>
           </nav>
+
+          <div class="mt-8">
+            <p class="text-text/50 mb-6 text-sm leading-[132%] font-normal tracking-[-0.01em]">Contact</p>
+            <div class="space-y-4">
+              <a class="!text-brand active:opacity-70 block font-normal leading-[132%] py-1 text-[24px] text-brand! touch-manipulation tracking-[-0.01em] transition-opacity" href="tel:+88006001441" >
+                8 800 600 14 41
+              </a>
+              <a class="!text-brand active:opacity-70 block border-b border-brand/40 font-normal leading-[132%] py-1 text-[24px] text-brand! touch-manipulation tracking-[-0.01em] transition-opacity w-fit" href="mailto:info@Laundromat.gr" >
+                info@Laundromat.gr
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
