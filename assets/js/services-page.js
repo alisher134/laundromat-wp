@@ -169,16 +169,23 @@
       const wrapper = card.querySelector('.service-card-wrapper');
       const imageWrapper = card.querySelector('.service-image-wrapper');
       const priceInfo = card.querySelector('.service-price-info');
-      
+
       if (!wrapper || !imageWrapper) return;
+
+      if (typeof Spring === 'undefined' || typeof SPRING_CONFIGS === 'undefined' || !SPRING_CONFIGS.SERVICES) {
+        console.warn('[Services] Spring animation dependencies missing');
+        return;
+      }
 
       const spring = new Spring(SPRING_CONFIGS.SERVICES);
       springs.set(card, { spring, card, wrapper, imageWrapper, priceInfo });
 
       const breakpoint = getBreakpoint();
-      const smallSize = CARD_SIZES.small[breakpoint];
-      imageWrapper.style.height = `${smallSize.height}px`;
-      imageWrapper.style.width = `${smallSize.width}px`;
+      if (typeof CARD_SIZES !== 'undefined' && CARD_SIZES.small && CARD_SIZES.small[breakpoint]) {
+        const smallSize = CARD_SIZES.small[breakpoint];
+        imageWrapper.style.height = `${smallSize.height}px`;
+        imageWrapper.style.width = `${smallSize.width}px`;
+      }
     });
 
     function updateCards() {
@@ -198,13 +205,13 @@
         const scrollProgress = getScrollProgressCenter(card);
         spring.setTarget(scrollProgress);
         const smoothProgress = spring.update(deltaTime);
-        
+
         // Transform: [0, 0.8] -> [0, 1]
         const expandProgress = transformProgress(smoothProgress, [0, 0.8], [0, 1]);
-        
+
         const smallSize = CARD_SIZES.small[breakpoint];
         const largeSize = CARD_SIZES.large[breakpoint];
-        
+
         const height = transformProgress(expandProgress, [0, 0.9], [smallSize.height, largeSize.height]);
         const width = transformProgress(expandProgress, [0, 1], [smallSize.width, largeSize.width]);
         const isActiveProgress = transformProgress(expandProgress, [0, 0.4], [0, 1], true);
@@ -215,7 +222,7 @@
         imageWrapper.style.width = `${width}px`;
         wrapper.style.justifyContent = justifyContentValue;
         wrapper.style.paddingBottom = `${paddingBottomValue}px`;
-        
+
         if (priceInfo) {
           priceInfo.style.opacity = isActiveProgress;
           priceInfo.style.display = isActiveProgress > 0 ? 'flex' : 'none';
@@ -278,7 +285,7 @@
   function initCategoryButtons() {
     const categoryButtons = document.querySelectorAll('[data-category]');
     const servicesList = document.getElementById('services-list');
-    
+
     if (!categoryButtons.length || !servicesList) return;
 
     const serviceCards = {
@@ -287,23 +294,23 @@
       specialCleaning: servicesList.querySelector('[data-service="specialCleaning"]') || servicesList.children[2],
     };
 
-      function setActiveCategory(category) {
-        categoryButtons.forEach((btn) => {
-          const btnCategory = btn.getAttribute('data-category');
-          if (btnCategory === category) {
-            btn.classList.remove('border-text/20', 'text-text');
-            btn.classList.add('bg-brand/6', 'text-brand', 'border-transparent');
-          } else {
-            btn.classList.remove('bg-brand/6', 'text-brand', 'border-transparent');
-            btn.classList.add('border-text/20', 'text-text');
-          }
-        });
+    function setActiveCategory(category) {
+      categoryButtons.forEach((btn) => {
+        const btnCategory = btn.getAttribute('data-category');
+        if (btnCategory === category) {
+          btn.classList.remove('border-text/20', 'text-text');
+          btn.classList.add('bg-brand/6', 'text-brand', 'border-transparent');
+        } else {
+          btn.classList.remove('bg-brand/6', 'text-brand', 'border-transparent');
+          btn.classList.add('border-text/20', 'text-text');
+        }
+      });
 
       const targetCard = serviceCards[category];
       if (targetCard) {
         const headerHeight = 120;
         const cardPosition = targetCard.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-        
+
         window.scrollTo({
           top: Math.max(0, cardPosition),
           behavior: 'smooth',
@@ -321,11 +328,11 @@
       });
     });
 
-    const categoriesSection = document.querySelector('.animate-fade-up');
-    const mobileSliderContainer = categoriesSection ? categoriesSection.querySelector('.keen-slider') : null;
-    
+    const mobileSliderContainer = document.querySelector('.md\\:hidden .keen-slider');
+
     if (mobileSliderContainer && typeof KeenSlider !== 'undefined') {
       try {
+        console.log('[Services] Initializing mobile category slider');
         new KeenSlider(mobileSliderContainer, {
           mode: 'free-snap',
           slides: {
@@ -334,7 +341,7 @@
           },
         });
       } catch (e) {
-        console.warn('Could not initialize category slider:', e);
+        console.warn('[Services] Could not initialize category slider:', e);
       }
     }
   }
@@ -342,32 +349,32 @@
   // FAQ accordion functionality
   function initFAQAccordion() {
     const faqItems = document.querySelectorAll('.faq-item');
-    
+
     if (faqItems.length === 0) return;
-    
+
     faqItems.forEach((item) => {
       const trigger = item.querySelector('.faq-trigger');
       const content = item.querySelector('.faq-content');
       const icon = item.querySelector('.faq-icon');
-      
+
       if (!trigger || !content) return;
-      
+
       // Set initial state - all closed
       content.setAttribute('data-state', 'closed');
       content.style.maxHeight = '0';
       content.style.opacity = '0';
       content.style.overflow = 'hidden';
       content.style.transition = 'max-height 0.3s ease-out, opacity 0.3s ease-out';
-      
+
       if (icon) {
         icon.style.transition = 'transform 0.3s ease-out';
         icon.style.transform = 'rotate(0deg)';
       }
-      
+
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
         const isOpen = content.getAttribute('data-state') === 'open';
-        
+
         // Close all other items (accordion behavior - only one open at a time)
         faqItems.forEach((otherItem) => {
           if (otherItem !== item) {
@@ -383,7 +390,7 @@
             }
           }
         });
-        
+
         if (isOpen) {
           // Close current item
           content.setAttribute('data-state', 'closed');
