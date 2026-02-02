@@ -15,7 +15,7 @@ read -p "Continue? (y/n) " -n 1 -r
 echo
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    docker exec -i $(docker-compose ps -q db) mysql -u wordpress -pwordpress wordpress < database-backup.sql
+    docker exec -i $(docker compose ps -q db) mysql -u wordpress -pwordpress wordpress < database-backup.sql
 
     if [ $? -eq 0 ]; then
         echo "✓ Database restored successfully"
@@ -24,7 +24,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "  Password: de^uoMXo8W(j#hfxW8"
     else
         echo "✗ Database restore failed"
-        echo "  Make sure Docker containers are running: docker-compose up -d"
+        echo "  Make sure Docker containers are running: docker compose up -d"
         exit 1
     fi
 else
