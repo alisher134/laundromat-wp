@@ -38,35 +38,36 @@
 
   function switchLanguage(lang) {
     const currentPath = window.location.pathname;
-    const currentPage = currentPath.split('/').pop() || 'index.html';
+    // Get filename or default to index.html
+    let currentPage = currentPath.split('/').pop();
+    if (!currentPage) currentPage = 'index.html';
 
-    // Detect if we're in a subdirectory
-    const pathParts = currentPath.split('/').filter((p) => p);
-    const isInGreek = pathParts.includes('el');
+    // Strict check for Greek context: path ends with /el/filename or /el/ or /el
+    const isGreekPath = /\/el\/[^/]*$/.test(currentPath) || /\/el\/?$/.test(currentPath);
 
     console.log('[LangSwitcher] Switching language:', {
-      from: isInGreek ? 'el' : 'en',
+      from: isGreekPath ? 'el' : 'en',
       to: lang,
       currentPath,
       currentPage,
+      isGreekPath,
     });
 
     if (lang === 'Gr' || lang === 'GR') {
-      // Switch to Greek - add /el/ prefix
-      if (!isInGreek) {
-        // Get the directory path without the filename
-        let dirPath = currentPath.substring(0, currentPath.lastIndexOf('/'));
-        const newPath = dirPath + '/el/' + currentPage;
-        console.log('[LangSwitcher] Navigating to:', newPath);
-        window.location.href = newPath;
+      // Switch to Greek
+      if (!isGreekPath) {
+        // We are in English context (root), navigate to ./el/PAGE
+        const target = 'el/' + currentPage;
+        console.log('[LangSwitcher] Navigating to:', target);
+        window.location.href = target;
       }
     } else if (lang === 'En' || lang === 'EN') {
-      // Switch to English - remove /el/ prefix
-      if (isInGreek) {
-        // Remove /el/ from path
-        const newPath = currentPath.replace('/el/', '/');
-        console.log('[LangSwitcher] Navigating to:', newPath);
-        window.location.href = newPath;
+      // Switch to English
+      if (isGreekPath) {
+        // We are in Greek context (subdir), navigate to ../PAGE
+        const target = '../' + currentPage;
+        console.log('[LangSwitcher] Navigating to:', target);
+        window.location.href = target;
       }
     }
   }
