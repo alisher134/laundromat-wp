@@ -10,9 +10,7 @@
     window.location.pathname === '/' ||
     window.location.pathname === '/index.html' ||
     window.location.pathname.endsWith('/laundromat-wp/') ||
-    window.location.pathname.endsWith('/laundromat-wp/index.html') ||
-    window.location.pathname.endsWith('/el/') ||
-    window.location.pathname.endsWith('/el/index.html');
+    window.location.pathname.endsWith('/laundromat-wp/index.html');
 
   if (!isHomepage) {
     return;
