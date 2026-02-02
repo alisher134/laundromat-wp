@@ -421,6 +421,14 @@
     rotate: -60 deg;
   }
 
+  @media screen and (min-width: 1542px) and (max-width: 1913px) {
+    width: 666px;
+    height: 666px;
+    top: -125.01px;
+    left: 650px;
+    rotate: -60 deg;
+  }
+
   @media screen and (min-width: 1920px) {
     width: 666px;
     height: 666px;
@@ -463,6 +471,14 @@
     height: 410px;
     top: -50.97px;
     left: 893.02px;
+    rotate: 120 deg;
+  }
+
+  @media screen and (min-width: 1542px) and (max-width: 1913px) {
+    width: 666px;
+    height: 666px;
+    top: -95.97px;
+    left: 1150px;
     rotate: 120 deg;
   }
 
