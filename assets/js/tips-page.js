@@ -3,6 +3,11 @@ let dataLoaded = false;
 let DATA = [];
 let isInstructionsPage = false;
 
+// Server-side pagination state
+let totalItems = 0;
+let totalPages = 0;
+const DEFAULT_ITEMS_PER_PAGE = 2;
+
 document.addEventListener('DOMContentLoaded', () => {
   isInstructionsPage =
     window.location.pathname.includes('instructions.html') ||
@@ -11,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   showLoadingState();
 
-  // Listen for API data
+  // Listen for API data (for categories and initial load)
   window.addEventListener('laundromatDataReady', handleDataReady);
 
   // Timeout fallback
@@ -33,13 +38,8 @@ function handleDataReady(event) {
   dataLoaded = true;
   hideLoadingState();
 
-  DATA = isInstructionsPage ? instructions : tips;
-
-  if (!DATA || DATA.length === 0) {
-    showEmptyState();
-    return;
-  }
-
+  // We'll use the server-side pagination, so just initialize the page
+  // The initial data comes from tips-data.js for categories, but we'll fetch paginated data
   initPage();
 }
 
@@ -100,16 +100,63 @@ function showEmptyState() {
 }
 
 (function () {
-  let activeCategory = 'all';
-  let currentSort = '';
-  let currentPage = 1;
-  let mobileFilterSlider = null;
-  let mobileTipsSlider = null;
+  // --- URL State Management ---
+  function getStateFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      page: parseInt(params.get('page')) || 1,
+      category: params.get('category') || 'all',
+      sort: params.get('sort') || '',
+      perPage: parseInt(params.get('perPage')) || DEFAULT_ITEMS_PER_PAGE,
+    };
+  }
 
-  // Pagination constants
-  const ITEMS_PER_PAGE = 6; // 2 columns × 3 rows
-  let useLoadMore = false; // Toggle between pagination and load more
-  let visibleCount = ITEMS_PER_PAGE;
+  function updateURL(page, category, sort, perPage) {
+    const params = new URLSearchParams(window.location.search);
+
+    // Update or remove params
+    if (page > 1) {
+      params.set('page', page);
+    } else {
+      params.delete('page');
+    }
+
+    if (category && category !== 'all') {
+      params.set('category', category);
+    } else {
+      params.delete('category');
+    }
+
+    if (sort) {
+      params.set('sort', sort);
+    } else {
+      params.delete('sort');
+    }
+
+    if (perPage && perPage !== DEFAULT_ITEMS_PER_PAGE) {
+      params.set('perPage', perPage);
+    } else {
+      params.delete('perPage');
+    }
+
+    const newURL = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname;
+
+    window.history.replaceState({}, '', newURL);
+  }
+
+  // Initialize state from URL
+  const urlState = getStateFromURL();
+  let activeCategory = urlState.category;
+  let currentSort = urlState.sort;
+  let currentPage = urlState.page;
+  let currentPerPage = urlState.perPage;
+  let mobileFilterSlider = null;
+
+  // Server-side pagination state (local to IIFE)
+  let isLoading = false;
+
+  // Mobile: accumulated data for Load More
+  let mobileAccumulatedData = [];
 
   // --- DOM Elements ---
   const filtersContainer = document.getElementById('tips-filters');
@@ -127,11 +174,107 @@ function showEmptyState() {
 
   window.initPage = initPage;
 
-  function initPage() {
+  async function initPage() {
     renderFilters();
-    renderContent();
-    renderPagination();
+    // Load from URL state - for mobile, load all pages up to current
+    if (isMobile() && currentPage > 1) {
+      // Load pages 1 to currentPage for mobile accumulated view
+      for (let p = 1; p <= currentPage; p++) {
+        await loadPageData(p, p === 1);
+      }
+    } else {
+      await loadPageData(currentPage, true);
+    }
     initScrollAnimations();
+  }
+
+  /**
+   * Check if current viewport is mobile
+   */
+  function isMobile() {
+    return window.innerWidth < 768;
+  }
+
+  /**
+   * Fetch data from server with pagination
+   * @param {number} page - Page number to fetch
+   * @param {boolean} resetAccumulated - If true, reset mobile accumulated data
+   */
+  async function loadPageData(page, resetAccumulated = false) {
+    if (isLoading || typeof LaundroAPI === 'undefined') return;
+
+    isLoading = true;
+
+    // Show loading only on initial load or desktop page switch
+    if (resetAccumulated || !isMobile()) {
+      showContentLoading();
+    }
+
+    try {
+      let result;
+      console.log('[Tips Page] Loading with perPage:', currentPerPage);
+      if (isInstructionsPage) {
+        result = await LaundroAPI.getInstructionsWithPagination(page, currentPerPage);
+      } else {
+        result = await LaundroAPI.getTipsWithPagination(page, currentPerPage);
+      }
+
+      const newItems = result.items || [];
+      totalItems = result.totalItems;
+      // Calculate totalPages on client based on current perPage
+      totalPages = Math.ceil(totalItems / currentPerPage);
+      currentPage = page;
+
+      console.log('[Tips Page] Loaded:', { totalItems, totalPages, currentPerPage, itemsLoaded: newItems.length });
+
+      // Desktop: replace data
+      DATA = newItems;
+
+      // Mobile: accumulate data for Load More
+      if (resetAccumulated) {
+        mobileAccumulatedData = [...newItems];
+      } else {
+        mobileAccumulatedData = [...mobileAccumulatedData, ...newItems];
+      }
+
+      if (newItems.length === 0 && resetAccumulated) {
+        showEmptyState();
+      } else {
+        renderContent();
+      }
+
+      // Update URL with current state including perPage
+      updateURL(currentPage, activeCategory, currentSort, currentPerPage);
+
+      // Set isLoading to false BEFORE rendering pagination
+      // so the button shows correct text
+      isLoading = false;
+      renderPagination();
+    } catch (error) {
+      console.error('[Tips Page] Error loading data:', error);
+      showErrorState('Failed to load data. Please try again.');
+      isLoading = false;
+    }
+  }
+
+  /**
+   * Handle Load More button click (mobile)
+   */
+  async function handleLoadMore() {
+    if (currentPage < totalPages) {
+      await loadPageData(currentPage + 1, false); // false = don't reset, accumulate
+    }
+  }
+
+  function showContentLoading() {
+    const loadingHtml = `
+      <div class="col-span-2 flex flex-col items-center justify-center py-20">
+        <div class="mb-4 h-12 w-12 animate-spin rounded-full border-4 border-brand/20 border-t-brand"></div>
+        <p class="text-text/60 text-lg">Loading...</p>
+      </div>
+    `;
+    if (gridDesktop) gridDesktop.innerHTML = loadingHtml;
+    if (sliderMobile) sliderMobile.innerHTML = loadingHtml;
   }
 
   function initScrollAnimations() {
@@ -192,8 +335,7 @@ function showEmptyState() {
     });
 
     const needsUpdate = Array.from(imageSprings.values()).some(
-      (spring) =>
-        Math.abs(spring.getValue() - spring.target) > 0.001 || Math.abs(spring.velocity) > 0.001
+      (spring) => Math.abs(spring.getValue() - spring.target) > 0.001 || Math.abs(spring.velocity) > 0.001,
     );
 
     if (needsUpdate) {
@@ -216,10 +358,6 @@ function showEmptyState() {
   // --- Rendering Filters ---
   function renderFilters() {
     if (!filtersContainer) return;
-
-    // Note: The structure requires a mobile slider container AND a desktop container
-    // OR we use the same elements and CSS handles layout.
-    // The reference has a mobile slider div AND a hidden desktop flex div.
 
     const categoriesHtml = CATEGORIES.map((cat) => {
       const isActive = cat.key === activeCategory;
@@ -289,14 +427,13 @@ function showEmptyState() {
   function initFilterInteractions() {
     // Category Clicks
     document.querySelectorAll('.category-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', async (e) => {
         const key = e.currentTarget.dataset.key;
         if (key !== activeCategory) {
           activeCategory = key;
-          currentPage = 1; // RESET pagination
-          visibleCount = ITEMS_PER_PAGE; // RESET load more
-          renderFilters(); // Re-render to update active state styles
-          renderContent(); // Filter content
+          currentPage = 1;
+          renderFilters();
+          await loadPageData(1, true); // Reset and load first page
         }
       });
     });
@@ -332,14 +469,14 @@ function showEmptyState() {
       });
 
       sortOptionsBtns.forEach((btn) => {
-        btn.addEventListener('click', (e) => {
+        btn.addEventListener('click', async (e) => {
           const val = e.currentTarget.dataset.value;
           currentSort = val;
-          currentPage = 1; // RESET pagination
-          visibleCount = ITEMS_PER_PAGE; // RESET load more
+          currentPage = 1;
           sortOptionsDiv.classList.add('hidden');
-          renderFilters(); // Update label
-          renderContent(); // Sort content
+          renderFilters();
+          // Sort is done client-side on current data
+          renderContent();
         });
       });
     }
@@ -347,55 +484,35 @@ function showEmptyState() {
 
   // --- Rendering Content (Tips/Instructions) ---
   function renderContent() {
-    // 1. Filter
-    let filtered = DATA;
-    if (activeCategory !== 'all') {
-      const catLabel = CATEGORIES.find((c) => c.key === activeCategory)?.label;
-      filtered = DATA.filter((t) => t.category === catLabel);
-    }
+    // Desktop: use current page data (DATA)
+    // Mobile: use accumulated data (mobileAccumulatedData)
 
-    // 2. Sort
-    filtered.sort((a, b) => {
+    let desktopDisplayData = [...DATA];
+    let mobileDisplayData = [...mobileAccumulatedData];
+
+    // Apply local sorting
+    const sortFn = (a, b) => {
       if (currentSort === 'latest' || currentSort === '') return new Date(b.date) - new Date(a.date);
       if (currentSort === 'oldest') return new Date(a.date) - new Date(b.date);
       if (currentSort === 'title-asc') return a.title.localeCompare(b.title);
       if (currentSort === 'title-desc') return b.title.localeCompare(a.title);
       return 0;
-    });
+    };
 
-    // Store filtered data globally for pagination
-    window.filteredData = filtered;
-
-    // Phase 4: Slice data based on pagination mode
-    let displayData;
-    if (useLoadMore) {
-      displayData = filtered.slice(0, visibleCount);
-    } else {
-      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-      const endIndex = startIndex + ITEMS_PER_PAGE;
-      displayData = filtered.slice(startIndex, endIndex);
-    }
-
-    const cardsHtml = displayData.map((item, index) => createDesktopCardHtml(item, index)).join('');
+    desktopDisplayData.sort(sortFn);
+    mobileDisplayData.sort(sortFn);
 
     // Desktop Grid
     if (gridDesktop) {
+      const cardsHtml = desktopDisplayData.map((item, index) => createDesktopCardHtml(item, index)).join('');
       gridDesktop.innerHTML = cardsHtml;
     }
 
-    // Mobile Slider (actually just a grid, no slider!)
+    // Mobile Grid with Load More
     if (sliderMobile) {
-      // Use specialized Mobile Card function - render directly without Keen Slider
-      const mobileCardsHtml = displayData.map((item) => createMobileCardHtml(item)).join('');
-
-      // Just inject cards directly - no keen-slider wrapper!
+      const mobileCardsHtml = mobileDisplayData.map((item) => createMobileCardHtml(item)).join('');
       sliderMobile.innerHTML = mobileCardsHtml;
-
-      // Don't initialize Keen Slider for mobile - it's just a grid!
     }
-
-    // Call renderPagination to update pagination UI
-    renderPagination();
 
     // Refresh animations for new content
     initScrollAnimations();
@@ -405,140 +522,121 @@ function showEmptyState() {
   function renderPagination() {
     if (!pagination) return;
 
-    // Phase 4: Calculate total pages dynamically
-    const totalItems = window.filteredData ? window.filteredData.length : 0;
-    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
-    // Phase 5: Handle load more mode
-    if (useLoadMore) {
-      // Hide pagination, show load more button
-      const paginationContainer = pagination.querySelector('.hidden.items-center.gap-1.md\\:flex');
-      if (paginationContainer) {
-        paginationContainer.style.display = 'none';
-      }
-
-      const loadMoreBtn = document.getElementById('load-more-btn');
-      if (loadMoreBtn) {
-        loadMoreBtn.style.display = 'block';
-        const allLoaded = visibleCount >= totalItems;
-        loadMoreBtn.textContent = allLoaded ? 'All items loaded' : 'Load more';
-        loadMoreBtn.disabled = allLoaded;
-        loadMoreBtn.onclick = handleLoadMore;
-      }
-      return;
-    }
-
-    // Hide load more button in pagination mode
+    // Use existing HTML elements
+    // Desktop: div with classes 'hidden items-center gap-1 md:flex'
+    // Mobile: button with id 'load-more-btn'
+    const desktopPaginationContainer = pagination.querySelector('.hidden.items-center.gap-1.md\\:flex');
     const loadMoreBtn = document.getElementById('load-more-btn');
-    if (loadMoreBtn) {
-      loadMoreBtn.style.display = 'none';
-    }
 
-    // Show pagination
-    const paginationContainer = pagination.querySelector('.hidden.items-center.gap-1.md\\:flex');
-    if (paginationContainer) {
-      paginationContainer.style.display = 'flex';
-    }
+    // === DESKTOP: Numbered pagination (uses totalPages calculated from currentPerPage) ===
+    // Always visible on desktop (hidden on mobile via CSS classes)
+    if (desktopPaginationContainer) {
+      if (totalPages <= 1) {
+        // Show at least page 1 even when there's only one page
+        const baseClasses =
+          'flex cursor-pointer items-center justify-center border md:rounded-[8px] 2xl:rounded-[6px] md:text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors';
+        const activeClasses = 'border-[#414242]/25 text-[#414242] md:size-[52px] 2xl:h-[54px] 2xl:w-[56px]';
+        desktopPaginationContainer.innerHTML = `<button class="${baseClasses} ${activeClasses}" data-page="1">1</button>`;
+      } else {
+        const siblingCount = 1;
+        const pageItems = [];
+        const leftSibling = Math.max(currentPage - siblingCount, 1);
+        const rightSibling = Math.min(currentPage + siblingCount, totalPages);
 
-    // If only one page or no data, hide pagination
-    if (totalPages <= 1) {
-      if (paginationContainer) {
-        paginationContainer.innerHTML = '';
-      }
-      return;
-    }
+        pageItems.push(1);
 
-    const siblingCount = 1;
-
-    // Generate page items (similar to getPageItems in reference)
-    const pageItems = [];
-    const leftSibling = Math.max(currentPage - siblingCount, 1);
-    const rightSibling = Math.min(currentPage + siblingCount, totalPages);
-
-    // Always show first page
-    pageItems.push(1);
-
-    // Add ellipsis if needed
-    if (leftSibling > 2) {
-      pageItems.push('ellipsis-left');
-    }
-
-    // Add sibling pages
-    for (let i = leftSibling; i <= rightSibling; i++) {
-      if (i !== 1 && i !== totalPages) {
-        pageItems.push(i);
-      }
-    }
-
-    // Add ellipsis if needed
-    if (rightSibling < totalPages - 1) {
-      pageItems.push('ellipsis-right');
-    }
-
-    // Always show last page
-    if (totalPages > 1) {
-      pageItems.push(totalPages);
-    }
-
-    // Generate HTML
-    // Base: Common classes
-    const baseClasses =
-      'flex cursor-pointer items-center justify-center border md:rounded-[8px] 2xl:rounded-[6px] md:text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors';
-
-    // Active: Specific dimensions and colors
-    const activeClasses = 'border-[#414242]/25 text-[#414242] md:size-[52px] 2xl:h-[54px] 2xl:w-[56px]';
-
-    // Inactive: Specific dimensions and colors
-    const inactiveClasses =
-      'border-transparent text-[#414242]/40 hover:text-[#414242]/60 2xl:w-[47px] 2xl:h-[56px] md:h-[42px] md:w-[35px]';
-
-    const paginationHtml = pageItems
-      .map((item, index) => {
-        if (typeof item === 'string' && item.startsWith('ellipsis')) {
-          return `<span class="${baseClasses} ${inactiveClasses}" key="${item}">…</span>`;
+        if (leftSibling > 2) {
+          pageItems.push('ellipsis-left');
         }
 
-        const isActive = item === currentPage;
-        return `<button class="${baseClasses} ${isActive ? activeClasses : inactiveClasses}" data-page="${item}">${item}</button>`;
-      })
-      .join('');
+        for (let i = leftSibling; i <= rightSibling; i++) {
+          if (i !== 1 && i !== totalPages) {
+            pageItems.push(i);
+          }
+        }
 
-    // Find pagination container and update
-    if (paginationContainer) {
-      paginationContainer.innerHTML = paginationHtml;
+        if (rightSibling < totalPages - 1) {
+          pageItems.push('ellipsis-right');
+        }
 
-      // Attach click handlers
-      paginationContainer.querySelectorAll('button[data-page]').forEach((btn) => {
-        btn.addEventListener('click', (e) => {
-          const page = parseInt(e.currentTarget.dataset.page);
-          if (page !== currentPage) {
-            currentPage = page;
-            renderContent();
-            // Scroll to top of tips section
-            const tipsSection = document.getElementById('tips-filters');
-            if (tipsSection) {
-              tipsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (totalPages > 1) {
+          pageItems.push(totalPages);
+        }
+
+        const baseClasses =
+          'flex cursor-pointer items-center justify-center border md:rounded-[8px] 2xl:rounded-[6px] md:text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors';
+        const activeClasses = 'border-[#414242]/25 text-[#414242] md:size-[52px] 2xl:h-[54px] 2xl:w-[56px]';
+        const inactiveClasses =
+          'border-transparent text-[#414242]/40 hover:text-[#414242]/60 2xl:w-[47px] 2xl:h-[56px] md:h-[42px] md:w-[35px]';
+
+        const paginationHtml = pageItems
+          .map((item) => {
+            if (typeof item === 'string' && item.startsWith('ellipsis')) {
+              return `<span class="${baseClasses} ${inactiveClasses}">…</span>`;
             }
+            const isActive = item === currentPage;
+            return `<button class="${baseClasses} ${isActive ? activeClasses : inactiveClasses}" data-page="${item}">${item}</button>`;
+          })
+          .join('');
+
+        desktopPaginationContainer.innerHTML = paginationHtml;
+
+        // Attach click handlers for desktop pagination
+        desktopPaginationContainer.querySelectorAll('button[data-page]').forEach((btn) => {
+          btn.addEventListener('click', async (e) => {
+            const page = parseInt(e.currentTarget.dataset.page);
+            if (page !== currentPage && !isLoading) {
+              // Only change page, not perPage
+              await loadPageData(page, true);
+              const tipsSection = document.getElementById('tips-filters');
+              if (tipsSection) {
+                tipsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }
+          });
+        });
+      }
+    }
+
+    // === MOBILE: Load More button ===
+    if (loadMoreBtn) {
+      // All loaded when totalPages is 1 (all items fit in current perPage)
+      const allLoaded = totalPages <= 1;
+
+      if (allLoaded) {
+        // Hide button when all loaded
+        loadMoreBtn.style.display = 'none';
+      } else {
+        loadMoreBtn.style.display = 'flex';
+        loadMoreBtn.textContent = 'Load more';
+        loadMoreBtn.disabled = false;
+
+        // Remove old listener and add new one
+        const newBtn = loadMoreBtn.cloneNode(true);
+        loadMoreBtn.parentNode.replaceChild(newBtn, loadMoreBtn);
+
+        newBtn.addEventListener('click', async () => {
+          if (!isLoading) {
+            newBtn.textContent = 'Loading...';
+            newBtn.disabled = true;
+
+            // Increase perPage and reload all data
+            currentPerPage += DEFAULT_ITEMS_PER_PAGE;
+
+            // Load from page 1 with increased perPage
+            await loadPageData(1, true);
           }
         });
-      });
+      }
     }
-  }
-
-  // Phase 5: Load more handler
-  function handleLoadMore() {
-    visibleCount += ITEMS_PER_PAGE;
-    renderContent();
   }
 
   function createDesktopCardHtml(item, index) {
-    // No big card on tips/instructions pages — all cards same size
     const isBigImage = false;
     const bigImageClass = '';
     const heightClass = 'lg:h-[278px] 2xl:h-[390px]';
     const paddingClass = '';
 
-    // Phase 3: Add query parameters to links
     const itemType = isInstructionsPage ? 'instruction' : 'tip';
     const link = `tips-details.html?id=${item.id}&type=${itemType}`;
 
@@ -586,7 +684,6 @@ function showEmptyState() {
   }
 
   function createMobileCardHtml(item) {
-    // Phase 3: Add query parameters to links
     const itemType = isInstructionsPage ? 'instruction' : 'tip';
     const link = `tips-details.html?id=${item.id}&type=${itemType}`;
 

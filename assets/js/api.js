@@ -52,8 +52,11 @@ const LaundroAPI = (function () {
 
   /**
    * Helper: Fetch JSON from URL with error handling
+   * @param {string} endpoint - API endpoint
+   * @param {Object} options - Fetch options
+   * @param {boolean} returnHeaders - If true, return { data, headers } object
    */
-  async function fetchJSON(endpoint, options = {}) {
+  async function fetchJSON(endpoint, options = {}, returnHeaders = false) {
     const url = `${CONFIG.API_BASE}${endpoint}`;
     log('Fetching:', url);
 
@@ -71,21 +74,29 @@ const LaundroAPI = (function () {
 
       const data = await response.json();
       log('Response:', data);
+
+      if (returnHeaders) {
+        return {
+          data,
+          totalItems: parseInt(response.headers.get('X-WP-Total') || '0', 10),
+          totalPages: parseInt(response.headers.get('X-WP-TotalPages') || '0', 10),
+        };
+      }
+
       return data;
     } catch (error) {
       console.error('[LaundroAPI] Error:', error.message);
-      return null;
+      return returnHeaders ? { data: null, totalItems: 0, totalPages: 0 } : null;
     }
   }
 
   /**
    * Build query string with language parameter
+   * @param {Object} params - Query parameters
+   * @param {boolean} includeDefaultPerPage - If true, include per_page=100 default
    */
-  function buildQuery(params = {}) {
-    const queryParams = new URLSearchParams({
-      per_page: 100,
-      ...params,
-    });
+  function buildQuery(params = {}, includeDefaultPerPage = true) {
+    const queryParams = new URLSearchParams(includeDefaultPerPage ? { per_page: 100, ...params } : params);
 
     // Add language parameter if Polylang is being used
     if (currentLang) {
@@ -199,6 +210,40 @@ const LaundroAPI = (function () {
     },
 
     /**
+     * Fetch tips with pagination support
+     * @param {number} page - Page number (1-indexed)
+     * @param {number} perPage - Items per page
+     * @returns {Promise<Object>} { items: Array, totalItems: number, totalPages: number }
+     */
+    async getTipsWithPagination(page = 1, perPage = 6) {
+      const result = await fetchJSON(`${CONFIG.WP_API}/tips${buildQuery({ page, per_page: perPage }, false)}`, {}, true);
+
+      if (!result.data) {
+        return { items: [], totalItems: 0, totalPages: 0 };
+      }
+
+      return {
+        items: result.data.map((item) => ({
+          id: item.id,
+          key: `tip-${item.id}`,
+          image: item.featured_image_url || './assets/images/tips-1.png',
+          category: item.category || 'Tips and tricks',
+          title: item.title?.rendered || '',
+          date:
+            item.formatted_date ||
+            new Date(item.date).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            }),
+          content: item.content?.rendered || '',
+        })),
+        totalItems: result.totalItems,
+        totalPages: result.totalPages,
+      };
+    },
+
+    /**
      * Fetch homepage tips (only tips selected in admin settings)
      * If no tips are selected, returns all tips
      * @returns {Promise<Array|null>}
@@ -247,6 +292,44 @@ const LaundroAPI = (function () {
           }),
         content: item.content?.rendered || '',
       }));
+    },
+
+    /**
+     * Fetch instructions with pagination support
+     * @param {number} page - Page number (1-indexed)
+     * @param {number} perPage - Items per page
+     * @returns {Promise<Object>} { items: Array, totalItems: number, totalPages: number }
+     */
+    async getInstructionsWithPagination(page = 1, perPage = 6) {
+      const result = await fetchJSON(
+        `${CONFIG.WP_API}/instructions${buildQuery({ page, per_page: perPage }, false)}`,
+        {},
+        true,
+      );
+
+      if (!result.data) {
+        return { items: [], totalItems: 0, totalPages: 0 };
+      }
+
+      return {
+        items: result.data.map((item) => ({
+          id: item.id,
+          key: `instruction-${item.id}`,
+          image: item.featured_image_url || './assets/images/tips-1.png',
+          category: item.category || 'Tips and tricks',
+          title: item.title?.rendered || '',
+          date:
+            item.formatted_date ||
+            new Date(item.date).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            }),
+          content: item.content?.rendered || '',
+        })),
+        totalItems: result.totalItems,
+        totalPages: result.totalPages,
+      };
     },
 
     /**
