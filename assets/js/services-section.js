@@ -136,19 +136,28 @@
     const cards = document.querySelectorAll('[data-service-card]');
     if (cards.length === 0) return;
 
-    const springs = new Map();
+    const entries = [];
     let lastTime = performance.now();
     let animationFrameId = null;
 
-    cards.forEach((card) => {
-      const wrapper = card.querySelector('.service-card-wrapper');
+    cards.forEach((card, index) => {
       const imageWrapper = card.querySelector('.service-image-wrapper');
-      const priceInfo = card.querySelector('.service-price-info');
+      const borders = card.querySelectorAll('[data-card-border]');
 
-      if (!wrapper || !imageWrapper) return;
+      if (!imageWrapper) return;
 
       const spring = new Spring(SPRING_CONFIGS.SERVICES);
-      springs.set(card, { spring, card, wrapper, imageWrapper, priceInfo });
+      const entry = {
+        spring,
+        card,
+        imageWrapper,
+        borders,
+        index,
+        smoothProgress: 0,
+        targetProgress: 0,
+      };
+
+      entries.push(entry);
 
       const breakpoint = getBreakpoint();
       const smallSize = CARD_SIZES.small[breakpoint];
@@ -164,38 +173,58 @@
       const breakpoint = getBreakpoint();
       let needsUpdate = false;
 
-      springs.forEach((entry, card) => {
-        if (!document.contains(card)) {
-          springs.delete(card);
-          return;
-        }
-        const { spring, wrapper, imageWrapper, priceInfo } = entry;
-        const scrollProgress = getScrollProgressCenter(card);
-        spring.setTarget(scrollProgress);
-        const smoothProgress = spring.update(deltaTime);
+      // Pass 1: Update all spring values and store current smooth progress
+      entries.forEach((entry) => {
+        if (!document.contains(entry.card)) return;
 
+        const scrollProgress = getScrollProgressCenter(entry.card);
+        entry.targetProgress = scrollProgress;
+        entry.smoothProgress = entry.spring.update(deltaTime);
+        entry.spring.setTarget(scrollProgress);
+      });
+
+      // Pass 2: Apply styles based on own or next card's progress
+      entries.forEach((entry, i) => {
+        if (!document.contains(entry.card)) return;
+
+        const { spring, smoothProgress, targetProgress, imageWrapper, borders } = entry;
         const expandProgress = transformProgress(smoothProgress, [0, 0.8], [0, 1]);
 
         const smallSize = CARD_SIZES.small[breakpoint];
         const largeSize = CARD_SIZES.large[breakpoint];
 
+        // Image expansion logic
         const height = transformProgress(expandProgress, [0, 0.9], [smallSize.height, largeSize.height]);
         const width = transformProgress(expandProgress, [0, 1], [smallSize.width, largeSize.width]);
-        const isActiveProgress = transformProgress(expandProgress, [0, 0.4], [0, 1], true);
-        const justifyContentValue = expandProgress < 0.3 ? 'flex-start' : '';
 
         imageWrapper.style.height = `${height}px`;
         imageWrapper.style.width = `${width}px`;
-        wrapper.style.justifyContent = justifyContentValue;
 
-        if (priceInfo) {
-          priceInfo.style.opacity = isActiveProgress;
-          priceInfo.style.display = isActiveProgress > 0 ? 'flex' : 'none';
+        // Border drawing logic
+        let borderDrawProgress = 0;
+        if (i < entries.length - 1) {
+          // Non-last card: Border draws when NEXT card starts its expansion
+          // Balanced range: 0 to 0.4
+          const nextEntry = entries[i + 1];
+          borderDrawProgress = transformProgress(nextEntry.smoothProgress, [0, 0.4], [0, 1], true);
+        } else {
+          // Last card: Border draws after its OWN expansion
+          // Balanced range: 0.8 to 1.0
+          borderDrawProgress = transformProgress(smoothProgress, [0.8, 1.0], [0, 1], true);
         }
 
+        if (borders.length > 0) {
+          borders.forEach((border) => {
+            border.style.transformOrigin = 'left';
+            border.style.transform = `scaleX(${borderDrawProgress})`;
+            border.style.opacity = borderDrawProgress;
+          });
+        }
+
+        // Monitoring for next frame
         const springValue = spring.getValue();
         const velocity = spring.velocity;
-        if (Math.abs(springValue - scrollProgress) > 0.001 || Math.abs(velocity) > 0.001) {
+        if (Math.abs(springValue - targetProgress) > 0.001 || Math.abs(velocity) > 0.001) {
           needsUpdate = true;
         }
       });
@@ -209,6 +238,7 @@
 
     function onScroll() {
       if (!animationFrameId) {
+        lastTime = performance.now(); // Reset lastTime to avoid huge deltaTime
         animationFrameId = requestAnimationFrame(updateCards);
       }
     }
@@ -218,11 +248,8 @@
       window.addEventListener('scroll', onScroll, { passive: true });
       window.addEventListener('resize', () => {
         const breakpoint = getBreakpoint();
-        springs.forEach((entry, card) => {
-          if (!document.contains(card)) {
-            springs.delete(card);
-            return;
-          }
+        entries.forEach((entry) => {
+          if (!document.contains(entry.card)) return;
           const { imageWrapper } = entry;
           const smallSize = CARD_SIZES.small[breakpoint];
           imageWrapper.style.height = `${smallSize.height}px`;
