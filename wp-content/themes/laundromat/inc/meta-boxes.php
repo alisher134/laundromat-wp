@@ -433,26 +433,17 @@ function laundromat_service_meta_box_callback($post)
             wp_editor($post->post_content, 'service_description', [
                 'textarea_name' => 'service_description',
                 'textarea_rows' => 8,
-                'media_buttons' => false,
+                'media_buttons' => true,
                 'teeny' => false,
                 'quicktags' => true,
                 'tinymce' => [
-                    'toolbar1' => 'formatselect,bold,italic,underline,bullist,numlist,link,unlink,removeformat',
-                    'toolbar2' => '',
-                    'block_formats' => 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4',
+                    'toolbar1' => 'bold,italic,underline,link,image,code,fontsizeselect,alignleft,aligncenter,alignright,bullist,numlist,wp_adv',
+                    'toolbar2' => 'formatselect,removeformat,undo,redo',
+                    'block_formats' => 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4', 'image_advtab' => true, 'fontsize_formats' => '8pt 9pt 10pt 11pt 12pt 13pt 14pt 16pt 18pt 20pt 24pt 30pt 36pt 48pt 60pt 72pt',
                 ],
             ]);
             ?>
             <p class="description"><?php _e('Use the formatting buttons above to add headings, lists, and links.', 'laundromat'); ?></p>
-        </div>
-
-        <div class="field-group">
-            <label for="service_category"><?php _e('Service Category', 'laundromat'); ?></label>
-            <select id="service_category" name="service_category">
-                <option value="laundry" <?php selected($service_category, 'laundry'); ?>><?php _e('Laundry services', 'laundromat'); ?></option>
-                <option value="drying" <?php selected($service_category, 'drying'); ?>><?php _e('Drying services', 'laundromat'); ?></option>
-                <option value="specialCleaning" <?php selected($service_category, 'specialCleaning'); ?>><?php _e('Special cleaning', 'laundromat'); ?></option>
-            </select>
         </div>
 
         <div class="field-section">
@@ -558,9 +549,9 @@ function laundromat_instruction_meta_box_callback($post)
                 'teeny' => false,
                 'quicktags' => true,
                 'tinymce' => [
-                    'toolbar1' => 'formatselect,bold,italic,underline,bullist,numlist,link,unlink,removeformat',
-                    'toolbar2' => '',
-                    'block_formats' => 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4',
+                    'toolbar1' => 'bold,italic,underline,link,image,code,fontsizeselect,alignleft,aligncenter,alignright,bullist,numlist,wp_adv',
+                    'toolbar2' => 'formatselect,removeformat,undo,redo',
+                    'block_formats' => 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4', 'image_advtab' => true, 'fontsize_formats' => '8pt 9pt 10pt 11pt 12pt 13pt 14pt 16pt 18pt 20pt 24pt 30pt 36pt 48pt 60pt 72pt',
                 ],
             ]);
             ?>
@@ -603,9 +594,9 @@ function laundromat_tip_meta_box_callback($post)
                 'teeny' => false,
                 'quicktags' => true,
                 'tinymce' => [
-                    'toolbar1' => 'formatselect,bold,italic,underline,bullist,numlist,link,unlink,removeformat',
-                    'toolbar2' => '',
-                    'block_formats' => 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4',
+                    'toolbar1' => 'bold,italic,underline,link,image,code,fontsizeselect,alignleft,aligncenter,alignright,bullist,numlist,wp_adv',
+                    'toolbar2' => 'formatselect,removeformat,undo,redo',
+                    'block_formats' => 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4', 'image_advtab' => true, 'fontsize_formats' => '8pt 9pt 10pt 11pt 12pt 13pt 14pt 16pt 18pt 20pt 24pt 30pt 36pt 48pt 60pt 72pt',
                 ],
             ]);
             ?>

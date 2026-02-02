@@ -224,10 +224,17 @@ function laundromat_enhance_service_response($response, $post, $request)
         $response->data['featured_image_url'] = get_the_post_thumbnail_url($post->ID, 'full');
     }
 
-    // Add meta fields explicitly
-    $response->data['meta'] = [
-        'service_category' => get_post_meta($post->ID, 'service_category', true) ?: 'laundry',
-    ];
+    // Add service category from taxonomy
+    $terms = wp_get_post_terms($post->ID, 'service_category');
+    if (!is_wp_error($terms) && !empty($terms)) {
+        $response->data['meta']['service_category'] = $terms[0]->slug;
+        $response->data['category_name'] = $terms[0]->name;
+    } else {
+        // Fallback or legacy meta check
+        $legacy_meta = get_post_meta($post->ID, 'service_category', true);
+        $response->data['meta']['service_category'] = $legacy_meta ?: 'laundry';
+        $response->data['category_name'] = '';
+    }
 
     // Add price rows (decoded from JSON)
     $price_rows_json = get_post_meta($post->ID, 'price_rows', true);

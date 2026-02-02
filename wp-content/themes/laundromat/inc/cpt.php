@@ -140,9 +140,10 @@ function laundromat_register_cpts()
         'show_in_menu' => true,
         'show_in_rest' => true,
         'rest_base' => 'services',
-        'supports' => ['title', 'editor', 'thumbnail', 'page-attributes'],
+        'supports' => ['title', 'editor', 'thumbnail', 'page-attributes', 'menu_order'],
         'menu_icon' => 'dashicons-archive',
         'menu_position' => 9,
+        'taxonomies' => ['service_category'],
     ]);
 
     // About Items CPT (for homepage About Laundromat slider)
@@ -258,7 +259,43 @@ function laundromat_register_cpts()
         'hierarchical' => true,
         'show_admin_column' => true,
     ]);
+
+    // Service Category Taxonomy
+    register_taxonomy('service_category', ['services'], [
+        'labels' => [
+            'name' => __('Service Categories', 'laundromat'),
+            'singular_name' => __('Service Category', 'laundromat'),
+            'search_items' => __('Search Service Categories', 'laundromat'),
+            'all_items' => __('All Service Categories', 'laundromat'),
+            'edit_item' => __('Edit Service Category', 'laundromat'),
+            'update_item' => __('Update Service Category', 'laundromat'),
+            'add_new_item' => __('Add New Service Category', 'laundromat'),
+            'new_item_name' => __('New Service Category Name', 'laundromat'),
+            'menu_name' => __('Categories', 'laundromat'),
+        ],
+        'public' => false,
+        'show_ui' => true,
+        'show_in_rest' => true,
+        'hierarchical' => true,
+        'show_admin_column' => true,
+    ]);
 }
+
+/**
+ * Migration: Convert service_category meta to taxonomy terms
+ */
+add_action('admin_init', function() {
+    if (get_option('laundromat_service_cat_migrated')) return;
+
+    $services = get_posts(['post_type' => 'services', 'posts_per_page' => -1, 'post_status' => 'any']);
+    foreach ($services as $service) {
+        $cat = get_post_meta($service->ID, 'service_category', true);
+        if ($cat) {
+            wp_set_object_terms($service->ID, $cat, 'service_category');
+        }
+    }
+    update_option('laundromat_service_cat_migrated', 1);
+});
 
 /**
  * Sanitize callback wrappers (WordPress passes extra params that floatval/intval don't accept)
@@ -302,7 +339,6 @@ function laundromat_register_meta_fields()
 
     // Service meta fields
     $service_fields = [
-        'service_category' => 'string', // 'laundry', 'drying', 'specialCleaning'
         'price_rows' => 'string', // JSON array of price row objects
         'action_link_text' => 'string', // Link button text
         'action_link_url' => 'string', // Link destination URL
