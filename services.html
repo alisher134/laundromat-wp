@@ -111,8 +111,23 @@
             <li class="paragraph-body-xs text-text 2xl:text-lg">
               <a class="hover:text-brand flex items-center gap-[6px] transition-colors" href="location.html">
                 Our location
-                
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 11 10" aria-hidden="true" class="h-[10px] w-[11px]"><path fill="currentColor" d="M5.127 10C2.3 10 0 7.757 0 5s2.3-5 5.127-5 5.127 2.243 5.127 5-2.3 5-5.127 5m0-8.759C3.002 1.241 1.273 2.928 1.273 5s1.729 3.758 3.854 3.758S8.981 7.073 8.981 5 7.252 1.24 5.127 1.24"></path><path fill="currentColor" d="m6.898 3.413.635-.54a3.3 3.3 0 0 0-1.326-.861l-.475.717c.454.115.857.357 1.166.684M7.864 3.292l-.645.548c.2.343.316.738.316 1.16 0 1.295-1.08 2.348-2.407 2.348a2.43 2.43 0 0 1-1.874-.877l-.475.717a3.28 3.28 0 0 0 2.349.982c1.792 0 3.25-1.422 3.25-3.17 0-.629-.189-1.215-.514-1.708"></path></svg>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 11 10"
+                  aria-hidden="true"
+                  class="h-[10px] w-[11px]"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M5.127 10C2.3 10 0 7.757 0 5s2.3-5 5.127-5 5.127 2.243 5.127 5-2.3 5-5.127 5m0-8.759C3.002 1.241 1.273 2.928 1.273 5s1.729 3.758 3.854 3.758S8.981 7.073 8.981 5 7.252 1.24 5.127 1.24"
+                  ></path>
+                  <path
+                    fill="currentColor"
+                    d="m6.898 3.413.635-.54a3.3 3.3 0 0 0-1.326-.861l-.475.717c.454.115.857.357 1.166.684M7.864 3.292l-.645.548c.2.343.316.738.316 1.16 0 1.295-1.08 2.348-2.407 2.348a2.43 2.43 0 0 1-1.874-.877l-.475.717a3.28 3.28 0 0 0 2.349.982c1.792 0 3.25-1.422 3.25-3.17 0-.629-.189-1.215-.514-1.708"
+                  ></path>
+                </svg>
               </a>
             </li>
           </ul>
@@ -189,7 +204,7 @@
     </header>
 
     <!-- Mobile Menu Overlay (Same as other pages) -->
-        <div id="mobile-menu" class="invisible fixed inset-0 z-50" style="pointer-events: none">
+    <div id="mobile-menu" class="invisible fixed inset-0 z-50" style="pointer-events: none">
       <div id="mobile-menu-overlay" class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300"></div>
 
       <div
@@ -302,10 +317,16 @@
           <div class="mt-8">
             <p class="text-text/50 mb-6 text-sm leading-[132%] font-normal tracking-[-0.01em]">Contact</p>
             <div class="space-y-4">
-              <a class="!text-brand active:opacity-70 block font-normal leading-[132%] py-1 text-[24px] text-brand! touch-manipulation tracking-[-0.01em] transition-opacity" href="tel:+88006001441" >
+              <a
+                class="!text-brand text-brand! block touch-manipulation py-1 text-[24px] leading-[132%] font-normal tracking-[-0.01em] transition-opacity active:opacity-70"
+                href="tel:+88006001441"
+              >
                 8 800 600 14 41
               </a>
-              <a class="!text-brand active:opacity-70 block border-b border-brand/40 font-normal leading-[132%] py-1 text-[24px] text-brand! touch-manipulation tracking-[-0.01em] transition-opacity w-fit" href="mailto:info@Laundromat.gr" >
+              <a
+                class="!text-brand border-brand/40 text-brand! block w-fit touch-manipulation border-b py-1 text-[24px] leading-[132%] font-normal tracking-[-0.01em] transition-opacity active:opacity-70"
+                href="mailto:info@Laundromat.gr"
+              >
                 info@Laundromat.gr
               </a>
             </div>
@@ -329,55 +350,14 @@
         <!-- Categories (Mobile & Desktop) -->
         <div class="animate-fade-up">
           <!-- Mobile Slider -->
-          <div class="my-[32px] md:hidden">
-            <div class="keen-slider">
-              <!-- Category: Laundry services (Active) -->
-              <!-- Classes from Category.tsx: inline-flex ... min-w-fit px-[18px] py-[14px] bg-brand/6 text-brand -->
-              <button
-                class="keen-slider__slide bg-brand/6 text-brand inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border border-transparent px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg"
-                data-category="laundry"
-              >
-                Laundry services
-              </button>
-              <!-- Category: Drying services -->
-              <button
-                class="keen-slider__slide border-text/20 text-text inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg"
-                data-category="drying"
-              >
-                Drying services
-              </button>
-              <!-- Category: Special cleaning -->
-              <button
-                class="keen-slider__slide border-text/20 text-text inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg"
-                data-category="specialCleaning"
-              >
-                Special cleaning
-              </button>
+          <div class="my-[32px] -mr-[16px] md:hidden">
+            <div id="services-mobile-categories-slider" class="keen-slider">
+              <!-- Dynamic content will be loaded here -->
             </div>
           </div>
           <!-- Desktop Flex -->
-          <div class="my-[32px] hidden gap-2 md:flex">
-            <!-- Category: Laundry services (Active) -->
-            <button
-              class="category-btn bg-brand/6 text-brand inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border border-transparent px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg"
-              data-category="laundry"
-            >
-              Laundry services
-            </button>
-            <!-- Category: Drying services -->
-            <button
-              class="category-btn border-text/20 text-text inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg"
-              data-category="drying"
-            >
-              Drying services
-            </button>
-            <!-- Category: Special cleaning -->
-            <button
-              class="category-btn border-text/20 text-text inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg"
-              data-category="specialCleaning"
-            >
-              Special cleaning
-            </button>
+          <div id="services-desktop-categories-container" class="my-[32px] hidden gap-2 md:flex">
+            <!-- Dynamic content will be loaded here -->
           </div>
         </div>
 
@@ -1104,7 +1084,11 @@
                 href="faq.html"
                 class="group border-text/20 focus-visible:ring-brand flex min-h-[75px] max-w-[196px] min-w-[196px] flex-1 cursor-pointer flex-col rounded-[7px] border pt-[14px] pr-3 pb-3 pl-4 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none md:min-h-[75px] md:max-w-[233px] md:min-w-[233px] xl:min-h-[75px] xl:max-w-[233px] xl:min-w-[233px] 2xl:min-h-[106px] 2xl:max-w-[328px] 2xl:min-w-[328px] 2xl:rounded-[10px] 2xl:pt-[18px] 2xl:pr-[14px] 2xl:pb-[14px] 2xl:pl-5"
               >
-                <p class="text-text group-hover:text-brand transition-colors text-sm leading-[132%] font-medium tracking-[-0.01em] 2xl:text-lg">All questions</p>
+                <p
+                  class="text-text group-hover:text-brand text-sm leading-[132%] font-medium tracking-[-0.01em] transition-colors 2xl:text-lg"
+                >
+                  All questions
+                </p>
 
                 <div class="mt-auto flex justify-end">
                   <span class="bg-brand flex size-[17px] items-center justify-center rounded-full 2xl:size-[22px]">

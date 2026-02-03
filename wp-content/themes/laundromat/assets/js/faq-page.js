@@ -84,8 +84,6 @@
 
     if (desktopContainer) {
       desktopContainer.innerHTML = html;
-      desktopContainer.classList.remove('hidden');
-      desktopContainer.classList.add('flex', 'flex-wrap', 'justify-center', 'gap-2');
     }
 
     if (mobileContainer) {

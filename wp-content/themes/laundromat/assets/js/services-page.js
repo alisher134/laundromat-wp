@@ -30,79 +30,85 @@
     return div;
   }
 
+  /**
+   * Helper to create a category button
+   * @param {Object} category - category object from API
+   * @param {Boolean} isActive - is this the active category
+   * @param {Boolean} isMobile - applies different classes for mobile slider
+   */
+  function createCategoryButton(category, isActive, isMobile) {
+    const btn = document.createElement('button');
+    btn.setAttribute('data-category', category.key);
+
+    // Base classes common to both
+    let classes =
+      'inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg';
+
+    // Active vs Inactive classes
+    if (isActive) {
+      classes += ' bg-brand/6 text-brand border-transparent';
+    } else {
+      classes += ' border-text/20 text-text';
+    }
+
+    // Mobile specific (slider class) checks
+    if (isMobile) {
+      classes += ' keen-slider__slide category-btn';
+    } else {
+      classes += ' category-btn';
+    }
+
+    btn.className = classes;
+    btn.textContent = category.label;
+
+    return btn;
+  }
+
   // Fetch services from WordPress API and update DOM
   async function loadServicesFromAPI() {
-    console.log('[Services] Starting to load services from WordPress API...');
-
     if (typeof LaundroAPI === 'undefined') {
-      console.warn('[Services] ⚠️ LaundroAPI not available, using static content');
+      console.warn('[Services] LaundroAPI not available');
       return;
     }
 
     try {
-      console.log('[Services] Fetching services from API...');
       const services = await LaundroAPI.getServices();
-
       if (!services || services.length === 0) {
-        console.warn('[Services] ⚠️ No services returned from API');
+        console.warn('[Services] No services returned from API');
         return;
       }
 
-      console.log(`[Services] ✅ Successfully loaded ${services.length} services from WordPress API:`, services);
+      console.log(`[Services] Loaded ${services.length} services from API`);
 
-      // Sort services by menu_order (WordPress drag-and-drop order)
-      // This makes the system independent of category slugs
-      services.sort((a, b) => {
-        const orderA = a.menu_order || 0;
-        const orderB = b.menu_order || 0;
-        return orderA - orderB;
-      });
+      // Sort services by menu_order
+      services.sort((a, b) => (a.menu_order || 0) - (b.menu_order || 0));
 
-      console.log(
-        '[Services] Services sorted by order:',
-        services.map((s) => ({
-          title: s.title,
-          menu_order: s.menu_order || 0,
-          category: s.category,
-        })),
-      );
-
-      // Update each service section in the DOM
       const servicesList = document.getElementById('services-list');
-      if (!servicesList) {
-        console.warn('[Services] #services-list not found');
-        return;
-      }
+      if (!servicesList) return;
 
       const serviceSections = servicesList.querySelectorAll('[data-service]');
-      console.log(`[Services] Found ${serviceSections.length} service sections in HTML`);
 
-      // Map services to sections by index (order-based, not category-based)
-      // First service → first section, second → second, etc.
+      // Map services to sections by index
       serviceSections.forEach((section, index) => {
         const serviceData = services[index];
-        const htmlCategory = section.getAttribute('data-service');
+        if (!serviceData) return;
 
-        if (!serviceData) {
-          console.warn(`[Services] ⚠️ No service data for section ${index + 1} (${htmlCategory})`);
-          return;
+        // CRITICAL: Update the data-service attribute to match the API category key
+        // This links the service section to the correct category button
+        if (serviceData.category) {
+          section.setAttribute('data-service', serviceData.category);
+          console.log(`[Services] Linked section ${index} to category "${serviceData.category}"`);
         }
-
-        console.log(`[Services] ✓ Section ${index + 1} (${htmlCategory}) ← "${serviceData.title}"`);
 
         // Update title
         const titleEl = section.querySelector('h2');
-        if (titleEl && serviceData.title) {
-          titleEl.textContent = serviceData.title;
-        }
+        if (titleEl && serviceData.title) titleEl.textContent = serviceData.title;
 
         // Update description
         const descriptionEl = section.querySelector('p.text-text[class*="max-w-"]');
         if (descriptionEl && serviceData.description) {
           const cleanDescription = serviceData.description.replace(/<[^>]*>/g, '').trim();
-          if (cleanDescription) {
-            descriptionEl.textContent = cleanDescription;
-          }
+          if (cleanDescription) descriptionEl.textContent = cleanDescription;
         }
 
         // Update image
@@ -112,29 +118,19 @@
           imageEl.alt = serviceData.title || 'Service';
         }
 
-        // Update price rows - always update if we have price rows from API
+        // Update price rows
         const priceContainer = section.querySelector('[data-price-rows]');
         if (priceContainer && serviceData.priceRows) {
-          console.log(`[Services] Updating price rows for ${category}:`, serviceData.priceRows);
-
-          // Keep the "Prices" header, remove everything else
           const header = priceContainer.querySelector('.text-brand');
-
-          // Remove all children except the header
           Array.from(priceContainer.children).forEach((child) => {
-            if (child !== header) {
-              child.remove();
-            }
+            if (child !== header) child.remove();
           });
 
-          // Add new price rows from API
           if (serviceData.priceRows.length > 0) {
             serviceData.priceRows.forEach((row) => {
-              const rowElement = createPriceRowElement(row);
-              priceContainer.appendChild(rowElement);
+              priceContainer.appendChild(createPriceRowElement(row));
             });
           } else {
-            // If no price rows, add a placeholder message
             const placeholder = document.createElement('p');
             placeholder.className = 'text-text/60 text-base py-4';
             placeholder.textContent = 'Pricing information coming soon';
@@ -145,16 +141,11 @@
         // Update action link
         const actionLink = section.querySelector('a[href*="instructions"], a.group');
         if (actionLink && serviceData.actionLink) {
-          if (serviceData.actionLink.url) {
-            actionLink.href = serviceData.actionLink.url;
-          }
+          if (serviceData.actionLink.url) actionLink.href = serviceData.actionLink.url;
           if (serviceData.actionLink.text) {
-            const linkTextEl = actionLink.querySelector('p');
-            if (linkTextEl) {
-              linkTextEl.textContent = serviceData.actionLink.text;
-            }
+            const p = actionLink.querySelector('p');
+            if (p) p.textContent = serviceData.actionLink.text;
           }
-          // Hide action link if no text or URL
           if (!serviceData.actionLink.text && !serviceData.actionLink.url) {
             actionLink.style.display = 'none';
           } else {
@@ -162,10 +153,45 @@
           }
         }
       });
-
-      console.log('[Services] Updated from WordPress API');
     } catch (error) {
       console.error('[Services] Error loading services:', error);
+    }
+  }
+
+  // Fetch categories from WordPress API and render buttons
+  async function loadCategoriesFromAPI() {
+    if (typeof LaundroAPI === 'undefined') return;
+
+    try {
+      const categories = await LaundroAPI.getServiceCategories();
+      if (!categories || categories.length === 0) {
+        console.warn('[Services] No categories returned from API');
+        return;
+      }
+
+      console.log(`[Services] Loaded ${categories.length} categories from API`);
+
+      // Sort by order
+      categories.sort((a, b) => (parseInt(a.order) || 0) - (parseInt(b.order) || 0));
+
+      const mobileSlider = document.getElementById('services-mobile-categories-slider');
+      const desktopContainer = document.getElementById('services-desktop-categories-container');
+
+      if (mobileSlider) mobileSlider.innerHTML = '';
+      if (desktopContainer) desktopContainer.innerHTML = '';
+
+      categories.forEach((cat, index) => {
+        const isActive = index === 0; // First one active by default
+
+        if (mobileSlider) {
+          mobileSlider.appendChild(createCategoryButton(cat, isActive, true));
+        }
+        if (desktopContainer) {
+          desktopContainer.appendChild(createCategoryButton(cat, isActive, false));
+        }
+      });
+    } catch (err) {
+      console.error('[Services] Error loading categories', err);
     }
   }
 
@@ -186,13 +212,17 @@
 
       if (!wrapper || !imageWrapper) return;
 
+      if (typeof Spring === 'undefined' || typeof SPRING_CONFIGS === 'undefined') return;
+
       const spring = new Spring(SPRING_CONFIGS.SERVICES);
       springs.set(card, { spring, card, wrapper, imageWrapper, priceInfo });
 
       const breakpoint = getBreakpoint();
-      const smallSize = CARD_SIZES.small[breakpoint];
-      imageWrapper.style.height = `${smallSize.height}px`;
-      imageWrapper.style.width = `${smallSize.width}px`;
+      if (typeof CARD_SIZES !== 'undefined' && CARD_SIZES.small && CARD_SIZES.small[breakpoint]) {
+        const smallSize = CARD_SIZES.small[breakpoint];
+        imageWrapper.style.height = `${smallSize.height}px`;
+        imageWrapper.style.width = `${smallSize.width}px`;
+      }
     });
 
     function updateCards() {
@@ -213,9 +243,7 @@
         spring.setTarget(scrollProgress);
         const smoothProgress = spring.update(deltaTime);
 
-        // Transform: [0, 0.8] -> [0, 1]
         const expandProgress = transformProgress(smoothProgress, [0, 0.8], [0, 1]);
-
         const smallSize = CARD_SIZES.small[breakpoint];
         const largeSize = CARD_SIZES.large[breakpoint];
 
@@ -236,8 +264,7 @@
         }
 
         const springValue = spring.getValue();
-        const velocity = spring.velocity;
-        if (Math.abs(springValue - scrollProgress) > 0.001 || Math.abs(velocity) > 0.001) {
+        if (Math.abs(springValue - scrollProgress) > 0.001 || Math.abs(spring.velocity) > 0.001) {
           needsUpdate = true;
         }
       });
@@ -261,10 +288,7 @@
       window.addEventListener('resize', () => {
         const breakpoint = getBreakpoint();
         springs.forEach((entry, card) => {
-          if (!document.contains(card)) {
-            springs.delete(card);
-            return;
-          }
+          // update size on resize
           const { imageWrapper } = entry;
           const smallSize = CARD_SIZES.small[breakpoint];
           imageWrapper.style.height = `${smallSize.height}px`;
@@ -277,29 +301,16 @@
     onScroll();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      loadServicesFromAPI();
-      initServiceCards();
-      initCategoryButtons();
-    });
-  } else {
-    loadServicesFromAPI();
-    initServiceCards();
-    initCategoryButtons();
-  }
-
   function initCategoryButtons() {
     const categoryButtons = document.querySelectorAll('[data-category]');
     const servicesList = document.getElementById('services-list');
 
     if (!categoryButtons.length || !servicesList) return;
 
-    const serviceCards = {
-      laundry: servicesList.querySelector('[data-service="laundry"]') || servicesList.children[0],
-      drying: servicesList.querySelector('[data-service="drying"]') || servicesList.children[1],
-      specialCleaning: servicesList.querySelector('[data-service="specialCleaning"]') || servicesList.children[2],
-    };
+    // Helper: find card by data-service attribute
+    function getServiceCard(category) {
+      return servicesList.querySelector(`[data-service="${category}"]`);
+    }
 
     function setActiveCategory(category) {
       categoryButtons.forEach((btn) => {
@@ -313,7 +324,7 @@
         }
       });
 
-      const targetCard = serviceCards[category];
+      const targetCard = getServiceCard(category);
       if (targetCard) {
         const headerHeight = 120;
         const cardPosition = targetCard.getBoundingClientRect().top + window.pageYOffset - headerHeight;
@@ -326,21 +337,27 @@
     }
 
     categoryButtons.forEach((btn) => {
-      btn.addEventListener('click', (e) => {
+      // Remove old listeners to prevent duplicates if re-inited
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+
+      newBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        const category = btn.getAttribute('data-category');
+        const category = newBtn.getAttribute('data-category');
         if (category) {
           setActiveCategory(category);
         }
       });
     });
 
-    const categoriesSection = document.querySelector('.animate-fade-up');
-    const mobileSliderContainer = categoriesSection ? categoriesSection.querySelector('.keen-slider') : null;
+    // Re-select fresh buttons after cloning
+    // Initialize KeenSlider for mobile
+    const mobileSliderElement = document.getElementById('services-mobile-categories-slider');
 
-    if (mobileSliderContainer && typeof KeenSlider !== 'undefined') {
+    if (mobileSliderElement && typeof KeenSlider !== 'undefined' && mobileSliderElement.children.length > 0) {
       try {
-        new KeenSlider(mobileSliderContainer, {
+        // Destroy existing instance if any (not easily tracked here without global var, but new instance usually ok)
+        new KeenSlider(mobileSliderElement, {
           mode: 'free-snap',
           slides: {
             perView: 'auto',
@@ -356,7 +373,6 @@
   // FAQ accordion functionality
   function initFAQAccordion() {
     const faqItems = document.querySelectorAll('.faq-item');
-
     if (faqItems.length === 0) return;
 
     faqItems.forEach((item) => {
@@ -372,7 +388,6 @@
       content.style.opacity = '0';
       content.style.overflow = 'hidden';
       content.style.transition = 'max-height 0.3s ease-out, opacity 0.3s ease-out';
-
       if (icon) {
         icon.style.transition = 'transform 0.3s ease-out';
         icon.style.transform = 'rotate(0deg)';
@@ -382,7 +397,7 @@
         e.preventDefault();
         const isOpen = content.getAttribute('data-state') === 'open';
 
-        // Close all other items (accordion behavior - only one open at a time)
+        // Close all other items
         faqItems.forEach((otherItem) => {
           if (otherItem !== item) {
             const otherContent = otherItem.querySelector('.faq-content');
@@ -391,38 +406,38 @@
               otherContent.setAttribute('data-state', 'closed');
               otherContent.style.maxHeight = '0';
               otherContent.style.opacity = '0';
-              if (otherIcon) {
-                otherIcon.style.transform = 'rotate(0deg)';
-              }
+              if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
             }
           }
         });
 
         if (isOpen) {
-          // Close current item
           content.setAttribute('data-state', 'closed');
           content.style.maxHeight = '0';
           content.style.opacity = '0';
-          if (icon) {
-            icon.style.transform = 'rotate(0deg)';
-          }
+          if (icon) icon.style.transform = 'rotate(0deg)';
         } else {
-          // Open current item
           content.setAttribute('data-state', 'open');
-          // Set maxHeight to scrollHeight for smooth animation
           content.style.maxHeight = content.scrollHeight + 'px';
           content.style.opacity = '1';
-          if (icon) {
-            icon.style.transform = 'rotate(45deg)';
-          }
+          if (icon) icon.style.transform = 'rotate(45deg)';
         }
       });
     });
   }
 
-  // Load services from WordPress API
-  loadServicesFromAPI();
+  async function initPage() {
+    // Parallel fetch
+    await Promise.all([loadServicesFromAPI(), loadCategoriesFromAPI()]);
 
-  // Initialize FAQ accordion
-  initFAQAccordion();
+    initServiceCards();
+    initCategoryButtons();
+    initFAQAccordion();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPage);
+  } else {
+    initPage();
+  }
 })();
