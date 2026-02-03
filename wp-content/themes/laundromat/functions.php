@@ -77,6 +77,9 @@ add_action('init', function () {
         'Learn more',
         'Not provided',
         'Message from %s',
+        'Return to homepage',
+        'Menu',
+        'Contact',
     ];
 
     foreach ($strings as $string) {

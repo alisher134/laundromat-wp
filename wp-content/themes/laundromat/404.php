@@ -1,6 +1,6 @@
 <?php if (!defined('ABSPATH')) exit; ?>
 <!doctype html>
-<html lang="en">
+<html <?php language_attributes(); ?>>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -100,7 +100,7 @@
           <ul>
             <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
               <a class="hover:text-brand flex items-center gap-[6px] transition-colors" href="<?php echo home_url('/location/'); ?>">
-                Our location
+                <?php function_exists('pll_e') ? pll_e('Our location') : _e('Our location', 'laundromat'); ?>
                 
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 11 10" aria-hidden="true" class="h-[10px] w-[11px]"><path fill="currentColor" d="M5.127 10C2.3 10 0 7.757 0 5s2.3-5 5.127-5 5.127 2.243 5.127 5-2.3 5-5.127 5m0-8.759C3.002 1.241 1.273 2.928 1.273 5s1.729 3.758 3.854 3.758S8.981 7.073 8.981 5 7.252 1.24 5.127 1.24"></path><path fill="currentColor" d="m6.898 3.413.635-.54a3.3 3.3 0 0 0-1.326-.861l-.475.717c.454.115.857.357 1.166.684M7.864 3.292l-.645.548c.2.343.316.738.316 1.16 0 1.295-1.08 2.348-2.407 2.348a2.43 2.43 0 0 1-1.874-.877l-.475.717a3.28 3.28 0 0 0 2.349.982c1.792 0 3.25-1.422 3.25-3.17 0-.629-.189-1.215-.514-1.708"></path></svg>
               </a>
@@ -109,16 +109,16 @@
 
           <ul class="flex items-center gap-[28px]">
             <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
-              <a class="hover:text-brand transition-colors" href="<?php echo home_url('/services/'); ?>">Services</a>
+              <a class="hover:text-brand transition-colors" href="<?php echo home_url('/services/'); ?>"><?php function_exists('pll_e') ? pll_e('Services') : _e('Services', 'laundromat'); ?></a>
             </li>
             <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
-              <a class="hover:text-brand transition-colors" href="<?php echo home_url('/instructions/'); ?>">Instructions</a>
+              <a class="hover:text-brand transition-colors" href="<?php echo home_url('/instructions/'); ?>"><?php function_exists('pll_e') ? pll_e('Instructions') : _e('Instructions', 'laundromat'); ?></a>
             </li>
             <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
-              <a class="hover:text-brand transition-colors" href="<?php echo home_url('/tips/'); ?>">Laundry tips</a>
+              <a class="hover:text-brand transition-colors" href="<?php echo home_url('/tips/'); ?>"><?php function_exists('pll_e') ? pll_e('Laundry tips') : _e('Laundry tips', 'laundromat'); ?></a>
             </li>
             <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
-              <a class="hover:text-brand transition-colors" href="<?php echo home_url('/contact/'); ?>">Contact us</a>
+              <a class="hover:text-brand transition-colors" href="<?php echo home_url('/contact/'); ?>"><?php function_exists('pll_e') ? pll_e('Contact us') : _e('Contact us', 'laundromat'); ?></a>
             </li>
           </ul>
         </nav>
@@ -253,14 +253,14 @@
 
         <div class="flex flex-1 flex-col justify-between overflow-y-auto px-4 pb-6">
           <nav aria-label="Main navigation">
-            <p class="paragraph-body-xs text-text/50 mb-6">Menu</p>
+            <p class="paragraph-body-xs text-text/50 mb-6"><?php function_exists('pll_e') ? pll_e('Menu') : _e('Menu', 'laundromat'); ?></p>
             <ul class="space-y-3">
               <li>
                 <a
                   class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
                   href="<?php echo home_url('/services/'); ?>"
                 >
-                  Services
+                  <?php function_exists('pll_e') ? pll_e('Services') : _e('Services', 'laundromat'); ?>
                 </a>
               </li>
               <li>
@@ -268,7 +268,7 @@
                   class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
                   href="<?php echo home_url('/instructions/'); ?>"
                 >
-                  Instructions
+                  <?php function_exists('pll_e') ? pll_e('Instructions') : _e('Instructions', 'laundromat'); ?>
                 </a>
               </li>
               <li>
@@ -276,7 +276,7 @@
                   class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
                   href="<?php echo home_url('/tips/'); ?>"
                 >
-                  Laundry tips
+                  <?php function_exists('pll_e') ? pll_e('Laundry tips') : _e('Laundry tips', 'laundromat'); ?>
                 </a>
               </li>
               <li>
@@ -284,14 +284,14 @@
                   class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
                   href="<?php echo home_url('/contact/'); ?>"
                 >
-                  Contact us
+                  <?php function_exists('pll_e') ? pll_e('Contact us') : _e('Contact us', 'laundromat'); ?>
                 </a>
               </li>
             </ul>
           </nav>
 
           <div>
-            <p class="text-text/50 mb-6 text-sm leading-[132%] font-normal tracking-[-0.01em]">Contact</p>
+            <p class="text-text/50 mb-6 text-sm leading-[132%] font-normal tracking-[-0.01em]"><?php function_exists('pll_e') ? pll_e('Contact') : _e('Contact', 'laundromat'); ?></p>
             <div class="space-y-3">
               <a
                 class="text-brand block touch-manipulation py-1 text-lg leading-[132%] font-normal tracking-[-0.01em] transition-opacity active:opacity-70"
@@ -323,7 +323,7 @@
               class="border-text/20 flex min-h-[75px] w-full max-w-[196px] flex-1 flex-col rounded-[7px] border bg-white/23 pt-[14px] pr-[12px] pb-[12px] pl-4 backdrop-blur-2xl backdrop-filter md:min-h-[75px] md:max-w-[233px] xl:min-h-[75px] xl:max-w-[233px] 2xl:min-h-[106px] 2xl:max-w-[328px] 2xl:rounded-[10px] 2xl:border-0"
               href="<?php echo home_url('/'); ?>"
             >
-              <p class="text-sm leading-[132%] font-medium tracking-[-0.01em] text-white 2xl:text-lg">Return to homepage</p>
+              <p class="text-sm leading-[132%] font-medium tracking-[-0.01em] text-white 2xl:text-lg"><?php function_exists('pll_e') ? pll_e('Return to homepage') : _e('Return to homepage', 'laundromat'); ?></p>
               <div class="mt-auto flex justify-end">
                 <span class="bg-brand flex size-[17px] items-center justify-center rounded-[15px] 2xl:size-[22px]">
                   <svg

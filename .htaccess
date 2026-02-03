@@ -24,5 +24,8 @@ RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^ - [L]
 
-# Everything else → static index.html (SPA-style fallback for clean URLs)
-RewriteRule ^ index.html [L]
+# Greek 404 -> el/404.html
+RewriteRule ^el/ el/404.html [L]
+
+# Everything else -> Static 404.html
+RewriteRule ^ 404.html [L]
