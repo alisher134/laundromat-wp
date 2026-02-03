@@ -91,7 +91,7 @@ function laundromat_register_cpts()
         'supports' => ['title', 'editor', 'thumbnail', 'page-attributes'],
         'menu_icon' => 'dashicons-book',
         'menu_position' => 7,
-        'taxonomies' => ['content_category'],
+        'taxonomies' => ['instruction_category'],
     ]);
 
     // FAQs CPT
@@ -220,8 +220,8 @@ function laundromat_register_cpts()
         'map_meta_cap' => true,
     ]);
 
-    // Content Category Taxonomy (for Tips and Instructions)
-    register_taxonomy('content_category', ['tips', 'instructions'], [
+    // Content Category Taxonomy (for Tips)
+    register_taxonomy('content_category', ['tips'], [
         'labels' => [
             'name' => __('Categories', 'laundromat'),
             'singular_name' => __('Category', 'laundromat'),
@@ -231,6 +231,26 @@ function laundromat_register_cpts()
             'update_item' => __('Update Category', 'laundromat'),
             'add_new_item' => __('Add New Category', 'laundromat'),
             'new_item_name' => __('New Category Name', 'laundromat'),
+            'menu_name' => __('Categories', 'laundromat'),
+        ],
+        'public' => false,
+        'show_ui' => true,
+        'show_in_rest' => true,
+        'hierarchical' => true,
+        'show_admin_column' => true,
+    ]);
+
+    // Instruction Category Taxonomy (for Instructions)
+    register_taxonomy('instruction_category', ['instructions'], [
+        'labels' => [
+            'name' => __('Instruction Categories', 'laundromat'),
+            'singular_name' => __('Instruction Category', 'laundromat'),
+            'search_items' => __('Search Instruction Categories', 'laundromat'),
+            'all_items' => __('All Instruction Categories', 'laundromat'),
+            'edit_item' => __('Edit Instruction Category', 'laundromat'),
+            'update_item' => __('Update Instruction Category', 'laundromat'),
+            'add_new_item' => __('Add New Instruction Category', 'laundromat'),
+            'new_item_name' => __('New Instruction Category Name', 'laundromat'),
             'menu_name' => __('Categories', 'laundromat'),
         ],
         'public' => false,

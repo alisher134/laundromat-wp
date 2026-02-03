@@ -198,6 +198,7 @@ const LaundroAPI = (function () {
         image: item.featured_image_url || './assets/images/tips-1.png',
         category: item.category || 'Tips and tricks',
         title: item.title?.rendered || '',
+        categorySlug: item.category_slug || '',
         date:
           item.formatted_date ||
           new Date(item.date).toLocaleDateString('en-US', {
@@ -215,8 +216,12 @@ const LaundroAPI = (function () {
      * @param {number} perPage - Items per page
      * @returns {Promise<Object>} { items: Array, totalItems: number, totalPages: number }
      */
-    async getTipsWithPagination(page = 1, perPage = 6) {
-      const result = await fetchJSON(`${CONFIG.WP_API}/tips${buildQuery({ page, per_page: perPage }, false)}`, {}, true);
+    async getTipsWithPagination(page = 1, perPage = 6, params = {}) {
+      const result = await fetchJSON(
+        `${CONFIG.CUSTOM_API}/tips${buildQuery({ page, per_page: perPage, ...params }, false)}`,
+        {},
+        true,
+      );
 
       if (!result.data) {
         return { items: [], totalItems: 0, totalPages: 0 };
@@ -229,6 +234,7 @@ const LaundroAPI = (function () {
           image: item.featured_image_url || './assets/images/tips-1.png',
           category: item.category || 'Tips and tricks',
           title: item.title?.rendered || '',
+          categorySlug: item.category_slug || '',
           date:
             item.formatted_date ||
             new Date(item.date).toLocaleDateString('en-US', {
@@ -258,6 +264,7 @@ const LaundroAPI = (function () {
         image: item.featured_image_url || './assets/images/tips-1.png',
         category: item.category || 'Tips and tricks',
         title: item.title?.rendered || '',
+        categorySlug: item.category_slug || '',
         date:
           item.formatted_date ||
           new Date(item.date).toLocaleDateString('en-US', {
@@ -283,6 +290,7 @@ const LaundroAPI = (function () {
         image: item.featured_image_url || './assets/images/tips-1.png',
         category: item.category || 'Tips and tricks',
         title: item.title?.rendered || '',
+        categorySlug: item.category_slug || '',
         date:
           item.formatted_date ||
           new Date(item.date).toLocaleDateString('en-US', {
@@ -300,9 +308,9 @@ const LaundroAPI = (function () {
      * @param {number} perPage - Items per page
      * @returns {Promise<Object>} { items: Array, totalItems: number, totalPages: number }
      */
-    async getInstructionsWithPagination(page = 1, perPage = 6) {
+    async getInstructionsWithPagination(page = 1, perPage = 6, params = {}) {
       const result = await fetchJSON(
-        `${CONFIG.WP_API}/instructions${buildQuery({ page, per_page: perPage }, false)}`,
+        `${CONFIG.CUSTOM_API}/instructions${buildQuery({ page, per_page: perPage, ...params }, false)}`,
         {},
         true,
       );
@@ -318,6 +326,7 @@ const LaundroAPI = (function () {
           image: item.featured_image_url || './assets/images/tips-1.png',
           category: item.category || 'Tips and tricks',
           title: item.title?.rendered || '',
+          categorySlug: item.category_slug || '',
           date:
             item.formatted_date ||
             new Date(item.date).toLocaleDateString('en-US', {
@@ -338,7 +347,7 @@ const LaundroAPI = (function () {
      * @returns {Promise<Array|null>}
      */
     async getFAQs(params = {}) {
-      const data = await fetchJSON(`${CONFIG.WP_API}/faqs${buildQuery(params)}`);
+      const data = await fetchJSON(`${CONFIG.CUSTOM_API}/faqs${buildQuery(params)}`);
       if (!data) return null;
 
       return data.map((item, index) => ({
@@ -430,6 +439,14 @@ const LaundroAPI = (function () {
     },
 
     /**
+     * Fetch instruction categories
+     * @returns {Promise<Array|null>}
+     */
+    async getInstructionCategories() {
+      return await fetchJSON(`${CONFIG.CUSTOM_API}/instruction-categories${buildQuery()}`);
+    },
+
+    /**
      * Fetch FAQ categories
      * @returns {Promise<Array|null>}
      */
@@ -469,6 +486,7 @@ const LaundroAPI = (function () {
         content: data.content?.rendered || '',
         image: data.featured_image_url || './assets/images/tips-1.png',
         category: data.category || 'Tips and tricks',
+        categorySlug: data.category_slug || '',
         date:
           data.formatted_date ||
           new Date(data.date).toLocaleDateString('en-US', {
@@ -495,6 +513,7 @@ const LaundroAPI = (function () {
         content: data.content?.rendered || '',
         image: data.featured_image_url || './assets/images/tips-1.png',
         category: data.category || 'Instructions',
+        categorySlug: data.category_slug || '',
         date:
           data.formatted_date ||
           new Date(data.date).toLocaleDateString('en-US', {

@@ -50,51 +50,149 @@ add_action('init', function () {
 });
 
 /**
- * Filter REST API queries by language when ?lang= parameter is provided
+ * Register custom query parameters for REST API filtering
+ * This is required for WordPress to accept these parameters without returning 400 errors
  */
-add_filter('rest_locations_query', 'laundromat_filter_rest_by_lang', 10, 2);
-add_filter('rest_tips_query', 'laundromat_filter_rest_by_lang', 10, 2);
-add_filter('rest_instructions_query', 'laundromat_filter_rest_by_lang', 10, 2);
-add_filter('rest_faqs_query', 'laundromat_filter_rest_by_lang', 10, 2);
-add_filter('rest_services_query', 'laundromat_filter_rest_by_lang', 10, 2);
-add_filter('rest_about_items_query', 'laundromat_filter_rest_by_lang', 10, 2);
-add_filter('rest_reviews_query', 'laundromat_filter_rest_by_lang', 10, 2);
+add_action('rest_api_init', 'laundromat_register_rest_query_params');
 
-function laundromat_filter_rest_by_lang($args, $request)
+function laundromat_register_rest_query_params()
 {
-    $lang = $request->get_param('lang');
-    if (!empty($lang) && function_exists('pll_current_language')) {
-        $args['lang'] = sanitize_text_field($lang);
+    // Register content_category parameter for tips
+    register_rest_field('tips', 'content_category', [
+        'get_callback' => null,
+        'update_callback' => null,
+        'schema' => null,
+    ]);
+
+    // Register instruction_category parameter for instructions  
+    register_rest_field('instructions', 'instruction_category', [
+        'get_callback' => null,
+        'update_callback' => null,
+        'schema' => null,
+    ]);
+
+    // Register faq_category parameter for faqs
+    register_rest_field('faqs', 'faq_category', [
+        'get_callback' => null,
+        'update_callback' => null,
+        'schema' => null,
+    ]);
+
+    // Add custom query params to the collection params
+    add_filter('rest_tips_collection_params', 'laundromat_add_tips_collection_params');
+    add_filter('rest_instructions_collection_params', 'laundromat_add_instructions_collection_params');
+    add_filter('rest_faqs_collection_params', 'laundromat_add_faqs_collection_params');
+}
+
+function laundromat_add_tips_collection_params($params)
+{
+    $params['content_category'] = [
+        'description' => 'Filter by content category slug',
+        'type' => 'string',
+        'sanitize_callback' => 'sanitize_text_field',
+    ];
+    return $params;
+}
+
+function laundromat_add_instructions_collection_params($params)
+{
+    $params['instruction_category'] = [
+        'description' => 'Filter by instruction category slug',
+        'type' => 'string',
+        'sanitize_callback' => 'sanitize_text_field',
+    ];
+    return $params;
+}
+
+function laundromat_add_faqs_collection_params($params)
+{
+    $params['faq_category'] = [
+        'description' => 'Filter by FAQ category slug',
+        'type' => 'string',
+        'sanitize_callback' => 'sanitize_text_field',
+    ];
+    return $params;
+}
+
+/**
+ * Filter REST API queries by language and taxonomy using pre_get_posts
+ * This is more reliable than rest_{post_type}_query filters
+ */
+add_action('pre_get_posts', 'laundromat_filter_rest_queries');
+
+function laundromat_filter_rest_queries($query)
+{
+    // Only run during REST API requests
+    if (!defined('REST_REQUEST') || !REST_REQUEST) {
+        return;
     }
 
-    // Default to menu_order sorting for sortable CPTs (only for frontend API requests)
-    // Skip if this is an admin context or if orderby is already specified
-    if (!is_admin() && !$request->get_param('orderby')) {
-        $args['orderby'] = 'menu_order';
-        $args['order'] = 'ASC';
+    // Only run on main query
+    if (!$query->is_main_query()) {
+        return;
     }
 
-    // Filter FAQs by category if faq_category parameter is provided
-    $faq_category = $request->get_param('faq_category');
-    if (!empty($faq_category)) {
-        $args['tax_query'] = [
-            [
-                'taxonomy' => 'faq_category',
-                'field' => 'slug',
-                'terms' => sanitize_text_field($faq_category),
-            ],
+    $post_type = $query->get('post_type');
+
+    // Handle language filtering for Polylang
+    if (function_exists('pll_current_language')) {
+        if (isset($_GET['lang'])) {
+            $query->set('lang', sanitize_text_field($_GET['lang']));
+        }
+    }
+
+    // Default to menu_order sorting
+    if (!$query->get('orderby')) {
+        $query->set('orderby', 'menu_order');
+        $query->set('order', 'ASC');
+    }
+
+    // Get existing tax_query
+    $tax_query = $query->get('tax_query');
+    if (!is_array($tax_query)) {
+        $tax_query = [];
+    }
+
+    // Filter Tips by content_category
+    if ($post_type === 'tips' && !empty($_GET['content_category']) && $_GET['content_category'] !== 'all') {
+        $tax_query[] = [
+            'taxonomy' => 'content_category',
+            'field' => 'slug',
+            'terms' => sanitize_text_field($_GET['content_category']),
         ];
     }
 
-    return $args;
+    // Filter Instructions by instruction_category
+    if ($post_type === 'instructions' && !empty($_GET['instruction_category']) && $_GET['instruction_category'] !== 'all') {
+        $tax_query[] = [
+            'taxonomy' => 'instruction_category',
+            'field' => 'slug',
+            'terms' => sanitize_text_field($_GET['instruction_category']),
+        ];
+    }
+
+    // Filter FAQs by faq_category
+    if ($post_type === 'faqs' && !empty($_GET['faq_category']) && $_GET['faq_category'] !== 'all') {
+        $tax_query[] = [
+            'taxonomy' => 'faq_category',
+            'field' => 'slug',
+            'terms' => sanitize_text_field($_GET['faq_category']),
+        ];
+    }
+
+    // Apply tax_query if we have any conditions
+    if (!empty($tax_query)) {
+        $query->set('tax_query', $tax_query);
+    }
 }
+
 
 /**
  * Add extra data to REST API responses
  */
 add_filter('rest_prepare_locations', 'laundromat_enhance_location_response', 10, 3);
 add_filter('rest_prepare_tips', 'laundromat_enhance_tips_response', 10, 3);
-add_filter('rest_prepare_instructions', 'laundromat_enhance_tips_response', 10, 3);
+add_filter('rest_prepare_instructions', 'laundromat_enhance_instruction_response', 10, 3);
 add_filter('rest_prepare_faqs', 'laundromat_enhance_faq_response', 10, 3);
 add_filter('rest_prepare_services', 'laundromat_enhance_service_response', 10, 3);
 add_filter('rest_prepare_about_items', 'laundromat_enhance_about_item_response', 10, 3);
@@ -160,6 +258,43 @@ function laundromat_enhance_tips_response($response, $post, $request)
     } else {
         $response->data['category'] = function_exists('pll__') ? pll__('Tips and tricks') : __('Tips and tricks', 'laundromat');
         $response->data['category_slug'] = 'tips-and-tricks';
+    }
+
+    // Format date
+    $response->data['formatted_date'] = get_the_date('F j, Y', $post->ID);
+
+    return $response;
+}
+
+function laundromat_enhance_instruction_response($response, $post, $request)
+{
+    // Ensure title is included
+    if (!isset($response->data['title']) || !isset($response->data['title']['rendered'])) {
+        $response->data['title'] = [
+            'rendered' => get_the_title($post->ID),
+        ];
+    }
+
+    // Ensure content is included
+    if (!isset($response->data['content']) || !isset($response->data['content']['rendered'])) {
+        $response->data['content'] = [
+            'rendered' => apply_filters('the_content', $post->post_content),
+        ];
+    }
+
+    // Add featured image URL
+    if (has_post_thumbnail($post->ID)) {
+        $response->data['featured_image_url'] = get_the_post_thumbnail_url($post->ID, 'full');
+    }
+
+    // Add category name from instruction_category
+    $terms = wp_get_post_terms($post->ID, 'instruction_category');
+    if (!is_wp_error($terms) && !empty($terms)) {
+        $response->data['category'] = $terms[0]->name;
+        $response->data['category_slug'] = $terms[0]->slug;
+    } else {
+        $response->data['category'] = function_exists('pll__') ? pll__('Instructions') : __('Instructions', 'laundromat');
+        $response->data['category_slug'] = 'instructions';
     }
 
     // Format date
@@ -329,10 +464,17 @@ function laundromat_register_rest_routes()
         'permission_callback' => '__return_true',
     ]);
 
-    // Categories endpoint for frontend
+    // Categories endpoint for frontend (Tips)
     register_rest_route('laundromat/v1', '/categories', [
         'methods' => 'GET',
         'callback' => 'laundromat_get_categories',
+        'permission_callback' => '__return_true',
+    ]);
+
+    // Instruction Categories endpoint for frontend
+    register_rest_route('laundromat/v1', '/instruction-categories', [
+        'methods' => 'GET',
+        'callback' => 'laundromat_get_instruction_categories',
         'permission_callback' => '__return_true',
     ]);
 
@@ -378,6 +520,27 @@ function laundromat_register_rest_routes()
         'permission_callback' => '__return_true',
     ]);
 
+    // Custom Tips endpoint with filtering support
+    register_rest_route('laundromat/v1', '/tips', [
+        'methods' => 'GET',
+        'callback' => 'laundromat_get_filtered_tips',
+        'permission_callback' => '__return_true',
+    ]);
+
+    // Custom Instructions endpoint with filtering support
+    register_rest_route('laundromat/v1', '/instructions', [
+        'methods' => 'GET',
+        'callback' => 'laundromat_get_filtered_instructions',
+        'permission_callback' => '__return_true',
+    ]);
+
+    // Custom FAQs endpoint with filtering support
+    register_rest_route('laundromat/v1', '/faqs', [
+        'methods' => 'GET',
+        'callback' => 'laundromat_get_filtered_faqs',
+        'permission_callback' => '__return_true',
+    ]);
+
     // Legal Pages endpoints
     register_rest_route('laundromat/v1', '/legal/privacy-policy', [
         'methods' => 'GET',
@@ -391,6 +554,204 @@ function laundromat_register_rest_routes()
         'permission_callback' => '__return_true',
     ]);
 }
+
+/**
+ * Get filtered Tips with pagination
+ */
+function laundromat_get_filtered_tips($request)
+{
+    $page = absint($request->get_param('page')) ?: 1;
+    $per_page = absint($request->get_param('per_page')) ?: 10;
+    $lang = $request->get_param('lang');
+    $category_slug = $request->get_param('content_category');
+
+    $args = [
+        'post_type' => 'tips',
+        'posts_per_page' => $per_page,
+        'paged' => $page,
+        'post_status' => 'publish',
+        'orderby' => 'menu_order',
+        'order' => 'ASC',
+    ];
+
+    // Category filter
+    if (!empty($category_slug) && $category_slug !== 'all') {
+        $args['tax_query'] = [
+            [
+                'taxonomy' => 'content_category',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($category_slug),
+            ],
+        ];
+    }
+
+    // Language filter for Polylang
+    if ($lang && function_exists('pll_current_language')) {
+        $args['lang'] = sanitize_text_field($lang);
+    }
+
+    $query = new WP_Query($args);
+    $tips = [];
+
+    foreach ($query->posts as $post) {
+        $featured_image_url = get_the_post_thumbnail_url($post->ID, 'full');
+        $terms = wp_get_post_terms($post->ID, 'content_category');
+        $category = function_exists('pll__') ? pll__('Tips and tricks') : __('Tips and tricks', 'laundromat');
+        $cat_slug = 'tips-and-tricks';
+
+        if (!is_wp_error($terms) && !empty($terms)) {
+            $category = $terms[0]->name;
+            $cat_slug = $terms[0]->slug;
+        }
+
+        $tips[] = [
+            'id' => $post->ID,
+            'title' => ['rendered' => get_the_title($post->ID)],
+            'content' => ['rendered' => apply_filters('the_content', $post->post_content)],
+            'featured_image_url' => $featured_image_url ?: '',
+            'category' => $category,
+            'category_slug' => $cat_slug,
+            'formatted_date' => get_the_date('F j, Y', $post->ID),
+            'date' => $post->post_date,
+            'slug' => $post->post_name,
+        ];
+    }
+
+    $response = new WP_REST_Response($tips);
+    $response->header('X-WP-Total', $query->found_posts);
+    $response->header('X-WP-TotalPages', $query->max_num_pages);
+
+    return $response;
+}
+
+/**
+ * Get filtered Instructions with pagination
+ */
+function laundromat_get_filtered_instructions($request)
+{
+    $page = absint($request->get_param('page')) ?: 1;
+    $per_page = absint($request->get_param('per_page')) ?: 10;
+    $lang = $request->get_param('lang');
+    $category_slug = $request->get_param('instruction_category');
+
+    $args = [
+        'post_type' => 'instructions',
+        'posts_per_page' => $per_page,
+        'paged' => $page,
+        'post_status' => 'publish',
+        'orderby' => 'menu_order',
+        'order' => 'ASC',
+    ];
+
+    // Category filter
+    if (!empty($category_slug) && $category_slug !== 'all') {
+        $args['tax_query'] = [
+            [
+                'taxonomy' => 'instruction_category',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($category_slug),
+            ],
+        ];
+    }
+
+    // Language filter for Polylang
+    if ($lang && function_exists('pll_current_language')) {
+        $args['lang'] = sanitize_text_field($lang);
+    }
+
+    $query = new WP_Query($args);
+    $instructions = [];
+
+    foreach ($query->posts as $post) {
+        $featured_image_url = get_the_post_thumbnail_url($post->ID, 'full');
+        $terms = wp_get_post_terms($post->ID, 'instruction_category');
+        $category = function_exists('pll__') ? pll__('Instructions') : __('Instructions', 'laundromat');
+        $cat_slug = 'instructions';
+
+        if (!is_wp_error($terms) && !empty($terms)) {
+            $category = $terms[0]->name;
+            $cat_slug = $terms[0]->slug;
+        }
+
+        $instructions[] = [
+            'id' => $post->ID,
+            'title' => ['rendered' => get_the_title($post->ID)],
+            'content' => ['rendered' => apply_filters('the_content', $post->post_content)],
+            'featured_image_url' => $featured_image_url ?: '',
+            'category' => $category,
+            'category_slug' => $cat_slug,
+            'formatted_date' => get_the_date('F j, Y', $post->ID),
+            'date' => $post->post_date,
+            'slug' => $post->post_name,
+        ];
+    }
+
+    $response = new WP_REST_Response($instructions);
+    $response->header('X-WP-Total', $query->found_posts);
+    $response->header('X-WP-TotalPages', $query->max_num_pages);
+
+    return $response;
+}
+
+/**
+ * Get filtered FAQs
+ */
+function laundromat_get_filtered_faqs($request)
+{
+    $per_page = absint($request->get_param('per_page')) ?: 100;
+    $lang = $request->get_param('lang');
+    $category_slug = $request->get_param('faq_category');
+
+    $args = [
+        'post_type' => 'faqs',
+        'posts_per_page' => $per_page,
+        'post_status' => 'publish',
+        'orderby' => 'menu_order',
+        'order' => 'ASC',
+    ];
+
+    // Category filter
+    if (!empty($category_slug) && $category_slug !== 'all') {
+        $args['tax_query'] = [
+            [
+                'taxonomy' => 'faq_category',
+                'field' => 'slug',
+                'terms' => sanitize_text_field($category_slug),
+            ],
+        ];
+    }
+
+    // Language filter for Polylang
+    if ($lang && function_exists('pll_current_language')) {
+        $args['lang'] = sanitize_text_field($lang);
+    }
+
+    $query = new WP_Query($args);
+    $faqs = [];
+
+    foreach ($query->posts as $post) {
+        $terms = wp_get_post_terms($post->ID, 'faq_category');
+        $category = 'general';
+        $category_name = 'General';
+
+        if (!is_wp_error($terms) && !empty($terms)) {
+            $category = $terms[0]->slug;
+            $category_name = $terms[0]->name;
+        }
+
+        $faqs[] = [
+            'id' => $post->ID,
+            'title' => ['rendered' => get_the_title($post->ID)],
+            'content' => ['rendered' => apply_filters('the_content', $post->post_content)],
+            'category' => $category,
+            'category_name' => $category_name,
+        ];
+    }
+
+    return $faqs;
+}
+
+
 
 /**
  * Get Settings Callback
@@ -528,6 +889,34 @@ function laundromat_get_categories()
 {
     $terms = get_terms([
         'taxonomy' => 'content_category',
+        'hide_empty' => false,
+    ]);
+
+    if (is_wp_error($terms)) {
+        return [];
+    }
+
+    $categories = [
+        ['key' => 'all', 'label' => __('All articles', 'laundromat')],
+    ];
+
+    foreach ($terms as $term) {
+        $categories[] = [
+            'key' => $term->slug,
+            'label' => $term->name,
+        ];
+    }
+
+    return $categories;
+}
+
+/**
+ * Get Instruction Categories
+ */
+function laundromat_get_instruction_categories($request)
+{
+    $terms = get_terms([
+        'taxonomy' => 'instruction_category',
         'hide_empty' => false,
     ]);
 

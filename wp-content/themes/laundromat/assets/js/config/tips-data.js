@@ -5,17 +5,41 @@
  * Empty arrays are used as initial state while data loads.
  */
 
+// Detect language
+const isGreek = window.location.pathname.includes('/el/');
+const lang = isGreek ? 'el' : 'en';
+
+const TRANSLATIONS = {
+  en: {
+    all_articles: 'All articles',
+    latest: 'Latest',
+    oldest: 'Oldest',
+    title_asc: 'Title A-Z',
+    title_desc: 'Title Z-A',
+    sort_by: 'Sort by',
+  },
+  el: {
+    all_articles: 'Όλα τα άρθρα',
+    latest: 'Πιο πρόσφατα',
+    oldest: 'Πιο παλιά',
+    title_asc: 'Τίτλος Α-Ω',
+    title_desc: 'Τίτλος Ω-Α',
+    sort_by: 'Ταξινόμηση',
+  },
+};
+
+const t = TRANSLATIONS[lang];
+let SORT_BY_LABEL = t.sort_by;
+
 // Categories - loaded from API, with fallback
-let CATEGORIES = [
-  { key: 'all', label: 'All articles' },
-];
+let CATEGORIES = [{ key: 'all', label: t.all_articles }];
 
 // Sort options (static, no need for API)
 const SORT_OPTIONS = [
-  { value: 'latest', label: 'Latest' },
-  { value: 'oldest', label: 'Oldest' },
-  { value: 'title-asc', label: 'Title A-Z' },
-  { value: 'title-desc', label: 'Title Z-A' },
+  { value: 'latest', label: t.latest },
+  { value: 'oldest', label: t.oldest },
+  { value: 'title-asc', label: t.title_asc },
+  { value: 'title-desc', label: t.title_desc },
 ];
 
 // Data arrays - start empty, loaded from API
@@ -34,9 +58,11 @@ async function loadDataFromAPI() {
   if (typeof LaundroAPI === 'undefined') {
     console.log('[Tips Data] LaundroAPI not available, cannot load data');
     // Dispatch event even with empty data so pages can handle it
-    window.dispatchEvent(new CustomEvent('laundromatDataReady', {
-      detail: { tips: TIPS_DATA, instructions: INSTRUCTIONS_DATA, fromAPI: false }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('laundromatDataReady', {
+        detail: { tips: TIPS_DATA, instructions: INSTRUCTIONS_DATA, fromAPI: false },
+      }),
+    );
     return false;
   }
 
@@ -47,7 +73,7 @@ async function loadDataFromAPI() {
     const [categories, tips, instructions] = await Promise.all([
       LaundroAPI.getCategories(),
       LaundroAPI.getTips(),
-      LaundroAPI.getInstructions()
+      LaundroAPI.getInstructions(),
     ]);
 
     if (categories && categories.length > 0) {
@@ -69,17 +95,21 @@ async function loadDataFromAPI() {
     dataLoadedFromAPI = true;
 
     // Dispatch event when data is ready
-    window.dispatchEvent(new CustomEvent('laundromatDataReady', {
-      detail: { tips: TIPS_DATA, instructions: INSTRUCTIONS_DATA, categories: CATEGORIES, fromAPI: true }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('laundromatDataReady', {
+        detail: { tips: TIPS_DATA, instructions: INSTRUCTIONS_DATA, categories: CATEGORIES, fromAPI: true },
+      }),
+    );
 
     return true;
   } catch (error) {
     console.error('[Tips Data] Failed to load from API:', error);
     // Dispatch event even on error so pages can handle it
-    window.dispatchEvent(new CustomEvent('laundromatDataReady', {
-      detail: { tips: TIPS_DATA, instructions: INSTRUCTIONS_DATA, fromAPI: false, error: error.message }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('laundromatDataReady', {
+        detail: { tips: TIPS_DATA, instructions: INSTRUCTIONS_DATA, fromAPI: false, error: error.message },
+      }),
+    );
     return false;
   }
 }

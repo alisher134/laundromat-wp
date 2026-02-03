@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css" rel="stylesheet" />
 
     <link href="../assets/css/output.css" rel="stylesheet" />
   </head>
@@ -102,8 +103,23 @@
             <li class="paragraph-body-xs text-text hover:text-brand transition-colors 2xl:text-lg">
               <a class="hover:text-brand flex items-center gap-[6px] transition-colors" href="location.html">
                 Η τοποθεσία μας
-                
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 11 10" aria-hidden="true" class="h-[10px] w-[11px]"><path fill="currentColor" d="M5.127 10C2.3 10 0 7.757 0 5s2.3-5 5.127-5 5.127 2.243 5.127 5-2.3 5-5.127 5m0-8.759C3.002 1.241 1.273 2.928 1.273 5s1.729 3.758 3.854 3.758S8.981 7.073 8.981 5 7.252 1.24 5.127 1.24"></path><path fill="currentColor" d="m6.898 3.413.635-.54a3.3 3.3 0 0 0-1.326-.861l-.475.717c.454.115.857.357 1.166.684M7.864 3.292l-.645.548c.2.343.316.738.316 1.16 0 1.295-1.08 2.348-2.407 2.348a2.43 2.43 0 0 1-1.874-.877l-.475.717a3.28 3.28 0 0 0 2.349.982c1.792 0 3.25-1.422 3.25-3.17 0-.629-.189-1.215-.514-1.708"></path></svg>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 11 10"
+                  aria-hidden="true"
+                  class="h-[10px] w-[11px]"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M5.127 10C2.3 10 0 7.757 0 5s2.3-5 5.127-5 5.127 2.243 5.127 5-2.3 5-5.127 5m0-8.759C3.002 1.241 1.273 2.928 1.273 5s1.729 3.758 3.854 3.758S8.981 7.073 8.981 5 7.252 1.24 5.127 1.24"
+                  ></path>
+                  <path
+                    fill="currentColor"
+                    d="m6.898 3.413.635-.54a3.3 3.3 0 0 0-1.326-.861l-.475.717c.454.115.857.357 1.166.684M7.864 3.292l-.645.548c.2.343.316.738.316 1.16 0 1.295-1.08 2.348-2.407 2.348a2.43 2.43 0 0 1-1.874-.877l-.475.717a3.28 3.28 0 0 0 2.349.982c1.792 0 3.25-1.422 3.25-3.17 0-.629-.189-1.215-.514-1.708"
+                  ></path>
+                </svg>
               </a>
             </li>
           </ul>
@@ -128,12 +144,12 @@
           <div class="relative" id="lang-switcher">
             <button
               id="lang-button"
-              class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] text-text 2xl:text-lg"
+              class="text-text flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
               type="button"
             >
               <span class="leading-[132%] tracking-[-0.01em]">Gr</span>
               <span class="bg-brand/8 rounded-[6px] px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-                <svg class="h-[3px] w-[5px] text-text" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="text-text h-[3px] w-[5px]" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M0.5 0.5L2.9901 2.63438L5.48021 0.5" stroke="currentColor" stroke-linecap="round" />
                 </svg>
               </span>
@@ -163,13 +179,13 @@
           </div>
 
           <a
-            class="hidden text-sm leading-[132%] font-normal tracking-[-0.01em] text-text md:block 2xl:text-lg 2xl:font-medium"
+            class="text-text hidden text-sm leading-[132%] font-normal tracking-[-0.01em] md:block 2xl:text-lg 2xl:font-medium"
             href="tel:+88006001441"
           >
             8 800 600 14 41
           </a>
 
-          <button id="mobile-menu-btn" class="block text-white min-[1366px]:hidden" aria-label="Menu">
+          <button id="mobile-menu-btn" class="text-text block min-[1366px]:hidden" aria-label="Menu">
             <svg class="h-9 w-[38px]" viewBox="0 0 38 36" fill="none">
               <rect width="38" height="36" rx="10" fill="currentColor" fill-opacity="0.01" />
               <rect x="0.5" y="0.5" width="37" height="35" rx="9.5" stroke="currentColor" stroke-opacity="0.8" />
@@ -181,7 +197,7 @@
       </div>
     </header>
 
-        <div id="mobile-menu" class="invisible fixed inset-0 z-50" style="pointer-events: none">
+    <div id="mobile-menu" class="invisible fixed inset-0 z-50" style="pointer-events: none">
       <div id="mobile-menu-overlay" class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300"></div>
 
       <div
@@ -294,10 +310,16 @@
           <div class="mt-8">
             <p class="text-text/50 mb-6 text-sm leading-[132%] font-normal tracking-[-0.01em]">Επικοινωνία</p>
             <div class="space-y-4">
-              <a class="!text-brand active:opacity-70 block font-normal leading-[132%] py-1 text-[24px] text-brand! touch-manipulation tracking-[-0.01em] transition-opacity" href="tel:+88006001441" >
+              <a
+                class="!text-brand text-brand! block touch-manipulation py-1 text-[24px] leading-[132%] font-normal tracking-[-0.01em] transition-opacity active:opacity-70"
+                href="tel:+88006001441"
+              >
                 8 800 600 14 41
               </a>
-              <a class="!text-brand active:opacity-70 block border-b border-brand/40 font-normal leading-[132%] py-1 text-[24px] text-brand! touch-manipulation tracking-[-0.01em] transition-opacity w-fit" href="mailto:info@Laundromat.gr" >
+              <a
+                class="!text-brand border-brand/40 text-brand! block w-fit touch-manipulation border-b py-1 text-[24px] leading-[132%] font-normal tracking-[-0.01em] transition-opacity active:opacity-70"
+                href="mailto:info@Laundromat.gr"
+              >
                 info@Laundromat.gr
               </a>
             </div>
@@ -600,6 +622,7 @@
       </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.js"></script>
     <script src="../assets/js/api.js"></script>
     <script src="../assets/js/utils/spring.js"></script>
     <script src="../assets/js/utils/scroll-utils.js"></script>

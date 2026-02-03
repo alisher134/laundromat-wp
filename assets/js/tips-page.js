@@ -213,10 +213,20 @@ function showEmptyState() {
     try {
       let result;
       console.log('[Tips Page] Loading with perPage:', currentPerPage);
+
+      const params = {};
+      if (activeCategory && activeCategory !== 'all') {
+        if (isInstructionsPage) {
+          params.instruction_category = activeCategory;
+        } else {
+          params.content_category = activeCategory;
+        }
+      }
+
       if (isInstructionsPage) {
-        result = await LaundroAPI.getInstructionsWithPagination(page, currentPerPage);
+        result = await LaundroAPI.getInstructionsWithPagination(page, currentPerPage, params);
       } else {
-        result = await LaundroAPI.getTipsWithPagination(page, currentPerPage);
+        result = await LaundroAPI.getTipsWithPagination(page, currentPerPage, params);
       }
 
       const newItems = result.items || [];
@@ -375,14 +385,16 @@ function showEmptyState() {
     }).join('');
 
     // Sort HTML
-    const sortLabel = SORT_OPTIONS.find((o) => o.value === currentSort)?.label || 'Sort by';
+    const sortLabel =
+      SORT_OPTIONS.find((o) => o.value === currentSort)?.label ||
+      (typeof SORT_BY_LABEL !== 'undefined' ? SORT_BY_LABEL : 'Sort by');
     const sortLabelClass = currentSort ? 'text-text' : 'text-text/50';
 
     const sortHtml = `
-            <div class="relative w-full md:w-[120px]" id="sort-dropdown">
-                <button id="sort-trigger" class="cursor-pointer border-text/20 text-text flex min-h-[45px] w-full items-center justify-between rounded-[12px] border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] shadow-none md:w-[120px]">
-                    <span id="sort-current-label" class="${sortLabelClass}">${sortLabel}</span>
-                    <svg class="text-text h-[15px] w-[15px] shrink-0 ml-auto" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <div class="relative w-full md:w-auto" id="sort-dropdown">
+                <button id="sort-trigger" class="cursor-pointer border-text/20 text-text flex min-h-[45px] w-full items-center justify-between gap-2 rounded-[12px] border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] shadow-none md:min-w-[120px]">
+                    <span id="sort-current-label" class="${sortLabelClass} whitespace-nowrap">${sortLabel}</span>
+                    <svg class="text-text h-[15px] w-[15px] shrink-0" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5.63346 1.77859V12.4505M2.07617 5.30624L5.63346 1.74895M8.59787 1.80824V12.4801L12.1552 8.92282" stroke="currentColor" stroke-width="1.06719" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
