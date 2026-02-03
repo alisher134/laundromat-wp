@@ -490,3 +490,56 @@
     rotate: 120 deg;
   }
 }
+
+@layer utilities {
+  .my-8 {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+  @media (min-width: 768px) {
+    .md\:my-10 {
+      margin-top: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+  }
+  @media (min-width: 1280px) {
+    .xl\:my-12 {
+      margin-top: 3rem;
+      margin-bottom: 3rem;
+    }
+  }
+}
+
+@layer utilities {
+  /* Manual overrides for dynamic arbitrary values used in JS */
+  .mb-\[56px\] {
+    margin-bottom: 56px;
+  }
+  .h-\[338px\] {
+    height: 338px;
+  }
+
+  @media (min-width: 768px) {
+    .md\:mb-\[116px\] {
+      margin-bottom: 116px;
+    }
+    .md\:h-\[475px\] {
+      height: 475px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .xl\:h-\[475px\] {
+      height: 475px;
+    } /* Already existed, ensuring consistency */
+  }
+
+  @media (min-width: 1536px) {
+    .\32 xl\:h-\[600px\] {
+      height: 600px;
+    }
+    .\32 xl\:mb-\[48px\] {
+      margin-bottom: 48px;
+    }
+  }
+}
