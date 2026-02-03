@@ -350,6 +350,13 @@ function laundromat_register_rest_routes()
         'permission_callback' => '__return_true',
     ]);
 
+    // Service Categories endpoint for frontend
+    register_rest_route('laundromat/v1', '/service-categories', [
+        'methods' => 'GET',
+        'callback' => 'laundromat_get_service_categories',
+        'permission_callback' => '__return_true',
+    ]);
+
     // Homepage Tips endpoint - returns only selected tips
     register_rest_route('laundromat/v1', '/homepage-tips', [
         'methods' => 'GET',
@@ -574,6 +581,46 @@ function laundromat_get_faq_categories($request)
             'key' => $term->slug,
             'label' => $term->name,
             'id' => $term->term_id,
+        ];
+    }
+
+    return $categories;
+}
+
+/**
+ * Get Service Categories
+ */
+function laundromat_get_service_categories($request)
+{
+    $lang = $request->get_param('lang');
+
+    $args = [
+        'taxonomy' => 'service_category',
+        'hide_empty' => false,
+        'orderby' => 'meta_value_num',
+        'meta_key' => '_sort_order',
+        'order' => 'ASC',
+    ];
+
+    // Add language filter for Polylang
+    if ($lang && function_exists('pll_current_language')) {
+        $args['lang'] = $lang;
+    }
+
+    $terms = get_terms($args);
+
+    if (is_wp_error($terms)) {
+        return [];
+    }
+
+    $categories = [];
+
+    foreach ($terms as $term) {
+        $categories[] = [
+            'key' => $term->slug,
+            'label' => $term->name,
+            'id' => $term->term_id,
+            'order' => get_term_meta($term->term_id, '_sort_order', true) ?: 0,
         ];
     }
 

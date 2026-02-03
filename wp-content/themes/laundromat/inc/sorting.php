@@ -356,7 +356,7 @@ function laundromat_make_order_column_sortable($columns)
 
 function laundromat_get_sortable_taxonomies()
 {
-    return ['faq_category'];
+    return ['faq_category', 'service_category'];
 }
 
 /**

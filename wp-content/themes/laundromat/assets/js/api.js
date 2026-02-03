@@ -363,6 +363,7 @@ const LaundroAPI = (function () {
         slug: item.slug || '',
         description: item.content?.rendered || '',
         category: item.meta?.service_category || 'laundry',
+        menu_order: item.menu_order || 0,
         image: item.featured_image_url || '',
         // Price rows array: each row has { feature, time, time_unit, price }
         priceRows: (item.price_rows || []).map((row) => ({
@@ -434,6 +435,14 @@ const LaundroAPI = (function () {
      */
     async getFAQCategories() {
       return await fetchJSON(`${CONFIG.CUSTOM_API}/faq-categories${buildQuery()}`);
+    },
+
+    /**
+     * Fetch service categories
+     * @returns {Promise<Array|null>}
+     */
+    async getServiceCategories() {
+      return await fetchJSON(`${CONFIG.CUSTOM_API}/service-categories${buildQuery()}`);
     },
 
     /**

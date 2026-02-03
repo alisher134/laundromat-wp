@@ -32,30 +32,40 @@
 
   // Fetch services from WordPress API and update DOM
   async function loadServicesFromAPI() {
+    console.log('[Services] Starting to load services from WordPress API...');
+
     if (typeof LaundroAPI === 'undefined') {
-      console.warn('[Services] LaundroAPI not available, using static content');
+      console.warn('[Services] ⚠️ LaundroAPI not available, using static content');
       return;
     }
 
     try {
+      console.log('[Services] Fetching services from API...');
       const services = await LaundroAPI.getServices();
+
       if (!services || services.length === 0) {
-        console.warn('[Services] No services returned from API');
+        console.warn('[Services] ⚠️ No services returned from API');
         return;
       }
 
-      console.log('[Services] Loaded services from API:', services);
+      console.log(`[Services] ✅ Successfully loaded ${services.length} services from WordPress API:`, services);
 
-      // Map services by category for easy lookup
-      // If multiple services have the same category, use the first one
-      const servicesByCategory = {};
-      services.forEach((service) => {
-        if (!servicesByCategory[service.category]) {
-          servicesByCategory[service.category] = service;
-        }
+      // Sort services by menu_order (WordPress drag-and-drop order)
+      // This makes the system independent of category slugs
+      services.sort((a, b) => {
+        const orderA = a.menu_order || 0;
+        const orderB = b.menu_order || 0;
+        return orderA - orderB;
       });
 
-      console.log('[Services] Services by category:', servicesByCategory);
+      console.log(
+        '[Services] Services sorted by order:',
+        services.map((s) => ({
+          title: s.title,
+          menu_order: s.menu_order || 0,
+          category: s.category,
+        })),
+      );
 
       // Update each service section in the DOM
       const servicesList = document.getElementById('services-list');
@@ -65,16 +75,20 @@
       }
 
       const serviceSections = servicesList.querySelectorAll('[data-service]');
-      serviceSections.forEach((section) => {
-        const category = section.getAttribute('data-service');
-        const serviceData = servicesByCategory[category];
+      console.log(`[Services] Found ${serviceSections.length} service sections in HTML`);
+
+      // Map services to sections by index (order-based, not category-based)
+      // First service → first section, second → second, etc.
+      serviceSections.forEach((section, index) => {
+        const serviceData = services[index];
+        const htmlCategory = section.getAttribute('data-service');
 
         if (!serviceData) {
-          console.warn(`[Services] No service found for category: ${category}`);
+          console.warn(`[Services] ⚠️ No service data for section ${index + 1} (${htmlCategory})`);
           return;
         }
 
-        console.log(`[Services] Updating section for category: ${category}`, serviceData);
+        console.log(`[Services] ✓ Section ${index + 1} (${htmlCategory}) ← "${serviceData.title}"`);
 
         // Update title
         const titleEl = section.querySelector('h2');
@@ -169,7 +183,7 @@
       const wrapper = card.querySelector('.service-card-wrapper');
       const imageWrapper = card.querySelector('.service-image-wrapper');
       const priceInfo = card.querySelector('.service-price-info');
-      
+
       if (!wrapper || !imageWrapper) return;
 
       const spring = new Spring(SPRING_CONFIGS.SERVICES);
@@ -198,13 +212,13 @@
         const scrollProgress = getScrollProgressCenter(card);
         spring.setTarget(scrollProgress);
         const smoothProgress = spring.update(deltaTime);
-        
+
         // Transform: [0, 0.8] -> [0, 1]
         const expandProgress = transformProgress(smoothProgress, [0, 0.8], [0, 1]);
-        
+
         const smallSize = CARD_SIZES.small[breakpoint];
         const largeSize = CARD_SIZES.large[breakpoint];
-        
+
         const height = transformProgress(expandProgress, [0, 0.9], [smallSize.height, largeSize.height]);
         const width = transformProgress(expandProgress, [0, 1], [smallSize.width, largeSize.width]);
         const isActiveProgress = transformProgress(expandProgress, [0, 0.4], [0, 1], true);
@@ -215,7 +229,7 @@
         imageWrapper.style.width = `${width}px`;
         wrapper.style.justifyContent = justifyContentValue;
         wrapper.style.paddingBottom = `${paddingBottomValue}px`;
-        
+
         if (priceInfo) {
           priceInfo.style.opacity = isActiveProgress;
           priceInfo.style.display = isActiveProgress > 0 ? 'flex' : 'none';
@@ -278,7 +292,7 @@
   function initCategoryButtons() {
     const categoryButtons = document.querySelectorAll('[data-category]');
     const servicesList = document.getElementById('services-list');
-    
+
     if (!categoryButtons.length || !servicesList) return;
 
     const serviceCards = {
@@ -287,23 +301,23 @@
       specialCleaning: servicesList.querySelector('[data-service="specialCleaning"]') || servicesList.children[2],
     };
 
-      function setActiveCategory(category) {
-        categoryButtons.forEach((btn) => {
-          const btnCategory = btn.getAttribute('data-category');
-          if (btnCategory === category) {
-            btn.classList.remove('border-text/20', 'text-text');
-            btn.classList.add('bg-brand/6', 'text-brand', 'border-transparent');
-          } else {
-            btn.classList.remove('bg-brand/6', 'text-brand', 'border-transparent');
-            btn.classList.add('border-text/20', 'text-text');
-          }
-        });
+    function setActiveCategory(category) {
+      categoryButtons.forEach((btn) => {
+        const btnCategory = btn.getAttribute('data-category');
+        if (btnCategory === category) {
+          btn.classList.remove('border-text/20', 'text-text');
+          btn.classList.add('bg-brand/6', 'text-brand', 'border-transparent');
+        } else {
+          btn.classList.remove('bg-brand/6', 'text-brand', 'border-transparent');
+          btn.classList.add('border-text/20', 'text-text');
+        }
+      });
 
       const targetCard = serviceCards[category];
       if (targetCard) {
         const headerHeight = 120;
         const cardPosition = targetCard.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-        
+
         window.scrollTo({
           top: Math.max(0, cardPosition),
           behavior: 'smooth',
@@ -323,7 +337,7 @@
 
     const categoriesSection = document.querySelector('.animate-fade-up');
     const mobileSliderContainer = categoriesSection ? categoriesSection.querySelector('.keen-slider') : null;
-    
+
     if (mobileSliderContainer && typeof KeenSlider !== 'undefined') {
       try {
         new KeenSlider(mobileSliderContainer, {
@@ -342,32 +356,32 @@
   // FAQ accordion functionality
   function initFAQAccordion() {
     const faqItems = document.querySelectorAll('.faq-item');
-    
+
     if (faqItems.length === 0) return;
-    
+
     faqItems.forEach((item) => {
       const trigger = item.querySelector('.faq-trigger');
       const content = item.querySelector('.faq-content');
       const icon = item.querySelector('.faq-icon');
-      
+
       if (!trigger || !content) return;
-      
+
       // Set initial state - all closed
       content.setAttribute('data-state', 'closed');
       content.style.maxHeight = '0';
       content.style.opacity = '0';
       content.style.overflow = 'hidden';
       content.style.transition = 'max-height 0.3s ease-out, opacity 0.3s ease-out';
-      
+
       if (icon) {
         icon.style.transition = 'transform 0.3s ease-out';
         icon.style.transform = 'rotate(0deg)';
       }
-      
+
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
         const isOpen = content.getAttribute('data-state') === 'open';
-        
+
         // Close all other items (accordion behavior - only one open at a time)
         faqItems.forEach((otherItem) => {
           if (otherItem !== item) {
@@ -383,7 +397,7 @@
             }
           }
         });
-        
+
         if (isOpen) {
           // Close current item
           content.setAttribute('data-state', 'closed');
@@ -405,6 +419,9 @@
       });
     });
   }
+
+  // Load services from WordPress API
+  loadServicesFromAPI();
 
   // Initialize FAQ accordion
   initFAQAccordion();
