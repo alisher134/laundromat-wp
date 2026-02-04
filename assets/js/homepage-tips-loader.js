@@ -158,8 +158,8 @@
       console.log('[Homepage Tips] Successfully loaded', tips.length, 'tips');
       console.log('[Homepage Tips] First tip:', tips[0]);
 
-      // Limit to 5 tips maximum for homepage display
-      const displayTips = tips.slice(0, 5);
+      // Show all tips (previously limited to 5)
+      const displayTips = tips;
       console.log('[Homepage Tips] Displaying', displayTips.length, 'tips');
 
       // Render desktop grid

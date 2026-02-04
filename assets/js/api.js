@@ -348,14 +348,29 @@ const LaundroAPI = (function () {
      */
     async getFAQs(params = {}) {
       const data = await fetchJSON(`${CONFIG.CUSTOM_API}/faqs${buildQuery(params)}`);
-      if (!data) return null;
 
-      return data.map((item, index) => ({
-        id: item.id,
-        number: String(index + 1).padStart(2, '0'),
-        question: item.title.rendered,
-        answer: item.answer || item.content?.rendered?.replace(/<[^>]*>/g, '') || '',
-      }));
+      let items = [];
+      if (Array.isArray(data)) {
+        items = data;
+      } else if (data && typeof data === 'object') {
+        // Fallback if data is returned as an object
+        items = Object.values(data);
+      }
+
+      if (!items || items.length === 0) return null;
+
+      return items.map((item, index) => {
+        const title = item.title?.rendered || item.question || '';
+        const rawContent = item.content?.rendered || item.answer || item.content || '';
+        const answer = typeof rawContent === 'string' ? rawContent.replace(/<[^>]*>/g, '') : '';
+
+        return {
+          id: item.id,
+          number: String(index + 1).padStart(2, '0'),
+          question: title,
+          answer: answer,
+        };
+      });
     },
 
     /**

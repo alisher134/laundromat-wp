@@ -37,7 +37,11 @@
     if (!container) return;
 
     // Limit to 5 FAQs for the home page section
-    const faqsToRender = faqs.slice(0, 5);
+    // Removed limit as per user request
+    const faqsToRender = faqs;
+
+    console.log('[FAQ Section] Rendering items:', faqsToRender);
+    container.innerHTML = ''; // Force clear static content
 
     const html = faqsToRender
       .map((faq, index) => {
