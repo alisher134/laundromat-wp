@@ -135,10 +135,11 @@ function laundromat_filter_rest_queries($query)
     $post_type = $query->get('post_type');
 
     // Handle language filtering for Polylang
-    if (function_exists('pll_current_language')) {
-        if (isset($_GET['lang'])) {
-            $query->set('lang', sanitize_text_field($_GET['lang']));
-        }
+    // For REST API, we need to set the language explicitly based on the 'lang' query param
+    if (isset($_GET['lang']) && !empty($_GET['lang'])) {
+        $lang = sanitize_text_field($_GET['lang']);
+        // Set the lang parameter for Polylang to filter by
+        $query->set('lang', $lang);
     }
 
     // Default to menu_order sorting
@@ -541,6 +542,13 @@ function laundromat_register_rest_routes()
         'permission_callback' => '__return_true',
     ]);
 
+    // Custom Locations endpoint with language filtering
+    register_rest_route('laundromat/v1', '/locations', [
+        'methods' => 'GET',
+        'callback' => 'laundromat_get_filtered_locations',
+        'permission_callback' => '__return_true',
+    ]);
+
     // Legal Pages endpoints
     register_rest_route('laundromat/v1', '/legal/privacy-policy', [
         'methods' => 'GET',
@@ -769,6 +777,59 @@ function laundromat_get_filtered_faqs($request)
     return $faqs;
 }
 
+/**
+ * Get filtered Locations with language support
+ */
+function laundromat_get_filtered_locations($request)
+{
+    $per_page = absint($request->get_param('per_page')) ?: 100;
+    $lang = $request->get_param('lang');
+
+    $args = [
+        'post_type' => 'locations',
+        'posts_per_page' => $per_page,
+        'post_status' => 'publish',
+        'orderby' => 'menu_order',
+        'order' => 'ASC',
+    ];
+
+    // Language filter for Polylang
+    if ($lang) {
+        $args['lang'] = sanitize_text_field($lang);
+    }
+
+    $query = new WP_Query($args);
+    $locations = [];
+
+    foreach ($query->posts as $post) {
+        $featured_image_url = get_the_post_thumbnail_url($post->ID, 'full');
+
+        $locations[] = [
+            'id' => $post->ID,
+            'title' => ['rendered' => get_the_title($post->ID)],
+            'featured_image_url' => $featured_image_url ?: '',
+            'meta' => [
+                'store_hours' => get_post_meta($post->ID, 'store_hours', true) ?: '',
+                'address' => get_post_meta($post->ID, 'address', true) ?: '',
+                'phone' => get_post_meta($post->ID, 'phone', true) ?: '',
+                'latitude' => get_post_meta($post->ID, 'latitude', true) ?: '',
+                'longitude' => get_post_meta($post->ID, 'longitude', true) ?: '',
+            ],
+            'map_position' => [
+                'mobile' => [
+                    'top' => get_post_meta($post->ID, 'map_pos_mobile_top', true) ?: '0%',
+                    'left' => get_post_meta($post->ID, 'map_pos_mobile_left', true) ?: '0%',
+                ],
+                'desktop' => [
+                    'top' => get_post_meta($post->ID, 'map_pos_desktop_top', true) ?: '0%',
+                    'left' => get_post_meta($post->ID, 'map_pos_desktop_left', true) ?: '0%',
+                ],
+            ],
+        ];
+    }
+
+    return $locations;
+}
 
 
 /**

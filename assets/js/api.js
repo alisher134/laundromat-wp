@@ -147,7 +147,7 @@ const LaundroAPI = (function () {
      * @returns {Promise<Array|null>}
      */
     async getLocations() {
-      const data = await fetchJSON(`${CONFIG.WP_API}/locations${buildQuery()}`);
+      const data = await fetchJSON(`${CONFIG.CUSTOM_API}/locations${buildQuery()}`);
       if (!data) return null;
 
       return data.map((item) => ({
