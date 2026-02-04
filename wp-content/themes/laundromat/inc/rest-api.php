@@ -136,22 +136,31 @@ function laundromat_filter_rest_queries($query)
 
     // Handle language filtering for Polylang
     // For REST API, we need to set the language explicitly based on the 'lang' query param
+    // Get existing tax_query
+    $tax_query = $query->get('tax_query');
+    if (!is_array($tax_query)) {
+        $tax_query = [];
+    }
+
+    // Handle language filtering for Polylang
+    // For REST API, we need to set the language explicitly based on the 'lang' query param
     if (isset($_GET['lang']) && !empty($_GET['lang'])) {
         $lang = sanitize_text_field($_GET['lang']);
         // Set the lang parameter for Polylang to filter by
         $query->set('lang', $lang);
+
+        // Force taxonomy filter for stricter filtering (fixes issue with mixed languages)
+        $tax_query[] = [
+            'taxonomy' => 'language',
+            'field'    => 'slug',
+            'terms'    => $lang,
+        ];
     }
 
     // Default to menu_order sorting
     if (!$query->get('orderby')) {
         $query->set('orderby', 'menu_order');
         $query->set('order', 'ASC');
-    }
-
-    // Get existing tax_query
-    $tax_query = $query->get('tax_query');
-    if (!is_array($tax_query)) {
-        $tax_query = [];
     }
 
     // Filter Tips by content_category
@@ -185,6 +194,49 @@ function laundromat_filter_rest_queries($query)
     if (!empty($tax_query)) {
         $query->set('tax_query', $tax_query);
     }
+}
+
+/**
+ * Force language filtering via rest_{post_type}_query hooks
+ * This serves as a second layer of defense if pre_get_posts is bypassed or overridden
+ */
+add_filter('rest_services_query', 'laundromat_force_rest_language_filter', 10, 2);
+add_filter('rest_about_items_query', 'laundromat_force_rest_language_filter', 10, 2);
+add_filter('rest_reviews_query', 'laundromat_force_rest_language_filter', 10, 2);
+add_filter('rest_tips_query', 'laundromat_force_rest_language_filter', 10, 2);
+add_filter('rest_instructions_query', 'laundromat_force_rest_language_filter', 10, 2);
+add_filter('rest_faqs_query', 'laundromat_force_rest_language_filter', 10, 2);
+add_filter('rest_locations_query', 'laundromat_force_rest_language_filter', 10, 2);
+
+function laundromat_force_rest_language_filter($args, $request)
+{
+    // Check if lang parameter exists in the request
+    $lang = $request->get_param('lang');
+    
+    // Also check $_GET just in case
+    if (empty($lang) && isset($_GET['lang'])) {
+        $lang = sanitize_text_field($_GET['lang']);
+    }
+
+    if (!empty($lang)) {
+        // 1. Set standard Polylang argument
+        $args['lang'] = $lang;
+        
+        // 2. Force explicit taxonomy query
+        // Ensure tax_query array exists
+        if (!isset($args['tax_query']) || !is_array($args['tax_query'])) {
+            $args['tax_query'] = [];
+        }
+
+        // Add language taxonomy requirement
+        $args['tax_query'][] = [
+            'taxonomy' => 'language',
+            'field'    => 'slug',
+            'terms'    => $lang,
+        ];
+    }
+
+    return $args;
 }
 
 

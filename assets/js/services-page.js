@@ -370,28 +370,117 @@
     }
   }
 
+  // Fetch FAQs from WordPress API
+  async function loadFAQsFromAPI() {
+    if (typeof LaundroAPI === 'undefined') {
+      console.warn('[Services] LaundroAPI not available');
+      return;
+    }
+
+    try {
+      const faqsList = document.getElementById('services-faq-list');
+      if (!faqsList) return;
+
+      // Add loading state
+      faqsList.innerHTML = '<div class="text-text/60 text-center py-8">Loading FAQs...</div>';
+
+      const faqs = await LaundroAPI.getFAQs();
+
+      if (!faqs || faqs.length === 0) {
+        faqsList.innerHTML = '<div class="text-text/60 text-center py-8">No FAQs available</div>';
+        return;
+      }
+
+      console.log(`[Services] Loaded ${faqs.length} FAQs from API`);
+
+      // Clear list
+      faqsList.innerHTML = '';
+
+      // Create and append FAQ items
+      faqs.forEach((faq, index) => {
+        const number = String(index + 1).padStart(2, '0');
+        const item = document.createElement('div');
+        item.className =
+          'faq-item overflow-hidden rounded-[11px] bg-white backdrop-blur-[30px] md:rounded-[16px] xl:rounded-[11px] 2xl:rounded-[16px]';
+        item.setAttribute('data-state', 'closed');
+
+        item.innerHTML = `
+          <button
+            class="faq-trigger group flex w-full cursor-pointer items-center justify-between pt-4 pr-3 pb-[17px] pl-4 text-left transition-all outline-none md:pt-[33px] md:pr-9 md:pb-9 md:pl-6 xl:pt-6 xl:pr-6 xl:pb-[25px] xl:pl-[22px] 2xl:pt-[33px] 2xl:pr-9 2xl:pb-9 2xl:pl-8"
+          >
+            <div class="flex w-full items-center justify-between">
+              <div class="flex items-start md:gap-[54px] xl:gap-[104px] 2xl:gap-[143px]">
+                <span
+                  class="text-brand/70 hidden leading-[132%] font-normal tracking-[-0.01em] md:block md:text-lg xl:text-sm 2xl:text-lg"
+                >
+                  ( ${number} )
+                </span>
+                <span
+                  class="text-text max-w-[230px] text-base leading-[132%] font-normal tracking-[-0.02em] md:max-w-[448px] md:text-[21px] xl:text-base 2xl:max-w-[545px] 2xl:text-[21px]"
+                >
+                  ${faq.question}
+                </span>
+              </div>
+
+              <span
+                class="bg-brand/10 text-brand flex h-[40px] w-[40px] items-center justify-center rounded-[9px] md:size-[55px] md:rounded-[12px] xl:size-[40px] 2xl:size-[55px] 2xl:rounded-[12px]"
+              >
+                <div class="faq-icon transition-transform duration-300">
+                  <svg
+                    class="h-[10px] w-[10px] md:h-[12px] md:w-[12px] xl:h-[10px] xl:w-[10px] 2xl:h-[12px] 2xl:w-[12px]"
+                    viewBox="0 0 11 11"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.76795 0.5V4.5V10.5M2.5 5.5H10.5H0.5"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </div>
+              </span>
+            </div>
+          </button>
+          <div class="faq-content overflow-hidden text-sm" data-state="closed" style="max-height: 0; opacity: 0; transition: max-height 0.3s ease-out, opacity 0.3s ease-out;">
+            <div class="text-text px-5 pb-5 text-base leading-[150%] font-normal tracking-[-0.01em] md:px-6 md:pb-6 xl:px-[22px] xl:pb-[25px] 2xl:px-8 2xl:pb-9">
+              ${faq.answer}
+            </div>
+          </div>
+        `;
+
+        faqsList.appendChild(item);
+      });
+
+      // Re-init accordion logic for new elements
+      initFAQAccordion();
+    } catch (error) {
+      console.error('[Services] Error loading FAQs:', error);
+      const faqsList = document.getElementById('services-faq-list');
+      if (faqsList) {
+        faqsList.innerHTML =
+          '<div class="text-error/60 text-center py-8">Failed to load FAQs. Please try again later.</div>';
+      }
+    }
+  }
+
   // FAQ accordion functionality
   function initFAQAccordion() {
-    const faqItems = document.querySelectorAll('.faq-item');
+    const faqItems = document.querySelectorAll('#services-faq-list .faq-item');
     if (faqItems.length === 0) return;
 
     faqItems.forEach((item) => {
+      // Avoid re-binding if already bound
+      if (item.hasAttribute('data-bound')) return;
+      item.setAttribute('data-bound', 'true');
+
       const trigger = item.querySelector('.faq-trigger');
       const content = item.querySelector('.faq-content');
       const icon = item.querySelector('.faq-icon');
+      const iconBox = item.querySelector('span.bg-brand\\/10');
 
       if (!trigger || !content) return;
-
-      // Set initial state - all closed
-      content.setAttribute('data-state', 'closed');
-      content.style.maxHeight = '0';
-      content.style.opacity = '0';
-      content.style.overflow = 'hidden';
-      content.style.transition = 'max-height 0.3s ease-out, opacity 0.3s ease-out';
-      if (icon) {
-        icon.style.transition = 'transform 0.3s ease-out';
-        icon.style.transform = 'rotate(0deg)';
-      }
 
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
@@ -402,11 +491,17 @@
           if (otherItem !== item) {
             const otherContent = otherItem.querySelector('.faq-content');
             const otherIcon = otherItem.querySelector('.faq-icon');
+            const otherIconBox = otherItem.querySelector('span.bg-brand\\/10');
+
             if (otherContent) {
               otherContent.setAttribute('data-state', 'closed');
               otherContent.style.maxHeight = '0';
               otherContent.style.opacity = '0';
               if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
+              if (otherIconBox) {
+                otherIconBox.classList.remove('bg-brand/20');
+                otherIconBox.classList.add('bg-brand/10');
+              }
             }
           }
         });
@@ -416,11 +511,22 @@
           content.style.maxHeight = '0';
           content.style.opacity = '0';
           if (icon) icon.style.transform = 'rotate(0deg)';
+          if (iconBox) {
+            iconBox.classList.remove('bg-brand/20');
+            iconBox.classList.add('bg-brand/10');
+          }
         } else {
           content.setAttribute('data-state', 'open');
-          content.style.maxHeight = content.scrollHeight + 'px';
+
+          const inner = content.children[0];
+          const height = inner ? inner.offsetHeight + 40 : content.scrollHeight;
+          content.style.maxHeight = height + 'px';
           content.style.opacity = '1';
           if (icon) icon.style.transform = 'rotate(45deg)';
+          if (iconBox) {
+            iconBox.classList.remove('bg-brand/10');
+            iconBox.classList.add('bg-brand/20');
+          }
         }
       });
     });
@@ -428,11 +534,11 @@
 
   async function initPage() {
     // Parallel fetch
-    await Promise.all([loadServicesFromAPI(), loadCategoriesFromAPI()]);
+    await Promise.all([loadServicesFromAPI(), loadCategoriesFromAPI(), loadFAQsFromAPI()]);
 
     initServiceCards();
     initCategoryButtons();
-    initFAQAccordion();
+    // initFAQAccordion called inside loadFAQsFromAPI
   }
 
   if (document.readyState === 'loading') {
