@@ -223,6 +223,23 @@ function showEmptyState() {
         }
       }
 
+      // Add server-side sorting params
+      if (currentSort) {
+        if (currentSort === 'latest') {
+          params.orderby = 'date';
+          params.order = 'desc';
+        } else if (currentSort === 'oldest') {
+          params.orderby = 'date';
+          params.order = 'asc';
+        } else if (currentSort === 'title-asc') {
+          params.orderby = 'title';
+          params.order = 'asc';
+        } else if (currentSort === 'title-desc') {
+          params.orderby = 'title';
+          params.order = 'desc';
+        }
+      }
+
       if (isInstructionsPage) {
         result = await LaundroAPI.getInstructionsWithPagination(page, currentPerPage, params);
       } else {
@@ -487,8 +504,8 @@ function showEmptyState() {
           currentPage = 1;
           sortOptionsDiv.classList.add('hidden');
           renderFilters();
-          // Sort is done client-side on current data
-          renderContent();
+          // Reload data from server with new sort order
+          await loadPageData(1, true);
         });
       });
     }
@@ -502,17 +519,8 @@ function showEmptyState() {
     let desktopDisplayData = [...DATA];
     let mobileDisplayData = [...mobileAccumulatedData];
 
-    // Apply local sorting
-    const sortFn = (a, b) => {
-      if (currentSort === 'latest' || currentSort === '') return new Date(b.date) - new Date(a.date);
-      if (currentSort === 'oldest') return new Date(a.date) - new Date(b.date);
-      if (currentSort === 'title-asc') return a.title.localeCompare(b.title);
-      if (currentSort === 'title-desc') return b.title.localeCompare(a.title);
-      return 0;
-    };
-
-    desktopDisplayData.sort(sortFn);
-    mobileDisplayData.sort(sortFn);
+    // Note: Sorting is now done server-side via API params
+    // Client-side sorting removed to ensure consistency with paginated data
 
     // Desktop Grid
     if (gridDesktop) {

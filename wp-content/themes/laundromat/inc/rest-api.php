@@ -564,14 +564,23 @@ function laundromat_get_filtered_tips($request)
     $per_page = absint($request->get_param('per_page')) ?: 10;
     $lang = $request->get_param('lang');
     $category_slug = $request->get_param('content_category');
+    $orderby = $request->get_param('orderby') ?: 'menu_order';
+    $order = $request->get_param('order') ?: 'ASC';
+
+    // Map frontend sort values to WP query params
+    $valid_orderby = ['date', 'title', 'menu_order'];
+    if (!in_array($orderby, $valid_orderby)) {
+        $orderby = 'menu_order';
+    }
+    $order = strtoupper($order) === 'DESC' ? 'DESC' : 'ASC';
 
     $args = [
         'post_type' => 'tips',
         'posts_per_page' => $per_page,
         'paged' => $page,
         'post_status' => 'publish',
-        'orderby' => 'menu_order',
-        'order' => 'ASC',
+        'orderby' => $orderby,
+        'order' => $order,
     ];
 
     // Category filter
@@ -633,14 +642,23 @@ function laundromat_get_filtered_instructions($request)
     $per_page = absint($request->get_param('per_page')) ?: 10;
     $lang = $request->get_param('lang');
     $category_slug = $request->get_param('instruction_category');
+    $orderby = $request->get_param('orderby') ?: 'menu_order';
+    $order = $request->get_param('order') ?: 'ASC';
+
+    // Map frontend sort values to WP query params
+    $valid_orderby = ['date', 'title', 'menu_order'];
+    if (!in_array($orderby, $valid_orderby)) {
+        $orderby = 'menu_order';
+    }
+    $order = strtoupper($order) === 'DESC' ? 'DESC' : 'ASC';
 
     $args = [
         'post_type' => 'instructions',
         'posts_per_page' => $per_page,
         'paged' => $page,
         'post_status' => 'publish',
-        'orderby' => 'menu_order',
-        'order' => 'ASC',
+        'orderby' => $orderby,
+        'order' => $order,
     ];
 
     // Category filter
