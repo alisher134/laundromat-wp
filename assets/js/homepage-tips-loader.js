@@ -85,7 +85,7 @@
     const link = 'tips-details.html?id=' + item.id;
 
     return `
-      <article class="keen-slider__slide w-[300px] shrink-0 md:w-[352px]">
+      <article class="keen-slider__slide min-w-[300px] max-w-[300px] md:min-w-[379px] md:max-w-[379px]">
         <div class="flex h-full w-full flex-1 flex-col rounded-[16px] bg-white p-[20px] min-h-[418px] md:min-h-[386px]">
           <div class="flex justify-end">
             <div class="relative mb-[47px] h-[87px] w-[127px] md:mb-[35px] md:h-[99px] md:w-[149px]">

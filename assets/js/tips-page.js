@@ -409,7 +409,7 @@ function showEmptyState() {
 
     const sortHtml = `
             <div class="relative w-full md:w-auto" id="sort-dropdown">
-                <button id="sort-trigger" class="cursor-pointer border-text/20 text-text flex min-h-[45px] w-full items-center justify-between gap-2 rounded-[12px] border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] shadow-none md:min-w-[120px]">
+                <button id="sort-trigger" class="cursor-pointer border-text/20 text-text flex min-h-[45px] w-full items-center justify-center gap-[23px] rounded-[12px] border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] shadow-none md:min-w-[120px] md:justify-between md:gap-2">
                     <span id="sort-current-label" class="${sortLabelClass} whitespace-nowrap">${sortLabel}</span>
                     <svg class="text-text h-[15px] w-[15px] shrink-0" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5.63346 1.77859V12.4505M2.07617 5.30624L5.63346 1.74895M8.59787 1.80824V12.4801L12.1552 8.92282" stroke="currentColor" stroke-width="1.06719" stroke-linecap="round" stroke-linejoin="round"/>

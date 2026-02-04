@@ -25,9 +25,7 @@
    * Generate user icon HTML (either custom photo or default SVG icon)
    */
   function generateUserIcon(photoUrl, authorName, size = 'mobile') {
-    const sizeClasses = size === 'desktop'
-      ? 'size-[69px] 2xl:size-[96px]'
-      : 'size-[50px]';
+    const sizeClasses = size === 'desktop' ? 'size-[69px] 2xl:size-[96px]' : 'size-[50px]';
 
     if (photoUrl) {
       return `<img src="${photoUrl}" alt="${authorName}" class="${sizeClasses} rounded-[14px] object-cover" />`;
@@ -43,7 +41,7 @@
    */
   function generateMobileReview(review) {
     return `
-      <div class="keen-slider__slide min-w-[320px] rounded-[16px] bg-white/80 px-[20px] pt-[20px] pb-[32px] backdrop-blur-[42px] md:min-w-[385px]">
+      <div class="keen-slider__slide min-w-[280px] max-w-[280px] rounded-[16px] bg-white/80 px-[20px] pt-[20px] pb-[32px] backdrop-blur-[42px] md:min-w-[379px] md:max-w-[379px]">
         <div class="flex items-start justify-between">
           <div class="mb-[80px] flex items-center gap-[18px]">
             ${generateUserIcon(review.photoUrl, review.authorName, 'mobile')}
@@ -166,14 +164,14 @@
       rtl: false,
       rubberband: true,
       slides: {
-        perView: 1,
+        perView: 'auto',
         spacing: 8,
         origin: 0,
       },
       breakpoints: {
         '(min-width: 768px)': {
           slides: {
-            perView: 1,
+            perView: 'auto',
             spacing: 8,
           },
         },

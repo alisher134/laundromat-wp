@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         storeHours: loc.storeHours,
         geo: {
           lat: parseFloat(loc.lat),
-          lng: parseFloat(loc.lng)
+          lng: parseFloat(loc.lng),
         },
       }));
 
@@ -157,26 +157,26 @@ document.addEventListener('DOMContentLoaded', async () => {
           </div>
         </div>
       `;
-      }
+    }
 
-      // --- Render Lists ---
-      const desktopContainer = document.getElementById('location-list-container');
-      const sliderContainer = document.getElementById('keen-slider-locations');
+    // --- Render Lists ---
+    const desktopContainer = document.getElementById('location-list-container');
+    const sliderContainer = document.getElementById('keen-slider-locations');
 
-      // Render Desktop List
-      if (desktopContainer) {
-        desktopContainer.innerHTML = locations.map((loc) => createLocationCardStr(loc, false, false)).join('');
+    // Render Desktop List
+    if (desktopContainer) {
+      desktopContainer.innerHTML = locations.map((loc) => createLocationCardStr(loc, false, false)).join('');
 
-        // Add Click Listeners
-        Array.from(desktopContainer.children).forEach((bg) => {
-          bg.addEventListener('click', () => {
-            handleLocationSelect(parseInt(bg.dataset.id));
-          });
+      // Add Click Listeners
+      Array.from(desktopContainer.children).forEach((bg) => {
+        bg.addEventListener('click', () => {
+          handleLocationSelect(parseInt(bg.dataset.id));
         });
-      }
+      });
+    }
 
-      // Render Mobile Slider
-      if (sliderContainer) {
+    // Render Mobile Slider
+    if (sliderContainer) {
       sliderContainer.innerHTML = locations.map((loc) => createLocationCardStr(loc, false, true)).join('');
       // Add Click Listeners logic is handled by slider click if needed, but inner divs have pointer-events for now?
       // Actually the card itself is clickable. I added data-id.
@@ -316,48 +316,48 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Use first location as center default
       const center = locations[0].geo;
 
-    const mapOptions = {
-      center: center,
-      zoom: 12, // Zoomed out a bit initially
-      disableDefaultUI: true,
-      zoomControl: true,
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullscreenControl: false,
-      styles: [
-        {
-          featureType: 'all',
-          elementType: 'geometry',
-          stylers: [{ saturation: -30 }],
-        },
-        {
-          featureType: 'water',
-          elementType: 'geometry.fill',
-          stylers: [{ color: '#87BCE0' }],
-        },
-      ],
-    };
+      const mapOptions = {
+        center: center,
+        zoom: 12, // Zoomed out a bit initially
+        disableDefaultUI: true,
+        zoomControl: true,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+        styles: [
+          {
+            featureType: 'all',
+            elementType: 'geometry',
+            stylers: [{ saturation: -30 }],
+          },
+          {
+            featureType: 'water',
+            elementType: 'geometry.fill',
+            stylers: [{ color: '#87BCE0' }],
+          },
+        ],
+      };
 
-    map = new google.maps.Map(mapElement, mapOptions);
+      map = new google.maps.Map(mapElement, mapOptions);
 
-    // Create Markers
-    locations.forEach((loc, index) => {
-      const marker = new google.maps.Marker({
-        position: loc.geo,
-        map: map,
-        icon: {
-          url: './assets/images/marker.svg',
-          scaledSize: new google.maps.Size(40, 40),
-        },
-        title: loc.title,
+      // Create Markers
+      locations.forEach((loc, index) => {
+        const marker = new google.maps.Marker({
+          position: loc.geo,
+          map: map,
+          icon: {
+            url: './assets/images/marker.svg',
+            scaledSize: new google.maps.Size(40, 40),
+          },
+          title: loc.title,
+        });
+
+        marker.addListener('click', () => {
+          handleLocationSelect(loc.id);
+        });
+
+        markers.push(marker);
       });
-
-      marker.addListener('click', () => {
-        handleLocationSelect(loc.id);
-      });
-
-      markers.push(marker);
-    });
     };
 
     // --- Load Map Script ---
