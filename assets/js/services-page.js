@@ -214,7 +214,7 @@
 
       if (typeof Spring === 'undefined' || typeof SPRING_CONFIGS === 'undefined') return;
 
-      const spring = new Spring(SPRING_CONFIGS.SERVICES);
+      const spring = new Spring(SPRING_CONFIGS.SERVICES_LAYOUT);
       springs.set(card, { spring, card, wrapper, imageWrapper, priceInfo });
 
       const breakpoint = getBreakpoint();

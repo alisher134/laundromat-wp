@@ -97,26 +97,41 @@
 
         <nav class="hidden items-center gap-[123px] min-[1366px]:flex">
           <ul>
-            <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs hover:text-brand text-white transition-colors 2xl:text-lg">
               <a class="hover:text-brand flex items-center gap-[6px] transition-colors" href="location.html">
                 Our location
-                
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 11 10" aria-hidden="true" class="h-[10px] w-[11px]"><path fill="currentColor" d="M5.127 10C2.3 10 0 7.757 0 5s2.3-5 5.127-5 5.127 2.243 5.127 5-2.3 5-5.127 5m0-8.759C3.002 1.241 1.273 2.928 1.273 5s1.729 3.758 3.854 3.758S8.981 7.073 8.981 5 7.252 1.24 5.127 1.24"></path><path fill="currentColor" d="m6.898 3.413.635-.54a3.3 3.3 0 0 0-1.326-.861l-.475.717c.454.115.857.357 1.166.684M7.864 3.292l-.645.548c.2.343.316.738.316 1.16 0 1.295-1.08 2.348-2.407 2.348a2.43 2.43 0 0 1-1.874-.877l-.475.717a3.28 3.28 0 0 0 2.349.982c1.792 0 3.25-1.422 3.25-3.17 0-.629-.189-1.215-.514-1.708"></path></svg>
+
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 11 10"
+                  aria-hidden="true"
+                  class="h-[10px] w-[11px]"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M5.127 10C2.3 10 0 7.757 0 5s2.3-5 5.127-5 5.127 2.243 5.127 5-2.3 5-5.127 5m0-8.759C3.002 1.241 1.273 2.928 1.273 5s1.729 3.758 3.854 3.758S8.981 7.073 8.981 5 7.252 1.24 5.127 1.24"
+                  ></path>
+                  <path
+                    fill="currentColor"
+                    d="m6.898 3.413.635-.54a3.3 3.3 0 0 0-1.326-.861l-.475.717c.454.115.857.357 1.166.684M7.864 3.292l-.645.548c.2.343.316.738.316 1.16 0 1.295-1.08 2.348-2.407 2.348a2.43 2.43 0 0 1-1.874-.877l-.475.717a3.28 3.28 0 0 0 2.349.982c1.792 0 3.25-1.422 3.25-3.17 0-.629-.189-1.215-.514-1.708"
+                  ></path>
+                </svg>
               </a>
             </li>
           </ul>
 
           <ul class="flex items-center gap-[28px]">
-            <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs hover:text-brand text-white transition-colors 2xl:text-lg">
               <a class="hover:text-brand transition-colors" href="services.html">Services</a>
             </li>
-            <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs hover:text-brand text-white transition-colors 2xl:text-lg">
               <a class="hover:text-brand transition-colors" href="instructions.html">Instructions</a>
             </li>
-            <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs hover:text-brand text-white transition-colors 2xl:text-lg">
               <a class="hover:text-brand transition-colors" href="tips.html">Laundry tips</a>
             </li>
-            <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs hover:text-brand text-white transition-colors 2xl:text-lg">
               <a class="hover:text-brand transition-colors" href="contact.html">Contact us</a>
             </li>
           </ul>
@@ -179,7 +194,7 @@
       </div>
     </header>
 
-        <div id="mobile-menu" class="invisible fixed inset-0 z-50" style="pointer-events: none">
+    <div id="mobile-menu" class="invisible fixed inset-0 z-50" style="pointer-events: none">
       <div id="mobile-menu-overlay" class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300"></div>
 
       <div
@@ -190,7 +205,7 @@
           <img
             alt=""
             aria-hidden="true"
-            class="absolute top-0 left-0 h-full w-full translate-x-[-100px] translate-y-[-40px] rotate-[170deg] object-contain"
+            class="absolute top-0 left-0 h-full w-full translate-x-[-140px] translate-y-[-40px] rotate-[170deg] object-contain"
             src="./assets/images/mobile-circle.png"
           />
 
@@ -250,13 +265,37 @@
           </div>
         </div>
 
-        <div class="flex flex-1 flex-col justify-between overflow-y-auto px-4 pb-12">
+        <div class="flex flex-1 flex-col gap-10 overflow-y-auto px-4 pb-12">
           <nav aria-label="Main navigation">
             <p class="paragraph-body-xs text-text/50 mb-6">Menu</p>
-            <ul class="space-y-4">
+            <ul class="space-y-3">
               <li>
                 <a
-                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[36px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="services.html"
+                >
+                  Services
+                </a>
+              </li>
+              <li>
+                <a
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="instructions.html"
+                >
+                  Instructions
+                </a>
+              </li>
+              <li>
+                <a
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="tips.html"
+                >
+                  Laundry tips
+                </a>
+              </li>
+              <li>
+                <a
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
                   href="location.html"
                 >
                   Our location
@@ -264,38 +303,28 @@
               </li>
               <li>
                 <a
-                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[36px] leading-[124%] font-normal tracking-[-0.04em] transition"
-                  href="tips.html"
-                >
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a
-                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[36px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
                   href="contact.html"
                 >
-                  Contacts
-                </a>
-              </li>
-              <li>
-                <a
-                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[36px] leading-[124%] font-normal tracking-[-0.04em] transition"
-                  href="faq.html"
-                >
-                  FAQ
+                  Contacts Us
                 </a>
               </li>
             </ul>
           </nav>
 
-          <div class="mt-8">
-            <p class="text-text/50 mb-6 text-sm leading-[132%] font-normal tracking-[-0.01em]">Contact</p>
-            <div class="space-y-4">
-              <a class="!text-brand active:opacity-70 block font-normal leading-[132%] py-1 text-[24px] text-brand! touch-manipulation tracking-[-0.01em] transition-opacity" href="tel:+88006001441" >
+          <div class="mt-auto">
+            <p class="text-text/50 text-sm leading-[132%] font-normal tracking-[-0.01em]">Contact</p>
+            <div class="space-y-2">
+              <a
+                class="text-brand block touch-manipulation py-1 text-[18px] leading-[132%] font-normal tracking-[-0.01em] transition-opacity hover:opacity-70"
+                href="tel:+88006001441"
+              >
                 8 800 600 14 41
               </a>
-              <a class="!text-brand active:opacity-70 block border-b border-brand/40 font-normal leading-[132%] py-1 text-[24px] text-brand! touch-manipulation tracking-[-0.01em] transition-opacity w-fit" href="mailto:info@Laundromat.gr" >
+              <a
+                class="text-brand block w-fit touch-manipulation py-1 text-[18px] leading-[132%] font-normal tracking-[-0.01em] underline transition-opacity hover:opacity-70"
+                href="mailto:info@Laundromat.gr"
+              >
                 info@Laundromat.gr
               </a>
             </div>

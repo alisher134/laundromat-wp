@@ -178,9 +178,13 @@
         if (!document.contains(entry.card)) return;
 
         const scrollProgress = getScrollProgressCenter(entry.card);
-        entry.targetProgress = scrollProgress;
+        // Trigger immediately: if the card enters the active zone (> 0), target becomes 1 (fully expanded)
+        // effectively playing the animation automatically instead of scrubbing with scroll
+        const target = scrollProgress > 0 ? 1 : 0;
+
+        entry.targetProgress = target;
         entry.smoothProgress = entry.spring.update(deltaTime);
-        entry.spring.setTarget(scrollProgress);
+        entry.spring.setTarget(target);
       });
 
       // Pass 2: Apply styles based on own or next card's progress

@@ -221,7 +221,7 @@
           <img
             alt=""
             aria-hidden="true"
-            class="absolute top-0 left-0 h-full w-full translate-x-[-100px] translate-y-[-40px] rotate-[170deg] object-contain"
+            class="absolute top-0 left-0 h-full w-full translate-x-[-140px] translate-y-[-40px] rotate-[170deg] object-contain"
             src="../assets/images/mobile-circle.png"
           />
 
@@ -281,13 +281,37 @@
           </div>
         </div>
 
-        <div class="flex flex-1 flex-col justify-between overflow-y-auto px-4 pb-12">
+        <div class="flex flex-1 flex-col gap-10 overflow-y-auto px-4 pb-12">
           <nav aria-label="Main navigation">
             <p class="paragraph-body-xs text-text/50 mb-6">Μενού</p>
-            <ul class="space-y-4">
+            <ul class="space-y-3">
               <li>
                 <a
-                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[36px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="services.html"
+                >
+                  Υπηρεσίες
+                </a>
+              </li>
+              <li>
+                <a
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="instructions.html"
+                >
+                  Οδηγίες
+                </a>
+              </li>
+              <li>
+                <a
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="tips.html"
+                >
+                  Συμβουλές πλυντηρίου
+                </a>
+              </li>
+              <li>
+                <a
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
                   href="location.html"
                 >
                   Η τοποθεσία μας
@@ -295,42 +319,26 @@
               </li>
               <li>
                 <a
-                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[36px] leading-[124%] font-normal tracking-[-0.04em] transition"
-                  href="tips.html"
-                >
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a
-                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[36px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[28px] leading-[124%] font-normal tracking-[-0.04em] transition"
                   href="contact.html"
                 >
                   Επικοινωνία
                 </a>
               </li>
-              <li>
-                <a
-                  class="text-text hover:text-brand active:text-brand/80 block touch-manipulation py-1 text-[36px] leading-[124%] font-normal tracking-[-0.04em] transition"
-                  href="faq.html"
-                >
-                  FAQ
-                </a>
-              </li>
             </ul>
           </nav>
 
-          <div class="mt-8">
-            <p class="text-text/50 mb-6 text-sm leading-[132%] font-normal tracking-[-0.01em]">Επικοινωνία</p>
-            <div class="space-y-4">
+          <div class="mt-auto">
+            <p class="text-text/50 text-sm leading-[132%] font-normal tracking-[-0.01em]">Επικοινωνία</p>
+            <div class="space-y-2">
               <a
-                class="!text-brand text-brand! block touch-manipulation py-1 text-[24px] leading-[132%] font-normal tracking-[-0.01em] transition-opacity active:opacity-70"
+                class="text-brand block touch-manipulation py-1 text-[18px] leading-[132%] font-normal tracking-[-0.01em] transition-opacity hover:opacity-70"
                 href="tel:+88006001441"
               >
                 8 800 600 14 41
               </a>
               <a
-                class="!text-brand border-brand/40 text-brand! block w-fit touch-manipulation border-b py-1 text-[24px] leading-[132%] font-normal tracking-[-0.01em] transition-opacity active:opacity-70"
+                class="text-brand block w-fit touch-manipulation py-1 text-[18px] leading-[132%] font-normal tracking-[-0.01em] underline transition-opacity hover:opacity-70"
                 href="mailto:info@Laundromat.gr"
               >
                 info@Laundromat.gr
@@ -362,7 +370,7 @@
       >
         <img
           alt="Laundromat hero background"
-          class="absolute inset-0 h-full w-full object-cover object-top"
+          class="absolute inset-0 h-full w-full -translate-y-[5%] scale-110 object-cover object-top md:translate-y-0 md:scale-100"
           src="../assets/images/hero-background.png"
           style="transform: translateZ(0); -webkit-backface-visibility: hidden; backface-visibility: hidden"
         />
@@ -387,11 +395,8 @@
                 class="pointer-events-none absolute inset-0 h-full w-full object-cover md:hidden"
                 src="../assets/images/mobile-map-preview.png"
               />
-              <img
-                alt="Map preview"
-                class="pointer-events-none absolute inset-0 hidden h-full w-full object-contain md:block"
-                src="../assets/images/map-preview.png"
-              />
+              class="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-[25%_center] md:block"
+              src="../assets/images/map-preview.png" />
               <a
                 aria-label="View our location on map"
                 class="rounded-card focus-brand relative z-10 mt-auto flex h-full w-full items-end justify-between px-[10px] pb-[8px] md:px-[14px] md:pb-[10px]"
@@ -1299,7 +1304,7 @@
             <!-- LocationSectionMap -->
             <div
               id="location-map-container"
-              class="z-background absolute top-[200px] right-0 left-0 h-[698px] w-[809px] md:top-[150px] md:h-[751px] md:w-[1018px] xl:top-0 xl:h-[952px] xl:w-[1104px] 2xl:-top-[100px] 2xl:-left-[150px] 2xl:h-[1337px] 2xl:w-[1551px]"
+              class="z-background absolute top-[200px] right-0 left-0 h-[698px] w-[809px] md:top-[150px] md:h-[751px] md:w-[1018px] xl:-top-[20px] xl:-left-[85px] xl:h-[1060px] xl:w-[1220px] 2xl:-top-[100px] 2xl:-left-[150px] 2xl:h-[1337px] 2xl:w-[1551px]"
             >
               <!-- Mobile Map -->
               <div
