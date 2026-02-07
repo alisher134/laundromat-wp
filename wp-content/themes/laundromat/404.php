@@ -11,17 +11,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <link href="<?php echo get_template_directory_uri(); ?>/assets/css/output.css" rel="stylesheet" />
+    <link href="<?php echo get_template_directory_uri(); ?>/assets/css/animations.css" rel="stylesheet" />
   </head>
   <body class="overflow-hidden font-sans">
     <header
       id="header"
       data-theme="dark"
-      class="px-container-mobile min-[1120px]:px-container-tablet 2xl:px-container-desktop fixed top-0 right-0 left-0 z-50 pt-4 pb-4 transition-all duration-500 min-[1366px]:pt-[11px] min-[1366px]:pb-[11px] md:pt-[18px] md:pb-[18px] 2xl:pt-[22px] 2xl:pb-[22px]"
+      class="px-container-mobile min-[1120px]:px-container-tablet 2xl:px-container-desktop fixed top-0 right-0 left-0 z-50 pt-4 pb-4 transition-all duration-500 lg:pt-[11px] lg:pb-[11px] md:pt-[18px] md:pb-[18px] 2xl:pt-[22px] 2xl:pb-[22px]"
     >
       <div class="flex items-center justify-between">
         <a href="<?php echo home_url('/'); ?>">
           <svg
-            class="h-[30px] w-[118px] text-white min-[1366px]:h-[31px] min-[1366px]:w-[126px] md:h-[32px] md:w-[122px] 2xl:h-[39px] 2xl:w-[156px]"
+            class="h-[30px] w-[118px] text-white lg:h-[31px] lg:w-[126px] md:h-[32px] md:w-[122px] 2xl:h-[39px] 2xl:w-[156px]"
             fill="currentColor"
           >
             <g clip-path="url(#clip0_510_10759)">
@@ -96,7 +97,7 @@
           </svg>
         </a>
 
-        <nav class="hidden items-center gap-[123px] min-[1366px]:flex">
+        <nav class="hidden items-center lg:flex lg:gap-[30px] xl:gap-[80px] 2xl:gap-[123px]">
           <ul>
             <li class="paragraph-body-xs text-white hover:text-brand transition-colors 2xl:text-lg">
               <a class="hover:text-brand flex items-center gap-[6px] transition-colors" href="<?php echo home_url('/location/'); ?>">
@@ -168,7 +169,7 @@
             8 800 600 14 41
           </a>
 
-          <button id="mobile-menu-btn" class="block text-white min-[1366px]:hidden" aria-label="Menu">
+          <button id="mobile-menu-btn" class="block text-white lg:hidden" aria-label="Menu">
             <svg class="h-9 w-[38px]" viewBox="0 0 38 36" fill="none">
               <rect width="38" height="36" rx="10" fill="currentColor" fill-opacity="0.01" />
               <rect x="0.5" y="0.5" width="37" height="35" rx="9.5" stroke="currentColor" stroke-opacity="0.8" />
@@ -320,7 +321,7 @@
         <div class="flex flex-col-reverse items-end gap-[28px] md:w-full md:justify-between md:gap-[46px] lg:flex-row">
           <div class="animate-notfound-link">
             <a
-              class="border-text/20 flex min-h-[75px] w-full max-w-[196px] flex-1 flex-col rounded-[7px] border bg-white/23 pt-[14px] pr-[12px] pb-[12px] pl-4 backdrop-blur-2xl backdrop-filter md:min-h-[75px] md:max-w-[233px] xl:min-h-[75px] xl:max-w-[233px] 2xl:min-h-[106px] 2xl:max-w-[328px] 2xl:rounded-[10px] 2xl:border-0"
+              class="group action-tile border-text/20 flex min-h-[75px] w-full max-w-[196px] flex-1 flex-col rounded-[7px] border bg-white/23 pt-[14px] pr-[12px] pb-[12px] pl-4 backdrop-blur-2xl backdrop-filter md:min-h-[75px] md:max-w-[233px] xl:min-h-[75px] xl:max-w-[233px] 2xl:min-h-[106px] 2xl:max-w-[328px] 2xl:rounded-[10px] 2xl:border-0"
               href="<?php echo home_url('/'); ?>"
             >
               <p class="text-sm leading-[132%] font-medium tracking-[-0.01em] text-white 2xl:text-lg"><?php function_exists('pll_e') ? pll_e('Return to homepage') : _e('Return to homepage', 'laundromat'); ?></p>

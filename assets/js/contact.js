@@ -178,25 +178,42 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // Agreement Checkbox Visual Toggle
+  // Form Validation Logic
+  const firstNameInput = document.getElementById('first-name');
+  const lastNameInput = document.getElementById('last-name');
+  const phoneInput = document.getElementById('phone');
   const consentCheckbox = document.getElementById('consent');
   const consentVisual = document.getElementById('consent-visual');
-  const submitBtn = document.querySelector('button[type="submit"]'); // Target the button broadly first
+  const submitBtn = document.getElementById('submit-btn');
 
-  // Set initial state of button
-  if (submitBtn && consentCheckbox) {
-    submitBtn.disabled = !consentCheckbox.checked;
+  function validateForm() {
+    if (!submitBtn || !consentCheckbox) return;
+
+    const isFirstNameFilled = firstNameInput?.value.trim().length > 0;
+    const isPhoneFilled = phoneInput?.value.trim().length > 0;
+    const isConsentChecked = consentCheckbox.checked;
+
+    submitBtn.disabled = !(isFirstNameFilled && isPhoneFilled && isConsentChecked);
   }
 
-  if (consentCheckbox && consentVisual) {
+  // Event Listeners for Real-time Validation
+  [firstNameInput, lastNameInput, phoneInput].forEach((input) => {
+    input?.addEventListener('input', validateForm);
+  });
+
+  if (consentCheckbox) {
     consentCheckbox.addEventListener('change', (e) => {
-      if (e.target.checked) {
-        consentVisual.innerHTML = '<div class="bg-brand size-[11px] rounded-[3px]"></div>';
-        if (submitBtn) submitBtn.disabled = false;
-      } else {
-        consentVisual.innerHTML = '';
-        if (submitBtn) submitBtn.disabled = true;
+      if (consentVisual) {
+        if (e.target.checked) {
+          consentVisual.innerHTML = '<div class="bg-brand size-[11px] rounded-[3px]"></div>';
+        } else {
+          consentVisual.innerHTML = '';
+        }
       }
+      validateForm();
     });
   }
+
+  // Initial validation check
+  validateForm();
 });

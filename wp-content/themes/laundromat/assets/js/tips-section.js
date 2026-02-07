@@ -1,7 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const isInstructionsPage = window.location.pathname.includes('instructions.html') || 
-                              window.location.href.includes('instructions.html') ||
-                              document.querySelector('h1#tips-title')?.textContent.trim() === 'Instructions';
+  const isInstructionsPage =
+    window.location.pathname.includes('instructions.html') ||
+    window.location.href.includes('instructions.html') ||
+    document.querySelector('h1#tips-title')?.textContent.trim() === 'Instructions';
 
   const DATA = isInstructionsPage ? INSTRUCTIONS_DATA : TIPS_DATA;
   let activeCategory = 'all';
@@ -11,21 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
   let mobileTipsSlider = null;
 
   // --- DOM Elements ---
-  // Check if we're on tips.html page (has filters and pagination)
   const filtersContainer = document.getElementById('tips-filters');
   const pagination = document.getElementById('tips-pagination');
   const isTipsPage = !!filtersContainer && !!pagination;
-  
-  // For TipsSection in index.html use 'tips-grid', for tips.html use 'tips-grid-desktop'
+
   const gridDesktop = document.getElementById(isTipsPage ? 'tips-grid-desktop' : 'tips-grid');
   const sliderMobile = document.getElementById('tips-slider-mobile');
 
   // --- Initialization ---
   if (isTipsPage) {
-    // Full page initialization (tips.html)
     initPage();
   } else {
-    // Section initialization (index.html TipsSection)
     initSection();
   }
 
@@ -33,20 +30,14 @@ document.addEventListener('DOMContentLoaded', () => {
     renderFilters();
     renderContent();
     renderPagination();
-    initScrollAnimations();
   }
 
   function initSection() {
-    // Only init scroll animations for TipsSection in index.html
-    // Content is already in HTML, no need to render
-    // Use setTimeout to ensure DOM is fully ready
     setTimeout(() => {
-      initScrollAnimations();
       initTipsSlider();
     }, 100);
   }
 
-  // Initialize tips slider for index.html
   function initTipsSlider() {
     const sliderEl = document.getElementById('tips-slider-mobile');
     if (!sliderEl || typeof KeenSlider === 'undefined') return;
@@ -110,116 +101,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  const cardAnimations = new Map();
-  let lastTime = performance.now();
-  let animationFrameId = null;
-  let scrollListenersAdded = false;
-
-  function initScrollAnimations() {
-    cardAnimations.clear();
-    if (animationFrameId) {
-      cancelAnimationFrame(animationFrameId);
-      animationFrameId = null;
-    }
-
-    const cards = document.querySelectorAll('.tips-card');
-
-    if (cards.length === 0) {
-      setTimeout(() => {
-        const retryCards = document.querySelectorAll('.tips-card');
-        if (retryCards.length > 0) initScrollAnimations();
-      }, 200);
-      return;
-    }
-
-    cards.forEach((card) => {
-      const images = card.querySelectorAll('.scroll-scale-image');
-      if (images.length === 0) return;
-
-      const spring = new Spring(SPRING_CONFIGS.TIPS);
-      spring.current = 0.8;
-      spring.target = 0.8;
-
-      images.forEach((img) => {
-        img.style.transformOrigin = 'top left';
-        img.style.transform = 'scale(0.8)';
-        img.style.willChange = 'transform';
-      });
-
-      cardAnimations.set(card, { spring, images: Array.from(images) });
-    });
-
-    if (!scrollListenersAdded) {
-      scrollListenersAdded = true;
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll, { passive: true });
-    }
-
-    onScroll();
-    if (cardAnimations.size > 0) {
-      lastTime = performance.now();
-      updateAnimations();
-    }
-  }
-
-  function updateAnimations() {
-    const currentTime = performance.now();
-    const deltaTime = currentTime - lastTime;
-    lastTime = currentTime;
-
-    cardAnimations.forEach((animation, card) => {
-      if (!document.contains(card)) {
-        cardAnimations.delete(card);
-        return;
-      }
-      const scrollProgress = getCardScrollProgressStartCenter(card);
-      const targetScale = transformProgressToScale(scrollProgress);
-      animation.spring.setTarget(targetScale);
-      const smoothScale = animation.spring.update(deltaTime);
-      animation.images.forEach((img) => {
-        img.style.transform = `scale(${smoothScale})`;
-        img.style.transformOrigin = 'top left';
-      });
-    });
-
-    const needsUpdate = Array.from(cardAnimations.values()).some(
-      (anim) =>
-        Math.abs(anim.spring.current - anim.spring.target) > 0.001 ||
-        Math.abs(anim.spring.velocity) > 0.001
-    );
-
-    if (needsUpdate) {
-      animationFrameId = requestAnimationFrame(updateAnimations);
-    } else {
-      animationFrameId = null;
-      cardAnimations.forEach((anim) => {
-        anim.images.forEach((img) => {
-          img.style.willChange = 'auto';
-        });
-      });
-    }
-  }
-
-  function onScroll() {
-    if (!animationFrameId) {
-      lastTime = performance.now();
-      animationFrameId = requestAnimationFrame(updateAnimations);
-    }
-  }
-
-  // Re-init scroll animations when homepage tips are loaded from WordPress (replaces static HTML)
   window.addEventListener('homepageTipsLoaded', () => {
-    initScrollAnimations();
     initTipsSlider();
   });
 
   // --- Rendering Filters ---
   function renderFilters() {
     if (!filtersContainer) return;
-
-    // Note: The structure requires a mobile slider container AND a desktop container
-    // OR we use the same elements and CSS handles layout.
-    // The reference has a mobile slider div AND a hidden desktop flex div.
 
     const categoriesHtml = CATEGORIES.map((cat) => {
       const isActive = cat.key === activeCategory;
@@ -228,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       return `
                 <button 
-                    class="category-btn keen-slider__slide inline-flex cursor-pointer items-center justify-center rounded-[12px] border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg min-w-fit ${isActive ? activeClass : inactiveClass}"
+                    class="category-btn keen-slider__slide inline-flex cursor-pointer items-center justify-center rounded-card border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-card 2xl:text-lg min-w-fit ${isActive ? activeClass : inactiveClass}"
                     data-key="${cat.key}"
                 >
                     ${cat.label}
@@ -236,19 +124,18 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
     }).join('');
 
-    // Sort HTML
     const sortLabel = SORT_OPTIONS.find((o) => o.value === currentSort)?.label || 'Sort by';
     const sortLabelClass = currentSort ? 'text-text' : 'text-text/50';
 
     const sortHtml = `
             <div class="relative w-full md:w-[120px]" id="sort-dropdown">
-                <button id="sort-trigger" class="cursor-pointer border-text/20 text-text flex min-h-[45px] w-full items-center justify-between rounded-[12px] border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] shadow-none md:w-[120px]">
+                <button id="sort-trigger" class="cursor-pointer border-text/20 text-text flex min-h-[45px] w-full items-center justify-between rounded-card border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] shadow-none md:w-[120px]">
                     <span id="sort-current-label" class="${sortLabelClass}">${sortLabel}</span>
                     <svg class="text-text h-[15px] w-[15px] shrink-0 ml-auto" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5.63346 1.77859V12.4505M2.07617 5.30624L5.63346 1.74895M8.59787 1.80824V12.4801L12.1552 8.92282" stroke="currentColor" stroke-width="1.06719" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
-                <div id="sort-options" class="absolute top-full left-0 z-[100] mt-1 hidden w-full overflow-hidden rounded-md border border-neutral-200 bg-white shadow-md">
+                <div id="sort-options" class="absolute top-full left-0 z-100 mt-1 hidden w-full overflow-hidden rounded-md border border-neutral-200 bg-white shadow-md">
                     ${SORT_OPTIONS.map((opt) => {
                       const isSelected = currentSort === opt.value;
                       return `
@@ -282,24 +169,21 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
 
-    // Re-attach listeners and init slider
     initFilterInteractions();
   }
 
   function initFilterInteractions() {
-    // Category Clicks
     document.querySelectorAll('.category-btn').forEach((btn) => {
       btn.addEventListener('click', (e) => {
         const key = e.currentTarget.dataset.key;
         if (key !== activeCategory) {
           activeCategory = key;
-          renderFilters(); // Re-render to update active state styles
-          renderContent(); // Filter content
+          renderFilters();
+          renderContent();
         }
       });
     });
 
-    // Filter Slider (Mobile)
     const filterSliderEl = document.getElementById('filter-slider-mobile');
     if (filterSliderEl) {
       if (mobileFilterSlider) mobileFilterSlider.destroy();
@@ -312,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Sort Dropdown
     const sortTrigger = document.getElementById('sort-trigger');
     const sortOptionsDiv = document.getElementById('sort-options');
     const sortOptionsBtns = document.querySelectorAll('.sort-option');
@@ -334,23 +217,20 @@ document.addEventListener('DOMContentLoaded', () => {
           const val = e.currentTarget.dataset.value;
           currentSort = val;
           sortOptionsDiv.classList.add('hidden');
-          renderFilters(); // Update label
-          renderContent(); // Sort content
+          renderFilters();
+          renderContent();
         });
       });
     }
   }
 
-  // --- Rendering Content (Tips/Instructions) ---
   function renderContent() {
-    // 1. Filter
     let filtered = DATA;
     if (activeCategory !== 'all') {
       const catLabel = CATEGORIES.find((c) => c.key === activeCategory)?.label;
       filtered = DATA.filter((t) => t.category === catLabel);
     }
 
-    // 2. Sort
     filtered.sort((a, b) => {
       if (currentSort === 'latest' || currentSort === '') return new Date(b.date) - new Date(a.date);
       if (currentSort === 'oldest') return new Date(a.date) - new Date(b.date);
@@ -361,72 +241,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const cardsHtml = filtered.map((item) => createDesktopCardHtml(item)).join('');
 
-    // Desktop Grid
     if (gridDesktop) {
       gridDesktop.innerHTML = cardsHtml;
     }
 
-    // Mobile Slider (actually just a grid, no slider!)
     if (sliderMobile) {
-      // Use specialized Mobile Card function - render directly without Keen Slider
       const mobileCardsHtml = filtered.map((item) => createMobileCardHtml(item)).join('');
-
-      // Just inject cards directly - no keen-slider wrapper!
       sliderMobile.innerHTML = mobileCardsHtml;
-
-      // Don't initialize Keen Slider for mobile - it's just a grid!
     }
-
-    // Refresh animations for new content
-    initScrollAnimations();
   }
 
-  // --- Rendering Pagination ---
   function renderPagination() {
     if (!pagination) return;
 
-    const totalPages = 10; // Static for now, matches reference
+    const totalPages = 10;
     const siblingCount = 1;
 
-    // Generate page items (similar to getPageItems in reference)
     const pageItems = [];
     const leftSibling = Math.max(currentPage - siblingCount, 1);
     const rightSibling = Math.min(currentPage + siblingCount, totalPages);
 
-    // Always show first page
     pageItems.push(1);
-
-    // Add ellipsis if needed
     if (leftSibling > 2) {
       pageItems.push('ellipsis-left');
     }
-
-    // Add sibling pages
     for (let i = leftSibling; i <= rightSibling; i++) {
       if (i !== 1 && i !== totalPages) {
         pageItems.push(i);
       }
     }
-
-    // Add ellipsis if needed
     if (rightSibling < totalPages - 1) {
       pageItems.push('ellipsis-right');
     }
-
-    // Always show last page
     if (totalPages > 1) {
       pageItems.push(totalPages);
     }
 
-    // Generate HTML
-    // Base: Common classes
     const baseClasses =
-      'flex cursor-pointer items-center justify-center border md:rounded-[8px] 2xl:rounded-[6px] md:text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors';
-
-    // Active: Specific dimensions and colors
+      'flex cursor-pointer items-center justify-center border md:rounded-card 2xl:rounded-[6px] md:text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors';
     const activeClasses = 'border-[#414242]/25 text-[#414242] md:size-[52px] 2xl:h-[54px] 2xl:w-[56px]';
-
-    // Inactive: Specific dimensions and colors
     const inactiveClasses =
       'border-transparent text-[#414242]/40 hover:text-[#414242]/60 2xl:w-[47px] 2xl:h-[56px] md:h-[42px] md:w-[35px]';
 
@@ -441,20 +294,15 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       .join('');
 
-    // Find pagination container and update
     const paginationContainer = pagination.querySelector('.hidden.items-center.gap-1.md\\:flex');
     if (paginationContainer) {
       paginationContainer.innerHTML = paginationHtml;
-
-      // Attach click handlers
       paginationContainer.querySelectorAll('button[data-page]').forEach((btn) => {
         btn.addEventListener('click', (e) => {
           const page = parseInt(e.currentTarget.dataset.page);
           if (page !== currentPage) {
             currentPage = page;
             renderPagination();
-            // In a real app, you'd also re-fetch/filter content here
-            console.log(`Navigated to page ${page}`);
           }
         });
       });
@@ -468,26 +316,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const link = 'tips-details.html';
 
     return `
-        <article class="rounded-[12px] bg-white/80 backdrop-blur-[30px] backdrop-filter ${heightClass} 2xl:rounded-[16px] ${bigImageClass} ${paddingClass}">
+        <article class="tips-card flex flex-col rounded-card bg-white/80 backdrop-blur-[30px] backdrop-filter ${heightClass} 2xl:rounded-card ${bigImageClass} ${paddingClass} transition-all duration-300">
             ${
               item.bigImage
                 ? `
-                <div class="relative h-[277px] w-full origin-top-left overflow-hidden lg:mb-10 2xl:mb-12 2xl:h-[390px] shrink-0">
-                  <img alt="${item.title}" class="scroll-scale-image rounded-t-[12px] object-cover object-top 2xl:rounded-t-[16px] w-full h-full origin-top-left" style="transform: scale(0.8); transition: transform 0.1s linear;" src="${item.image}" />
+                <div class="relative h-[277px] w-full lg:mb-10 2xl:mb-12 2xl:h-[390px] shrink-0">
+                  <img alt="${item.title}" class="rounded-t-card object-cover object-top 2xl:rounded-t-card w-full h-full" src="${item.image}" />
                 </div>
             `
                 : ''
             }
 
             <div class="flex items-start justify-between px-6 2xl:px-8 ${item.bigImage ? 'mb-20 2xl:mb-[120px]' : 'pt-6 lg:mb-[7px] 2xl:mb-[23px] 2xl:pt-8'}">
-                <div class="border-brand/40 text-brand rounded-[9px] border px-[13px] py-[9px] text-xs leading-[132%] font-normal tracking-[-0.01em] 2xl:rounded-[10px] 2xl:px-[18px] 2xl:py-[10px] 2xl:text-sm">
+                <div class="border-brand/40 text-brand rounded-badge border px-[13px] py-[9px] text-xs leading-[132%] font-normal tracking-[-0.01em] 2xl:rounded-badge 2xl:px-[18px] 2xl:py-[10px] 2xl:text-sm">
                   ${item.category}
                 </div>
                 ${
                   !item.bigImage
                     ? `
-                    <div class="relative h-[87px] w-[149px] shrink-0 overflow-hidden md:h-[99px] md:w-[149px] lg:h-[127px] lg:w-[186px] 2xl:h-[177px] 2xl:w-[258px]">
-                        <img alt="${item.title}" class="scroll-scale-image rounded-[6px] object-cover w-full h-full origin-top-left" style="transform: scale(0.8); transition: transform 0.1s linear;" src="${item.image}" />
+                    <div class="relative h-[87px] w-[149px] shrink-0 md:h-[99px] md:w-[149px] lg:h-[127px] lg:w-[186px] 2xl:h-[177px] 2xl:w-[258px]">
+                        <img alt="${item.title}" class="rounded-badge object-cover w-full h-full" src="${item.image}" />
                     </div>
                 `
                     : ''
@@ -500,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <a class="flex items-center justify-between px-6 pb-6 2xl:px-8 mt-auto" href="${link}">
                 <p class="text-text/60 paragraph-sm-default 2xl:text-lg">${item.date}</p>
-                <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-[9px] 2xl:size-[57px]">
+                <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-badge 2xl:size-[57px]">
                   <svg class="text-brand h-[7px] w-[8px] 2xl:size-[10px]" viewBox="0 0 9 9" fill="none">
                     <path d="M0.75009 0.750399L7.62744 7.87305M7.62744 7.87305L7.84096 1.08657M7.62744 7.87305L0.840964 8.08657" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                   </svg>
@@ -514,19 +362,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const link = 'tips-details.html';
 
     return `
-        <article class="w-full min-h-[418px] shrink-0 md:min-h-[386px]">
-          <div class="flex h-full w-full flex-1 flex-col rounded-[16px] bg-white p-[20px]">
+        <article class="tips-card w-full min-h-[418px] shrink-0 md:min-h-[386px] transition-all duration-300">
+          <div class="flex h-full w-full flex-1 flex-col rounded-card bg-white p-[20px] transition-all duration-300">
             <div class="flex justify-end">
               <div class="relative mb-[47px] h-[87px] w-[127px] md:mb-[35px] md:h-[99px] md:w-[149px]">
                  <img
                     alt="${item.title}"
-                    class="rounded-[6px] object-cover w-full h-full"
+                    class="rounded-badge object-cover w-full h-full"
                     src="${item.image}"
                  />
               </div>
             </div>
 
-            <div class="border-brand/40 text-brand mb-9 flex h-[33px] w-[123px] items-center justify-center rounded-[9px] border px-3 py-1 text-xs leading-[132%] font-normal tracking-[-0.01em] md:mb-[27px]">
+            <div class="border-brand/40 text-brand mb-9 flex h-[33px] w-[123px] items-center justify-center rounded-badge border px-3 py-1 text-xs leading-[132%] font-normal tracking-[-0.01em] md:mb-[27px]">
               ${item.category}
             </div>
 
@@ -537,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <a class="mt-auto flex items-center justify-between" href="${link}">
               <p class="text-text/60 paragraph-sm-default">${item.date}</p>
 
-              <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-[9px]">
+              <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-badge">
                 <svg class="text-brand h-[7px] w-[8px]" viewBox="0 0 9 9" fill="none">
                   <path d="M0.75009 0.750399L7.62744 7.87305M7.62744 7.87305L7.84096 1.08657M7.62744 7.87305L0.840964 8.08657" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>

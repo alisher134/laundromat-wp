@@ -263,6 +263,7 @@ function laundromat_enhance_location_response($response, $post, $request)
         'store_hours' => get_post_meta($post->ID, 'store_hours', true) ?: '',
         'address' => get_post_meta($post->ID, 'address', true) ?: '',
         'phone' => get_post_meta($post->ID, 'phone', true) ?: '',
+        'google_maps_url' => get_post_meta($post->ID, 'google_maps_url', true) ?: '',
         'latitude' => get_post_meta($post->ID, 'latitude', true) ?: '',
         'longitude' => get_post_meta($post->ID, 'longitude', true) ?: '',
     ];
@@ -492,6 +493,9 @@ function laundromat_enhance_review_response($response, $post, $request)
 
     // Add author name for easy access
     $response->data['author_name'] = get_the_title($post->ID);
+
+    // Add aggregator/source URL
+    $response->data['aggregator_url'] = get_post_meta($post->ID, 'aggregator_url', true) ?: '';
 
     return $response;
 }
@@ -864,6 +868,7 @@ function laundromat_get_filtered_locations($request)
                 'store_hours' => get_post_meta($post->ID, 'store_hours', true) ?: '',
                 'address' => get_post_meta($post->ID, 'address', true) ?: '',
                 'phone' => get_post_meta($post->ID, 'phone', true) ?: '',
+                'google_maps_url' => get_post_meta($post->ID, 'google_maps_url', true) ?: '',
                 'latitude' => get_post_meta($post->ID, 'latitude', true) ?: '',
                 'longitude' => get_post_meta($post->ID, 'longitude', true) ?: '',
             ],
@@ -922,6 +927,7 @@ function laundromat_get_settings($request)
         'facebook_url' => get_option('laundromat_facebook_url', ''),
         'instagram_url' => get_option('laundromat_instagram_url', ''),
         'tiktok_url' => get_option('laundromat_tiktok_url', ''),
+        'google_maps_key' => get_option('laundromat_google_maps_key', ''),
         'lang' => $lang ?: (function_exists('pll_current_language') ? pll_current_language('slug') : null),
     ];
 }
@@ -934,13 +940,13 @@ function laundromat_handle_contact_form($request)
 {
     $params = $request->get_json_params();
 
-    // Validate required fields
+    // Validate required fields (Name and Phone as requested)
     $name = sanitize_text_field($params['name'] ?? '');
     $phone = sanitize_text_field($params['phone'] ?? '');
     $email = sanitize_email($params['email'] ?? '');
     $message = sanitize_textarea_field($params['message'] ?? '');
 
-    if (empty($name) || empty($email) || empty($message)) {
+    if (empty($name) || empty($phone)) {
         return new WP_Error(
             'missing_fields',
             __('Required fields missing', 'laundromat'),
@@ -948,7 +954,8 @@ function laundromat_handle_contact_form($request)
         );
     }
 
-    if (!is_email($email)) {
+    // Only validate email format if provided
+    if (!empty($email) && !is_email($email)) {
         return new WP_Error(
             'invalid_email',
             __('Invalid email address', 'laundromat'),

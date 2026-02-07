@@ -142,98 +142,78 @@
 
     cards.forEach((card, index) => {
       const imageWrapper = card.querySelector('.service-image-wrapper');
-      const borders = card.querySelectorAll('[data-card-border]');
+      const border = card.querySelector('[data-card-border]');
 
       if (!imageWrapper) return;
 
-      const spring = new Spring(SPRING_CONFIGS.SERVICES);
-      const entry = {
-        spring,
-        card,
-        imageWrapper,
-        borders,
-        index,
-        smoothProgress: 0,
-        targetProgress: 0,
-      };
-
-      entries.push(entry);
-
+      // Set initial styles and CSS transition for fixed 250ms duration
       const breakpoint = getBreakpoint();
       const smallSize = CARD_SIZES.small[breakpoint];
       imageWrapper.style.height = `${smallSize.height}px`;
       imageWrapper.style.width = `${smallSize.width}px`;
+      imageWrapper.style.transition = 'all 4000ms cubic-bezier(0.23, 1, 0.32, 1)'; // Extremely slow, gradual expansion
+      imageWrapper.style.willChange = 'height, width';
+
+      if (border) {
+        border.style.transition = 'transform 4000ms cubic-bezier(0.23, 1, 0.32, 1), opacity 4000ms ease-out';
+        border.style.transformOrigin = 'left';
+        border.style.transform = 'scaleX(0)';
+        border.style.opacity = '0';
+      }
+
+      const entry = {
+        card,
+        imageWrapper,
+        border,
+        index,
+        isExpanded: false,
+      };
+
+      entries.push(entry);
     });
 
     function updateCards() {
-      const currentTime = performance.now();
-      const deltaTime = currentTime - lastTime;
-      lastTime = currentTime;
-
+      const windowHeight = window.innerHeight;
       const breakpoint = getBreakpoint();
-      let needsUpdate = false;
 
-      // Pass 1: Update all spring values and store current smooth progress
-      entries.forEach((entry) => {
-        if (!document.contains(entry.card)) return;
-
-        const scrollProgress = getScrollProgressCenter(entry.card);
-        entry.targetProgress = scrollProgress;
-        entry.smoothProgress = entry.spring.update(deltaTime);
-        entry.spring.setTarget(scrollProgress);
-      });
-
-      // Pass 2: Apply styles based on own or next card's progress
       entries.forEach((entry, i) => {
         if (!document.contains(entry.card)) return;
 
-        const { spring, smoothProgress, targetProgress, imageWrapper, borders } = entry;
-        const expandProgress = transformProgress(smoothProgress, [0, 0.8], [0, 1]);
+        const rect = entry.card.getBoundingClientRect();
+        // Trigger as soon as the card top enters the viewport (plus a small buffer)
+        const shouldExpand = rect.top < windowHeight - 50;
 
-        const smallSize = CARD_SIZES.small[breakpoint];
-        const largeSize = CARD_SIZES.large[breakpoint];
+        if (shouldExpand !== entry.isExpanded) {
+          entry.isExpanded = shouldExpand;
+          const size = shouldExpand ? CARD_SIZES.large[breakpoint] : CARD_SIZES.small[breakpoint];
 
-        // Image expansion logic
-        const height = transformProgress(expandProgress, [0, 0.9], [smallSize.height, largeSize.height]);
-        const width = transformProgress(expandProgress, [0, 1], [smallSize.width, largeSize.width]);
+          entry.imageWrapper.style.height = `${size.height}px`;
+          entry.imageWrapper.style.width = `${size.width}px`;
 
-        imageWrapper.style.height = `${height}px`;
-        imageWrapper.style.width = `${width}px`;
+          // If this card expands, it potentially triggers the PREVIOUS card's border
+          if (i > 0 && shouldExpand) {
+            const prevEntry = entries[i - 1];
+            if (prevEntry.border) {
+              prevEntry.border.style.transform = 'scaleX(1)';
+              prevEntry.border.style.opacity = '1';
+            }
+          } else if (i > 0 && !shouldExpand) {
+            const prevEntry = entries[i - 1];
+            if (prevEntry.border) {
+              prevEntry.border.style.transform = 'scaleX(0)';
+              prevEntry.border.style.opacity = '0';
+            }
+          }
 
-        // Border drawing logic
-        let borderDrawProgress = 0;
-        if (i < entries.length - 1) {
-          // Non-last card: Border draws when NEXT card starts its expansion
-          // Balanced range: 0 to 0.4
-          const nextEntry = entries[i + 1];
-          borderDrawProgress = transformProgress(nextEntry.smoothProgress, [0, 0.4], [0, 1], true);
-        } else {
-          // Last card: Border draws after its OWN expansion
-          // Balanced range: 0.8 to 1.0
-          borderDrawProgress = transformProgress(smoothProgress, [0.8, 1.0], [0, 1], true);
-        }
-
-        if (borders.length > 0) {
-          borders.forEach((border) => {
-            border.style.transformOrigin = 'left';
-            border.style.transform = `scaleX(${borderDrawProgress})`;
-            border.style.opacity = borderDrawProgress;
-          });
-        }
-
-        // Monitoring for next frame
-        const springValue = spring.getValue();
-        const velocity = spring.velocity;
-        if (Math.abs(springValue - targetProgress) > 0.001 || Math.abs(velocity) > 0.001) {
-          needsUpdate = true;
+          // Last card handles its own border
+          if (i === entries.length - 1 && entry.border) {
+            entry.border.style.transform = shouldExpand ? 'scaleX(1)' : 'scaleX(0)';
+            entry.border.style.opacity = shouldExpand ? '1' : '0';
+          }
         }
       });
 
-      if (needsUpdate) {
-        animationFrameId = requestAnimationFrame(updateCards);
-      } else {
-        animationFrameId = null;
-      }
+      animationFrameId = null;
     }
 
     function onScroll() {

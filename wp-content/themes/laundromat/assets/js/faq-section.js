@@ -99,8 +99,16 @@
           <div
             class="accordion-content h-0 overflow-hidden bg-transparent opacity-0 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
           >
-            <div class="text-text px-5 pt-0 pb-5 text-base leading-[150%] font-normal tracking-[-0.01em] md:px-6 md:pb-6 xl:px-[22px] xl:pb-[25px] 2xl:px-8 2xl:pb-9">
-              ${faq.answer || ''}
+            <div class="flex items-start px-5 pt-0 pb-5 md:gap-[54px] md:px-6 md:pb-6 xl:gap-[104px] xl:px-[22px] xl:pb-[25px] 2xl:gap-[143px] 2xl:px-8 2xl:pb-9">
+              <span
+                class="pointer-events-none hidden font-normal opacity-0 md:block md:text-lg xl:text-sm 2xl:text-lg"
+                aria-hidden="true"
+              >
+                ( 00 )
+              </span>
+              <div class="text-text max-w-full text-base leading-[150%] font-normal tracking-[-0.01em] md:max-w-[448px] md:text-lg xl:max-w-[500px] xl:text-base 2xl:max-w-[680px] 2xl:text-lg">
+                ${faq.answer || ''}
+              </div>
             </div>
           </div>
         </div>

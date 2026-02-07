@@ -35,7 +35,7 @@
 
   --spacing-section-top-sm: 60px;
   --spacing-section-top-md: 82px;
-  --spacing-section-top: 111px;
+  --spacing-section-top: 60px;
   --spacing-section-top-lg: 143px;
 
   --radius-card: 12px;
@@ -187,7 +187,7 @@
   }
 
   .section-spacing-top {
-    @apply mt-[111px] md:mt-[136px] xl:mt-[147px] 2xl:mt-[208px];
+    @apply mt-[60px] md:mt-[80px] xl:mt-[100px] 2xl:mt-[160px];
   }
 
   .section-spacing-top-sm {

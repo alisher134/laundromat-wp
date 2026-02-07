@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (isMobile) {
       return `
-        <article class="${slideClass} min-h-[418px] max-w-[324px] shrink-0 md:min-h-[386px] md:max-w-[379px]">
+        <article class="${slideClass} action-tile min-h-[418px] max-w-[324px] shrink-0 md:min-h-[386px] md:max-w-[379px]">
           <div class="flex h-full w-full flex-1 flex-col rounded-[16px] bg-white p-[20px]">
             <div class="flex justify-end">
               <div class="relative mb-[47px] h-[87px] w-[127px] md:mb-[35px] md:h-[99px] md:w-[149px]">
@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     return `
-      <article class="${slideClass} rounded-[12px] bg-white/80 backdrop-blur-[30px] backdrop-filter lg:h-[278px] 2xl:h-[390px] 2xl:rounded-[16px] pt-6 lg:mb-[7px] 2xl:mb-[23px] 2xl:pt-8 flex flex-col justify-between">
+      <article class="${slideClass} action-tile rounded-[12px] bg-white/80 backdrop-blur-[30px] backdrop-filter lg:h-[278px] 2xl:h-[390px] 2xl:rounded-[16px] pt-6 lg:mb-[7px] 2xl:mb-[23px] 2xl:pt-8 flex flex-col justify-between">
         <div class="flex items-start justify-between px-6 2xl:px-8">
           <div class="border-brand/40 text-brand rounded-[9px] border px-[13px] py-[9px] text-xs leading-[132%] font-normal tracking-[-0.01em] 2xl:rounded-[10px] 2xl:px-[18px] 2xl:py-[10px] 2xl:text-sm">
             ${item.category}

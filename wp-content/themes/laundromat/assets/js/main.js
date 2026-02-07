@@ -22,8 +22,33 @@
     document.documentElement.style.overflow = '';
   }
 
-  // Block scroll immediately when preloader is active
-  blockScroll();
+  // Check if preloader has already been shown in this session
+  const hasShownPreloader = sessionStorage.getItem('preloader-shown');
+
+  if (hasShownPreloader) {
+    // Skip preloader
+    preloader.style.display = 'none';
+    heroSection.style.opacity = '1';
+    isLoaded = true;
+    unblockScroll();
+    // Use requestAnimationFrame to ensure DOM is ready for animations
+    requestAnimationFrame(() => {
+      initHeroAnimation();
+      // Trigger essential events
+      window.dispatchEvent(new Event('scroll'));
+      window.dispatchEvent(new Event('resize'));
+    });
+  } else {
+    // Show preloader normally
+    blockScroll();
+
+    // Check if page is already loaded
+    if (document.readyState === 'complete') {
+      handleLoad();
+    } else {
+      window.addEventListener('load', handleLoad);
+    }
+  }
 
   // Preloader logic - only affects hero section
   function handleLoad() {
@@ -33,6 +58,7 @@
       // After fade transition (300ms), hide preloader and show hero section
       setTimeout(() => {
         preloader.style.display = 'none';
+        sessionStorage.setItem('preloader-shown', 'true');
         isLoaded = true;
         // Unblock scrolling first
         unblockScroll();
@@ -43,22 +69,12 @@
             heroSection.style.opacity = '1';
             initHeroAnimation();
             // Trigger scroll-based animations to recalculate
-            // Use requestAnimationFrame to ensure layout is ready
-            const scrollEvent = new Event('scroll', { bubbles: true });
-            window.dispatchEvent(scrollEvent);
-            const resizeEvent = new Event('resize', { bubbles: true });
-            window.dispatchEvent(resizeEvent);
+            window.dispatchEvent(new Event('scroll', { bubbles: true }));
+            window.dispatchEvent(new Event('resize', { bubbles: true }));
           });
         });
       }, 300);
     }, 3000);
-  }
-
-  // Check if page is already loaded
-  if (document.readyState === 'complete') {
-    handleLoad();
-  } else {
-    window.addEventListener('load', handleLoad);
   }
 
   function initHeroAnimation() {

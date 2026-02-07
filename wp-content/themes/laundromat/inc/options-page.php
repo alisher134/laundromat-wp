@@ -64,6 +64,7 @@ function laundromat_register_settings()
         'laundromat_facebook_url',
         'laundromat_instagram_url',
         'laundromat_tiktok_url',
+        'laundromat_google_maps_key',
     ];
 
     foreach ($global_settings as $setting) {
@@ -111,6 +112,16 @@ function laundromat_register_settings()
         'laundromat-settings',
         'laundromat_contact_section',
         ['id' => 'laundromat_email', 'placeholder' => __('info@laundromat.gr', 'laundromat'), 'type' => 'email']
+    );
+
+    // Google Maps API Key field
+    add_settings_field(
+        'laundromat_google_maps_key',
+        __('Google Maps API Key', 'laundromat'),
+        'laundromat_text_field_callback',
+        'laundromat-settings',
+        'laundromat_contact_section',
+        ['id' => 'laundromat_google_maps_key', 'placeholder' => __('AIza...', 'laundromat')]
     );
 
     // Per-language fields section

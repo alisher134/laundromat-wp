@@ -53,7 +53,7 @@
         <p class="text-text mt-5 mb-[46px] text-sm leading-[146%] font-normal tracking-[-0.01em]">
           ${review.reviewText}
         </p>
-        <a class="link-brand" href="/">Read more</a>
+        ${review.aggregatorUrl ? `<a class="link-brand" href="${review.aggregatorUrl}" target="_blank" rel="noopener noreferrer">Read more</a>` : ''}
       </div>
     `;
   }
@@ -89,7 +89,7 @@
           <p class="text-text mt-5 mb-[26px] max-w-full text-sm leading-[146%] font-normal tracking-[-0.01em] lg:max-w-[280px] xl:max-w-[348px] 2xl:mb-9 2xl:max-w-[489px] 2xl:text-lg">
             ${review.reviewText}
           </p>
-          <a class="link-brand-lg" href="/">Read more</a>
+          ${review.aggregatorUrl ? `<a class="link-brand-lg" href="${review.aggregatorUrl}" target="_blank" rel="noopener noreferrer">Read more</a>` : ''}
         </div>
         <span class="bg-brand absolute top-[12px] right-[12px] h-[6px] w-[6px] rounded-full"></span>
       </div>

@@ -342,6 +342,7 @@ function laundromat_register_meta_fields()
         'latitude' => 'number',
         'longitude' => 'number',
         'phone' => 'string',
+        'google_maps_url' => 'string',
         'map_pos_mobile_top' => 'string',
         'map_pos_mobile_left' => 'string',
         'map_pos_desktop_top' => 'string',

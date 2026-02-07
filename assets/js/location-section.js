@@ -45,17 +45,77 @@
 
   // Dynamically render map markers from API data
   function updateMapMarkers() {
-    // Update mobile map markers
-    const mobileMapContainer = document.querySelector('#location-map-container > div:not([id])');
-    if (mobileMapContainer && LOCATIONS_POSITIONS.mobile.length > 0) {
-      const mobileMarkersHTML = locations
+    function updateGroup(parentSelector, isDesktop) {
+      const parent = document.querySelector(parentSelector);
+      if (!parent) return;
+
+      const img = parent.querySelector('img');
+      if (!img) return;
+
+      // Wait for image to load to get dimensions
+      if (!img.complete || img.naturalWidth === 0) {
+        img.onload = () => updateMapMarkers();
+        return;
+      }
+
+      // 1. Calculate the actual visible area of the image (object-fit: contain logic)
+      const containerRect = parent.getBoundingClientRect();
+      const imgRatio = img.naturalWidth / img.naturalHeight;
+      const containerRatio = containerRect.width / containerRect.height;
+
+      let actualWidth, actualHeight, offsetLeft, offsetTop;
+
+      if (containerRatio > imgRatio) {
+        // Limited by height
+        actualHeight = containerRect.height;
+        actualWidth = actualHeight * imgRatio;
+        offsetLeft = (containerRect.width - actualWidth) / 2;
+        offsetTop = 0;
+      } else {
+        // Limited by width
+        actualWidth = containerRect.width;
+        actualHeight = actualWidth / imgRatio;
+        offsetLeft = 0;
+        offsetTop = (containerRect.height - actualHeight) / 2;
+      }
+
+      // 2. Create or get the wrapper that matches the image dimensions exactly
+      let wrapper = parent.querySelector('.marker-container-wrapper');
+      if (!wrapper) {
+        // Clean up any old markers that might be directly in the parent
+        parent.querySelectorAll(':scope > .location-marker').forEach((m) => m.remove());
+
+        wrapper = document.createElement('div');
+        wrapper.className = 'marker-container-wrapper absolute z-10 pointer-events-none';
+        parent.appendChild(wrapper);
+      }
+
+      // Update wrapper to match image visual bounds
+      Object.assign(wrapper.style, {
+        left: offsetLeft + 'px',
+        top: offsetTop + 'px',
+        width: actualWidth + 'px',
+        height: actualHeight + 'px',
+        position: 'absolute',
+      });
+
+      // 3. Render markers with percentage positions relative to the wrapper (the actual image)
+      const positions = isDesktop ? LOCATIONS_POSITIONS.desktop : LOCATIONS_POSITIONS.mobile;
+
+      const markersHTML = locations
         .map((location, index) => {
-          const position = LOCATIONS_POSITIONS.mobile.find((p) => p.id === location.id) || { top: '0%', left: '0%' };
+          const position = positions.find((p) => p.id === location.id) || { top: '0%', left: '0%' };
+          // For desktop, markers start hidden and are shown by initMapAnimation
+          const initialOpacity = isDesktop ? '0' : '1';
+
           return `
-          <div
+          <a
+            href="${location.googleMapsUrl || '#'}"
+            target="_blank"
+            rel="noopener noreferrer"
             class="location-marker absolute z-10 flex -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center transition-transform hover:scale-110"
+            style="top: ${position.top}; left: ${position.left}; pointer-events: auto; opacity: ${initialOpacity};"
             data-location-index="${index}"
-            style="top: ${position.top}; left: ${position.left}"
           >
             <svg width="18" height="18" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" class="location-marker-outline">
               <rect x="0.75" y="0.75" width="23.5" height="23.5" rx="11.75" stroke="#3A6D90" stroke-width="1.5" />
@@ -65,49 +125,20 @@
               <rect width="18" height="18" rx="9" fill="currentColor" />
               <path d="M6.40332 10.9878C6.94676 11.6077 7.70489 11.9977 8.52446 12.0791C9.34402 12.1605 10.1639 11.9272 10.8183 11.4264C11.4727 10.9256 11.9129 10.1946 12.0498 9.38114C12.1867 8.56773 12.0101 7.73258 11.5558 7.04454M11.2169 6.6148C10.7986 6.1675 10.2626 5.84759 9.67075 5.69189" stroke="white" stroke-width="1.06719" />
             </svg>
-          </div>
+          </a>
         `;
         })
         .join('');
 
-      // Find existing markers container or create new one
-      const existingMarkers = mobileMapContainer.querySelectorAll('.location-marker');
-      existingMarkers.forEach((marker) => marker.remove());
-      mobileMapContainer.insertAdjacentHTML('beforeend', mobileMarkersHTML);
+      wrapper.innerHTML = markersHTML;
     }
 
-    // Update desktop map markers
-    const desktopMap = document.getElementById('location-map-desktop');
-    if (desktopMap && LOCATIONS_POSITIONS.desktop.length > 0) {
-      const desktopMarkersHTML = locations
-        .map((location, index) => {
-          const position = LOCATIONS_POSITIONS.desktop.find((p) => p.id === location.id) || { top: '0%', left: '0%' };
-          return `
-          <div
-            class="location-marker absolute z-10 flex -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center transition-transform hover:scale-110"
-            data-location-index="${index}"
-            style="top: ${position.top}; left: ${position.left}; opacity: 0"
-          >
-            <svg width="18" height="18" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" class="location-marker-outline">
-              <rect x="0.75" y="0.75" width="23.5" height="23.5" rx="11.75" stroke="#3A6D90" stroke-width="1.5" />
-              <path d="M9 15.4438C9.76384 16.315 10.8294 16.8632 11.9814 16.9777C13.1333 17.0921 14.2857 16.7642 15.2055 16.0602C16.1253 15.3563 16.744 14.3288 16.9364 13.1855C17.1289 12.0422 16.8807 10.8683 16.2421 9.90124M15.7658 9.29721C15.1778 8.66849 14.4245 8.21884 13.5926 8" stroke="#3A6D90" stroke-width="1.5" />
-            </svg>
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" class="location-marker-filled text-brand" style="display: none">
-              <rect width="18" height="18" rx="9" fill="currentColor" />
-              <path d="M6.40332 10.9878C6.94676 11.6077 7.70489 11.9977 8.52446 12.0791C9.34402 12.1605 10.1639 11.9272 10.8183 11.4264C11.4727 10.9256 11.9129 10.1946 12.0498 9.38114C12.1867 8.56773 12.0101 7.73258 11.5558 7.04454M11.2169 6.6148C10.7986 6.1675 10.2626 5.84759 9.67075 5.69189" stroke="white" stroke-width="1.06719" />
-            </svg>
-          </div>
-        `;
-        })
-        .join('');
+    // Update Mobile
+    updateGroup('#location-map-container > div:first-child', false);
 
-      // Remove existing markers and add new ones
-      const existingMarkers = desktopMap.querySelectorAll('.location-marker');
-      existingMarkers.forEach((marker) => marker.remove());
-      desktopMap.insertAdjacentHTML('beforeend', desktopMarkersHTML);
-    }
+    // Update Desktop
+    updateGroup('#location-map-desktop', true);
   }
-
   // Dynamically render location cards from API data
   function updateLocationCards() {
     const sliderContainer = document.getElementById('location-slider');
@@ -127,7 +158,13 @@
           >
             ${location.title}
           </h2>
-          <span class="bg-brand/6 flex size-[33px] items-center justify-center rounded-[6px] 2xl:size-[42px]">
+          <a
+            href="${location.googleMapsUrl || '#'}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bg-brand/6 hover:bg-brand/12 flex size-[33px] items-center justify-center rounded-[6px] transition-colors 2xl:size-[42px]"
+            onclick="event.stopPropagation()"
+          >
             <svg
               aria-hidden="true"
               class="text-brand size-4 2xl:size-[22px]"
@@ -158,7 +195,7 @@
                 fill="currentColor"
               />
             </svg>
-          </span>
+          </a>
         </div>
         <div class="flex items-center justify-between">
           <div class="space-y-[4px] 2xl:space-y-[6px]">
@@ -256,7 +293,7 @@
       const smoothMarkersProgress = markersOpacitySpring.update(deltaTime);
 
       const mapY = transformProgress(smoothMapProgress, [0, 1], [150, 0]);
-      const markersOpacity = transformProgress(smoothMarkersProgress, [0.95, 1], [0, 1], true);
+      const markersOpacity = transformProgress(smoothMarkersProgress, [0.4, 0.7], [0, 1], true);
 
       // Apply map Y transform
       // In Next.js, Framer Motion applies y as translateY() which is added to existing transforms
@@ -483,29 +520,7 @@
       });
     }
 
-    // Map markers - Event Delegation for Mobile Map
-    const mobileMapContainer = document.querySelector('#location-map-container > div:not([id])');
-    if (mobileMapContainer) {
-      mobileMapContainer.addEventListener('click', (e) => {
-        const marker = e.target.closest('.location-marker');
-        if (marker) {
-          const index = parseInt(marker.getAttribute('data-location-index'));
-          handleLocationSelect(index, true);
-        }
-      });
-    }
-
-    // Map markers - Event Delegation for Desktop Map
-    const desktopMap = document.getElementById('location-map-desktop');
-    if (desktopMap) {
-      desktopMap.addEventListener('click', (e) => {
-        const marker = e.target.closest('.location-marker');
-        if (marker) {
-          const index = parseInt(marker.getAttribute('data-location-index'));
-          handleLocationSelect(index, true);
-        }
-      });
-    }
+    // Map markers click handlers removed - now handled by <a> tags directly for navigation only
   }
 
   // Initialize all components

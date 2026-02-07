@@ -8,13 +8,24 @@ const LaundroAPI = (function () {
   // Path to WordPress (no trailing slash). Set window.LAUNDROMAT_WP_PATH before this script to override.
   // Option B (WP in root): use '' so API = origin + '/wp-json'. Option A (WP in /wp): use '/wp'.
   const isLocal = /localhost|127\.0\.0\.1/i.test(window.location.hostname);
+  const isFileProtocol = window.location.protocol === 'file:';
+
+  if (isFileProtocol) {
+    console.warn(
+      '[LaundroAPI] Site opened via file:// protocol. WordPress API calls will likely fail due to CORS. Please use a local web server (e.g., Live Server or npm run dev).',
+    );
+  }
+
   const wpPath =
     typeof window !== 'undefined' && window.LAUNDROMAT_WP_PATH != null
       ? window.LAUNDROMAT_WP_PATH
       : isLocal
         ? 'http://localhost:8080'
         : '';
-  const apiBase = wpPath.startsWith('http') ? wpPath + '/wp-json' : window.location.origin + (wpPath || '') + '/wp-json';
+
+  // Ensure origin is correctly determined even on file://
+  const origin = window.location.origin === 'null' ? '' : window.location.origin;
+  const apiBase = wpPath.startsWith('http') ? wpPath + '/wp-json' : (origin || '') + (wpPath || '') + '/wp-json';
 
   const CONFIG = {
     API_BASE: apiBase,
@@ -157,6 +168,7 @@ const LaundroAPI = (function () {
         storeHours: item.meta?.store_hours || '',
         address: item.meta?.address || '',
         phone: item.meta?.phone || '',
+        googleMapsUrl: item.meta?.google_maps_url || '',
         lat: item.meta?.latitude,
         lng: item.meta?.longitude,
       }));
@@ -434,6 +446,7 @@ const LaundroAPI = (function () {
         authorName: item.author_name || item.title?.rendered || '',
         reviewText: item.review_text || item.content?.rendered?.replace(/<[^>]*>/g, '') || '',
         photoUrl: item.photo_url || '',
+        aggregatorUrl: item.aggregator_url || '',
       }));
     },
 

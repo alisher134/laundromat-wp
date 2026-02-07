@@ -157,6 +157,7 @@ const LaundroAPI = (function () {
         storeHours: item.meta?.store_hours || '',
         address: item.meta?.address || '',
         phone: item.meta?.phone || '',
+        googleMapsUrl: item.meta?.google_maps_url || '',
         lat: item.meta?.latitude,
         lng: item.meta?.longitude,
       }));
@@ -419,6 +420,7 @@ const LaundroAPI = (function () {
         authorName: item.author_name || item.title?.rendered || '',
         reviewText: item.review_text || item.content?.rendered?.replace(/<[^>]*>/g, '') || '',
         photoUrl: item.photo_url || '',
+        aggregatorUrl: item.aggregator_url || '',
       }));
     },
 

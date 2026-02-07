@@ -6,7 +6,7 @@ let isInstructionsPage = false;
 // Server-side pagination state
 let totalItems = 0;
 let totalPages = 0;
-const DEFAULT_ITEMS_PER_PAGE = 2;
+const DEFAULT_ITEMS_PER_PAGE = 6;
 
 document.addEventListener('DOMContentLoaded', () => {
   isInstructionsPage =
@@ -164,14 +164,6 @@ function showEmptyState() {
   const sliderMobile = document.getElementById('tips-slider-mobile');
   const pagination = document.getElementById('tips-pagination');
 
-  const imageSprings = new Map();
-  let lastTime = performance.now();
-  let animationFrameId = null;
-  let scrollListenersAdded = false;
-
-  // On tips/instructions use scale(1) so images fill the container (no scroll-scale animation)
-  const TIPS_PAGE_SCALE = 1;
-
   window.initPage = initPage;
 
   async function initPage() {
@@ -185,7 +177,6 @@ function showEmptyState() {
     } else {
       await loadPageData(currentPage, true);
     }
-    initScrollAnimations();
   }
 
   /**
@@ -204,6 +195,13 @@ function showEmptyState() {
     if (isLoading || typeof LaundroAPI === 'undefined') return;
 
     isLoading = true;
+
+    // Show loading state on button immediately
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    if (loadMoreBtn && !resetAccumulated && isMobile()) {
+      loadMoreBtn.disabled = true;
+      loadMoreBtn.textContent = 'Loading...';
+    }
 
     // Show loading only on initial load or desktop page switch
     if (resetAccumulated || !isMobile()) {
@@ -240,7 +238,9 @@ function showEmptyState() {
       if (newItems.length === 0 && resetAccumulated) {
         showEmptyState();
       } else {
-        renderContent();
+        // Fix skipping bug: append if we're on mobile and not resetting
+        const shouldAppend = !resetAccumulated && isMobile();
+        renderContent(shouldAppend, newItems);
       }
 
       // Update URL with current state including perPage
@@ -277,84 +277,6 @@ function showEmptyState() {
     if (sliderMobile) sliderMobile.innerHTML = loadingHtml;
   }
 
-  function initScrollAnimations() {
-    if (animationFrameId) {
-      cancelAnimationFrame(animationFrameId);
-      animationFrameId = null;
-    }
-
-    const images = document.querySelectorAll('.scroll-scale-image');
-    images.forEach((img) => {
-      if (!imageSprings.has(img)) {
-        const spring = new Spring(SPRING_CONFIGS.TIPS);
-        spring.current = TIPS_PAGE_SCALE;
-        spring.target = TIPS_PAGE_SCALE;
-        spring.velocity = 0;
-        imageSprings.set(img, spring);
-        img.style.transform = `scale(${TIPS_PAGE_SCALE})`;
-        img.style.transformOrigin = 'top left';
-        img.style.willChange = 'transform';
-      }
-    });
-
-    if (!scrollListenersAdded) {
-      scrollListenersAdded = true;
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', onScroll, { passive: true });
-    }
-
-    onScroll();
-  }
-
-  function updateAnimations() {
-    const currentTime = performance.now();
-    const deltaTime = currentTime - lastTime;
-    lastTime = currentTime;
-
-    const images = document.querySelectorAll('.scroll-scale-image');
-    imageSprings.forEach((spring, img) => {
-      if (!document.contains(img)) imageSprings.delete(img);
-    });
-
-    images.forEach((img) => {
-      if (!imageSprings.has(img)) {
-        const spring = new Spring(SPRING_CONFIGS.TIPS);
-        spring.current = TIPS_PAGE_SCALE;
-        spring.target = TIPS_PAGE_SCALE;
-        spring.velocity = 0;
-        imageSprings.set(img, spring);
-        img.style.transformOrigin = 'top left';
-        img.style.willChange = 'transform';
-      }
-      const spring = imageSprings.get(img);
-      if (spring) {
-        spring.setTarget(TIPS_PAGE_SCALE);
-        const smoothScale = spring.update(deltaTime);
-        img.style.transform = `scale(${smoothScale})`;
-      }
-    });
-
-    const needsUpdate = Array.from(imageSprings.values()).some(
-      (spring) => Math.abs(spring.getValue() - spring.target) > 0.001 || Math.abs(spring.velocity) > 0.001,
-    );
-
-    if (needsUpdate) {
-      animationFrameId = requestAnimationFrame(updateAnimations);
-    } else {
-      animationFrameId = null;
-      images.forEach((img) => {
-        img.style.willChange = 'auto';
-      });
-    }
-  }
-
-  function onScroll() {
-    if (!animationFrameId) {
-      lastTime = performance.now();
-      animationFrameId = requestAnimationFrame(updateAnimations);
-    }
-  }
-
   // --- Rendering Filters ---
   function renderFilters() {
     if (!filtersContainer) return;
@@ -366,7 +288,7 @@ function showEmptyState() {
 
       return `
                 <button 
-                    class="category-btn keen-slider__slide inline-flex cursor-pointer items-center justify-center rounded-[12px] border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg min-w-fit ${isActive ? activeClass : inactiveClass}"
+                    class="category-btn action-tile keen-slider__slide inline-flex cursor-pointer items-center justify-center rounded-card border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-card 2xl:text-lg min-w-fit ${isActive ? activeClass : inactiveClass}"
                     data-key="${cat.key}"
                 >
                     ${cat.label}
@@ -382,13 +304,13 @@ function showEmptyState() {
 
     const sortHtml = `
             <div class="relative w-full md:w-auto" id="sort-dropdown">
-                <button id="sort-trigger" class="cursor-pointer border-text/20 text-text flex min-h-[45px] w-full items-center justify-between gap-2 rounded-[12px] border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] shadow-none md:min-w-[120px]">
+                <button id="sort-trigger" class="cursor-pointer action-tile border-text/20 text-text flex min-h-[45px] w-full items-center justify-between gap-2 rounded-card border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] shadow-none md:min-w-[120px]">
                     <span id="sort-current-label" class="${sortLabelClass} whitespace-nowrap">${sortLabel}</span>
                     <svg class="text-text h-[15px] w-[15px] shrink-0" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5.63346 1.77859V12.4505M2.07617 5.30624L5.63346 1.74895M8.59787 1.80824V12.4801L12.1552 8.92282" stroke="currentColor" stroke-width="1.06719" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
                 </button>
-                <div id="sort-options" class="absolute top-full left-0 z-[100] mt-1 hidden w-full overflow-hidden rounded-md border border-neutral-200 bg-white shadow-md">
+                <div id="sort-options" class="absolute top-full left-0 z-100 mt-1 hidden w-full overflow-hidden rounded-md border border-neutral-200 bg-white shadow-md">
                     ${SORT_OPTIONS.map((opt) => {
                       const isSelected = currentSort === opt.value;
                       return `
@@ -485,7 +407,7 @@ function showEmptyState() {
   }
 
   // --- Rendering Content (Tips/Instructions) ---
-  function renderContent() {
+  function renderContent(isAppend = false, newItems = []) {
     // Desktop: use current page data (DATA)
     // Mobile: use accumulated data (mobileAccumulatedData)
 
@@ -512,12 +434,16 @@ function showEmptyState() {
 
     // Mobile Grid with Load More
     if (sliderMobile) {
-      const mobileCardsHtml = mobileDisplayData.map((item) => createMobileCardHtml(item)).join('');
-      sliderMobile.innerHTML = mobileCardsHtml;
+      if (isAppend && newItems.length > 0) {
+        // Append new items to avoid "skipping" bug
+        const newCardsHtml = newItems.map((item) => createMobileCardHtml(item)).join('');
+        sliderMobile.insertAdjacentHTML('beforeend', newCardsHtml);
+      } else {
+        // Full replace (for filters, sorting, initial load)
+        const mobileCardsHtml = mobileDisplayData.map((item) => createMobileCardHtml(item)).join('');
+        sliderMobile.innerHTML = mobileCardsHtml;
+      }
     }
-
-    // Refresh animations for new content
-    initScrollAnimations();
   }
 
   // --- Rendering Pagination ---
@@ -536,7 +462,7 @@ function showEmptyState() {
       if (totalPages <= 1) {
         // Show at least page 1 even when there's only one page
         const baseClasses =
-          'flex cursor-pointer items-center justify-center border md:rounded-[8px] 2xl:rounded-[6px] md:text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors';
+          'flex cursor-pointer items-center justify-center border md:rounded-card 2xl:rounded-[6px] md:text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors';
         const activeClasses = 'border-[#414242]/25 text-[#414242] md:size-[52px] 2xl:h-[54px] 2xl:w-[56px]';
         desktopPaginationContainer.innerHTML = `<button class="${baseClasses} ${activeClasses}" data-page="1">1</button>`;
       } else {
@@ -566,7 +492,7 @@ function showEmptyState() {
         }
 
         const baseClasses =
-          'flex cursor-pointer items-center justify-center border md:rounded-[8px] 2xl:rounded-[6px] md:text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors';
+          'flex cursor-pointer items-center justify-center border md:rounded-card 2xl:rounded-[6px] md:text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors';
         const activeClasses = 'border-[#414242]/25 text-[#414242] md:size-[52px] 2xl:h-[54px] 2xl:w-[56px]';
         const inactiveClasses =
           'border-transparent text-[#414242]/40 hover:text-[#414242]/60 2xl:w-[47px] 2xl:h-[56px] md:h-[42px] md:w-[35px]';
@@ -643,26 +569,26 @@ function showEmptyState() {
     const link = `tips-details.html?id=${item.id}&type=${itemType}`;
 
     return `
-        <article class="tips-card rounded-[12px] bg-white/80 backdrop-blur-[30px] backdrop-filter ${heightClass} 2xl:rounded-[16px] ${bigImageClass} ${paddingClass}">
+        <article class="tips-card action-tile rounded-card bg-white/80 backdrop-blur-[30px] backdrop-filter ${heightClass} 2xl:rounded-card ${bigImageClass} ${paddingClass} transition-all duration-300">
             ${
               isBigImage
                 ? `
-                <div class="relative h-[277px] w-full origin-top-left overflow-hidden lg:mb-10 2xl:mb-12 2xl:h-[390px] shrink-0">
-                  <img alt="${item.title}" class="scroll-scale-image rounded-t-[12px] object-cover object-top 2xl:rounded-t-[16px] w-full h-full origin-top-left" src="${item.image}" />
+                <div class="relative h-[277px] w-full lg:mb-10 2xl:mb-12 2xl:h-[390px] shrink-0">
+                  <img alt="${item.title}" class="rounded-t-card object-cover object-top 2xl:rounded-t-card w-full h-full" src="${item.image}" />
                 </div>
             `
                 : ''
             }
 
             <div class="flex items-start justify-between px-6 2xl:px-8 ${isBigImage ? 'mb-20 2xl:mb-[120px]' : 'pt-6 lg:mb-[7px] 2xl:mb-[23px] 2xl:pt-8'}">
-                <div class="border-brand/40 text-brand rounded-[9px] border px-[13px] py-[9px] text-xs leading-[132%] font-normal tracking-[-0.01em] 2xl:rounded-[10px] 2xl:px-[18px] 2xl:py-[10px] 2xl:text-sm">
+                <div class="border-brand/40 text-brand rounded-badge border px-[13px] py-[9px] text-xs leading-[132%] font-normal tracking-[-0.01em] 2xl:rounded-badge 2xl:px-[18px] 2xl:py-[10px] 2xl:text-sm">
                   ${item.category}
                 </div>
                 ${
                   !isBigImage
                     ? `
-                    <div class="relative h-[87px] w-[149px] shrink-0 overflow-hidden md:h-[99px] md:w-[149px] lg:h-[127px] lg:w-[186px] 2xl:h-[177px] 2xl:w-[258px]">
-                        <img alt="${item.title}" class="scroll-scale-image rounded-[6px] object-cover w-full h-full origin-top-left" src="${item.image}" />
+                    <div class="relative h-[87px] w-[149px] shrink-0 md:h-[99px] md:w-[149px] lg:h-[127px] lg:w-[186px] 2xl:h-[177px] 2xl:w-[258px]">
+                        <img alt="${item.title}" class="rounded-badge object-cover w-full h-full" src="${item.image}" />
                     </div>
                 `
                     : ''
@@ -675,7 +601,7 @@ function showEmptyState() {
 
             <a class="flex items-center justify-between px-6 pb-6 2xl:px-8 mt-auto" href="${link}">
                 <p class="text-text/60 paragraph-sm-default 2xl:text-lg">${item.date}</p>
-                <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-[9px] 2xl:size-[57px]">
+                <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-badge 2xl:size-[57px]">
                   <svg class="text-brand h-[7px] w-[8px] 2xl:size-[10px]" viewBox="0 0 9 9" fill="none">
                     <path d="M0.75009 0.750399L7.62744 7.87305M7.62744 7.87305L7.84096 1.08657M7.62744 7.87305L0.840964 8.08657" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                   </svg>
@@ -690,19 +616,19 @@ function showEmptyState() {
     const link = `tips-details.html?id=${item.id}&type=${itemType}`;
 
     return `
-        <article class="w-full min-h-[418px] shrink-0 md:min-h-[386px]">
-          <div class="flex h-full w-full flex-1 flex-col rounded-[16px] bg-white p-[20px]">
+        <article class="tips-card w-full min-h-[418px] shrink-0 md:min-h-[386px] transition-all duration-300">
+          <div class="action-tile flex h-full w-full flex-1 flex-col rounded-card bg-white p-[20px] transition-all duration-300">
             <div class="flex justify-end">
               <div class="relative mb-[47px] h-[87px] w-[127px] md:mb-[35px] md:h-[99px] md:w-[149px]">
                  <img
                     alt="${item.title}"
-                    class="rounded-[6px] object-cover w-full h-full"
+                    class="rounded-badge object-cover w-full h-full"
                     src="${item.image}"
                  />
               </div>
             </div>
 
-            <div class="border-brand/40 text-brand mb-9 flex h-[33px] w-[123px] items-center justify-center rounded-[9px] border px-3 py-1 text-xs leading-[132%] font-normal tracking-[-0.01em] md:mb-[27px]">
+            <div class="border-brand/40 text-brand mb-9 flex h-[33px] w-[123px] items-center justify-center rounded-badge border px-3 py-1 text-xs leading-[132%] font-normal tracking-[-0.01em] md:mb-[27px]">
               ${item.category}
             </div>
 
@@ -713,7 +639,7 @@ function showEmptyState() {
             <a class="mt-auto flex items-center justify-between" href="${link}">
               <p class="text-text/60 paragraph-sm-default">${item.date}</p>
 
-              <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-[9px]">
+              <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-badge">
                 <svg class="text-brand h-[7px] w-[8px]" viewBox="0 0 9 9" fill="none">
                   <path d="M0.75009 0.750399L7.62744 7.87305M7.62744 7.87305L7.84096 1.08657M7.62744 7.87305L0.840964 8.08657" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>

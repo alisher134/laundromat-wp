@@ -88,3 +88,166 @@
     opacity 0.8s cubic-bezier(0.25, 0.1, 0.25, 1),
     transform 0.8s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
+
+/* Action Tiles Hover Effects */
+.action-tile {
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease,
+    background-color 0.3s ease !important;
+}
+
+.action-tile:hover {
+  transform: translateY(-4px);
+  border-color: rgba(58, 109, 144, 0.4) !important;
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.08);
+  background-color: rgba(58, 109, 144, 0.02) !important;
+}
+
+.action-tile:active {
+  transform: scale(0.98);
+}
+
+/* Arrow inside Action Tile */
+.action-tile .mt-auto span,
+.action-tile .action-icon {
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.3s ease !important;
+}
+
+.action-tile:hover .mt-auto span,
+.action-tile:hover .action-icon {
+  transform: translate(3px, -3px);
+  background-color: #488ebe !important; /* Slightly lighter brand color */
+}
+
+/* Text inside Action Tile */
+.action-tile p,
+.action-tile h2,
+.action-tile h3 {
+  transition: color 0.3s ease !important;
+}
+
+.action-tile:hover p,
+.action-tile:hover h2,
+.action-tile:hover h3 {
+  color: #3a6d90 !important;
+}
+
+/* --- Global Button & Interactive Elements --- */
+
+/* General Button Scaling */
+button:not(.action-tile),
+.category-btn,
+.social-icon,
+#mobile-menu-btn,
+#mobile-menu-close,
+[role='button']:not(.action-tile) {
+  cursor: pointer;
+  transition:
+    transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+    background-color 0.2s ease,
+    color 0.2s ease,
+    opacity 0.2s ease !important;
+}
+
+button:not(.action-tile):hover,
+.category-btn:hover,
+[role='button']:not(.action-tile):hover {
+  transform: scale(1.05);
+}
+
+button:not(.action-tile):active,
+.category-btn:active,
+[role='button']:not(.action-tile):active {
+  transform: scale(0.95);
+}
+
+/* Global Arrow/Icon Animation inside Buttons */
+button svg,
+.btn svg,
+.category-btn svg,
+[role='button'] svg {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* Hover effect for icons inside buttons */
+button:hover svg,
+.category-btn:hover svg,
+[role='button']:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* Lang button chevron moving down instead of up-right */
+#lang-button:hover span svg,
+#lang-button-mobile:hover span svg,
+#lang-button-footer:hover span svg {
+  transform: translateY(2px);
+}
+
+/* Slider & Pagination Buttons - Stabilize */
+button[id*='prev']:hover,
+button[id*='next']:hover,
+button[id*='pagination']:hover,
+#tips-pagination button:hover,
+#slider-prev:hover,
+#slider-next:hover {
+  transform: none !important;
+}
+
+/* Slider Arrow Animation - Horizontal only */
+button[id*='next']:hover svg,
+#slider-next:hover svg {
+  transform: translateX(3px) !important;
+}
+
+button[id*='prev']:hover svg,
+#slider-prev:hover svg {
+  transform: translateX(-3px) !important;
+}
+
+/* Newsletter button specific arrow move */
+#newsletter-form button:hover svg {
+  transform: translateX(4px) scale(1.1);
+}
+
+/* FAQ Accordion Icons */
+.accordion-trigger:hover svg {
+  transform: rotate(90deg) scale(1.2);
+}
+
+/* --- Interactive Links & Social --- */
+nav a,
+footer a:not(.text-white\/60),
+.social-link,
+.interactive-link {
+  display: inline-block;
+  transition:
+    transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+    color 0.2s ease !important;
+}
+
+nav a:hover,
+footer a:not(.text-white\/60):hover,
+.social-link:hover,
+.interactive-link:hover {
+  transform: scale(1.06);
+}
+
+nav a:active,
+.social-link:active,
+.interactive-link:active {
+  transform: scale(0.94);
+}
+
+/* Animation for links with circles/arrows */
+a:hover span[class*='bg-brand'] {
+  transform: translate(3px, -3px) scale(1.1);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+/* Smart Header */
+.header-hidden {
+  transform: translateY(-100%) !important;
+}

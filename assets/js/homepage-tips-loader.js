@@ -36,26 +36,26 @@
     const link = 'tips-details.html?id=' + item.id;
 
     return `
-      <article class="tips-card flex flex-col rounded-[12px] bg-white/80 backdrop-blur-[30px] backdrop-filter ${heightClass} 2xl:rounded-[16px] ${bigImageClass} ${paddingClass}" data-tip-index="${index}">
+      <article class="tips-card flex flex-col rounded-card bg-white/80 backdrop-blur-[30px] backdrop-filter ${heightClass} 2xl:rounded-card ${bigImageClass} ${paddingClass} transition-all duration-300" data-tip-index="${index}">
         ${
           isBigImage
             ? `
-            <div class="relative h-[277px] w-full origin-top-left overflow-hidden lg:mb-10 2xl:mb-12 2xl:h-[390px] shrink-0">
-              <img alt="${item.title}" class="scroll-scale-image rounded-t-[12px] object-cover object-top 2xl:rounded-t-[16px] w-full h-full origin-top-left" src="${item.image_large || item.image}" />
+            <div class="relative h-[277px] w-full lg:mb-10 2xl:mb-12 2xl:h-[390px] shrink-0">
+              <img alt="${item.title}" class="rounded-t-card object-cover object-top 2xl:rounded-t-card w-full h-full" src="${item.image_large || item.image}" />
             </div>
           `
             : ''
         }
 
         <div class="flex items-start justify-between px-6 2xl:px-8 ${isBigImage ? 'mb-20 2xl:mb-[120px]' : 'pt-6 lg:mb-[7px] 2xl:mb-[23px] 2xl:pt-8'}">
-          <div class="border-brand/40 text-brand rounded-[9px] border px-[13px] py-[9px] text-xs leading-[132%] font-normal tracking-[-0.01em] 2xl:rounded-[10px] 2xl:px-[18px] 2xl:py-[10px] 2xl:text-sm">
+          <div class="border-brand/40 text-brand rounded-badge border px-[13px] py-[9px] text-xs leading-[132%] font-normal tracking-[-0.01em] 2xl:rounded-badge 2xl:px-[18px] 2xl:py-[10px] 2xl:text-sm">
             ${item.category}
           </div>
           ${
             !isBigImage
               ? `
-              <div class="relative h-[87px] w-[149px] shrink-0 overflow-hidden md:h-[99px] md:w-[149px] lg:h-[127px] lg:w-[186px] 2xl:h-[177px] 2xl:w-[258px]">
-                <img alt="${item.title}" class="scroll-scale-image rounded-[6px] object-cover w-full h-full origin-top-left" src="${item.image}" />
+              <div class="relative h-[87px] w-[149px] shrink-0 md:h-[99px] md:w-[149px] lg:h-[127px] lg:w-[186px] 2xl:h-[177px] 2xl:w-[258px]">
+                <img alt="${item.title}" class="rounded-badge object-cover w-full h-full" src="${item.image}" />
               </div>
             `
               : ''
@@ -68,7 +68,7 @@
 
         <a class="flex items-center justify-between px-6 pb-6 2xl:px-8 mt-auto" href="${link}">
           <p class="text-text/60 paragraph-sm-default 2xl:text-lg">${item.date}</p>
-          <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-[9px] 2xl:size-[57px]">
+          <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-badge 2xl:size-[57px]">
             <svg class="text-brand h-[7px] w-[8px] 2xl:size-[10px]" viewBox="0 0 9 9" fill="none">
               <path d="M0.75009 0.750399L7.62744 7.87305M7.62744 7.87305L7.84096 1.08657M7.62744 7.87305L0.840964 8.08657" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
@@ -85,19 +85,19 @@
     const link = 'tips-details.html?id=' + item.id;
 
     return `
-      <article class="keen-slider__slide min-w-[300px] max-w-[300px] md:min-w-[379px] md:max-w-[379px]">
-        <div class="flex h-full w-full flex-1 flex-col rounded-[16px] bg-white p-[20px] min-h-[418px] md:min-h-[386px]">
+      <article class="tips-card keen-slider__slide min-w-[300px] max-w-[300px] md:min-w-[379px] md:max-w-[379px] transition-all duration-300">
+        <div class="flex h-full w-full flex-1 flex-col rounded-card bg-white p-[20px] min-h-[418px] md:min-h-[386px] transition-all duration-300">
           <div class="flex justify-end">
             <div class="relative mb-[47px] h-[87px] w-[127px] md:mb-[35px] md:h-[99px] md:w-[149px]">
               <img
                 alt="${item.title}"
-                class="rounded-[6px] object-cover w-full h-full"
+                class="rounded-badge object-cover w-full h-full"
                 src="${item.image}"
               />
             </div>
           </div>
 
-          <div class="border-brand/40 text-brand mb-9 flex h-[33px] w-[123px] items-center justify-center rounded-[9px] border px-3 py-1 text-xs leading-[132%] font-normal tracking-[-0.01em] md:mb-[27px]">
+          <div class="border-brand/40 text-brand mb-9 flex h-[33px] w-[123px] items-center justify-center rounded-badge border px-3 py-1 text-xs leading-[132%] font-normal tracking-[-0.01em] md:mb-[27px]">
             ${item.category}
           </div>
 
@@ -108,7 +108,7 @@
           <a class="mt-auto flex items-center justify-between" href="${link}">
             <p class="text-text/60 paragraph-sm-default">${item.date}</p>
 
-            <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-[9px]">
+            <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-badge">
               <svg class="text-brand h-[7px] w-[8px]" viewBox="0 0 9 9" fill="none">
                 <path d="M0.75009 0.750399L7.62744 7.87305M7.62744 7.87305L7.84096 1.08657M7.62744 7.87305L0.840964 8.08657" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>

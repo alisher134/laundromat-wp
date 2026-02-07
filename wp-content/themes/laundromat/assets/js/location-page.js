@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         storeHours: loc.storeHours,
         geo: {
           lat: parseFloat(loc.lat),
-          lng: parseFloat(loc.lng)
+          lng: parseFloat(loc.lng),
         },
       }));
 
@@ -120,14 +120,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Structure matches LocationCard.tsx with Tailwind classes
       return `
       <div
-        class="${slideClass} rounded-card max-w-[328px] shrink-0 cursor-pointer px-[20px] py-4 transition-colors duration-300 md:max-w-[360px] xl:max-w-[425px] 2xl:max-w-[605px] 2xl:rounded-[16px] 2xl:p-6 ${activeClass}"
+        class="${slideClass} action-tile rounded-card max-w-[328px] shrink-0 cursor-pointer px-[20px] py-4 transition-colors duration-300 md:max-w-[360px] xl:max-w-[425px] 2xl:max-w-[605px] 2xl:rounded-[16px] 2xl:p-6 ${activeClass}"
         data-id="${loc.id}"
       >
         <div class="mb-[31px] flex items-center justify-between md:mb-[27px] xl:mb-[46px] 2xl:mb-[88px] pointer-events-none">
             <h2 class="text-text max-w-[184px] text-base leading-[132%] font-normal tracking-[-0.01em] md:text-sm xl:text-sm 2xl:max-w-[307px] 2xl:text-2xl 2xl:leading-[136%] 2xl:tracking-[-0.02em]">
               ${loc.title}
             </h2>
-            <span class="flex size-[33px] items-center justify-center rounded-[6px] bg-white 2xl:size-[42px]">
+            <span class="action-icon flex size-[33px] items-center justify-center rounded-[6px] bg-white 2xl:size-[42px]">
                <!-- Location Icon -->
                <svg class="size-4 text-[#3A6D90] 2xl:size-[22px]" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M11.1563 19.0809H8.8078C7.63992 19.0809 6.51987 18.6169 5.69405 17.7911C4.86824 16.9653 4.4043 15.8453 4.4043 14.6774C4.4043 13.5095 4.86824 12.3895 5.69405 11.5636C6.51987 10.7378 7.63992 10.2739 8.8078 10.2739H13.5049C14.2056 10.2739 14.8776 9.99551 15.3731 9.50002C15.8686 9.00453 16.147 8.3325 16.147 7.63178C16.147 6.93105 15.8686 6.25902 15.3731 5.76353C14.8776 5.26804 14.2056 4.98967 13.5049 4.98967H11.1563C10.9228 4.98967 10.6988 4.89689 10.5336 4.73172C10.3684 4.56656 10.2756 4.34255 10.2756 4.10897C10.2756 3.8754 10.3684 3.65139 10.5336 3.48622C10.6988 3.32106 10.9228 3.22827 11.1563 3.22827H13.5049C14.6728 3.22827 15.7928 3.69221 16.6186 4.51803C17.4444 5.34385 17.9084 6.46389 17.9084 7.63178C17.9084 8.79966 17.4444 9.91971 16.6186 10.7455C15.7928 11.5713 14.6728 12.0353 13.5049 12.0353H8.8078C8.10707 12.0353 7.43504 12.3136 6.93955 12.8091C6.44406 13.3046 6.1657 13.9767 6.1657 14.6774C6.1657 15.3781 6.44406 16.0501 6.93955 16.5456C7.43504 17.0411 8.10707 17.3195 8.8078 17.3195H11.1563C11.3899 17.3195 11.6139 17.4123 11.7791 17.5774C11.9442 17.7426 12.037 17.9666 12.037 18.2002C12.037 18.4338 11.9442 18.6578 11.7791 18.8229C11.6139 18.9881 11.3899 19.0809 11.1563 19.0809Z" fill="currentColor"/>
@@ -157,26 +157,26 @@ document.addEventListener('DOMContentLoaded', async () => {
           </div>
         </div>
       `;
-      }
+    }
 
-      // --- Render Lists ---
-      const desktopContainer = document.getElementById('location-list-container');
-      const sliderContainer = document.getElementById('keen-slider-locations');
+    // --- Render Lists ---
+    const desktopContainer = document.getElementById('location-list-container');
+    const sliderContainer = document.getElementById('keen-slider-locations');
 
-      // Render Desktop List
-      if (desktopContainer) {
-        desktopContainer.innerHTML = locations.map((loc) => createLocationCardStr(loc, false, false)).join('');
+    // Render Desktop List
+    if (desktopContainer) {
+      desktopContainer.innerHTML = locations.map((loc) => createLocationCardStr(loc, false, false)).join('');
 
-        // Add Click Listeners
-        Array.from(desktopContainer.children).forEach((bg) => {
-          bg.addEventListener('click', () => {
-            handleLocationSelect(parseInt(bg.dataset.id));
-          });
+      // Add Click Listeners
+      Array.from(desktopContainer.children).forEach((bg) => {
+        bg.addEventListener('click', () => {
+          handleLocationSelect(parseInt(bg.dataset.id));
         });
-      }
+      });
+    }
 
-      // Render Mobile Slider
-      if (sliderContainer) {
+    // Render Mobile Slider
+    if (sliderContainer) {
       sliderContainer.innerHTML = locations.map((loc) => createLocationCardStr(loc, false, true)).join('');
       // Add Click Listeners logic is handled by slider click if needed, but inner divs have pointer-events for now?
       // Actually the card itself is clickable. I added data-id.
@@ -316,48 +316,48 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Use first location as center default
       const center = locations[0].geo;
 
-    const mapOptions = {
-      center: center,
-      zoom: 12, // Zoomed out a bit initially
-      disableDefaultUI: true,
-      zoomControl: true,
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullscreenControl: false,
-      styles: [
-        {
-          featureType: 'all',
-          elementType: 'geometry',
-          stylers: [{ saturation: -30 }],
-        },
-        {
-          featureType: 'water',
-          elementType: 'geometry.fill',
-          stylers: [{ color: '#87BCE0' }],
-        },
-      ],
-    };
+      const mapOptions = {
+        center: center,
+        zoom: 12, // Zoomed out a bit initially
+        disableDefaultUI: true,
+        zoomControl: true,
+        mapTypeControl: false,
+        streetViewControl: false,
+        fullscreenControl: false,
+        styles: [
+          {
+            featureType: 'all',
+            elementType: 'geometry',
+            stylers: [{ saturation: -30 }],
+          },
+          {
+            featureType: 'water',
+            elementType: 'geometry.fill',
+            stylers: [{ color: '#87BCE0' }],
+          },
+        ],
+      };
 
-    map = new google.maps.Map(mapElement, mapOptions);
+      map = new google.maps.Map(mapElement, mapOptions);
 
-    // Create Markers
-    locations.forEach((loc, index) => {
-      const marker = new google.maps.Marker({
-        position: loc.geo,
-        map: map,
-        icon: {
-          url: './assets/images/marker.svg',
-          scaledSize: new google.maps.Size(40, 40),
-        },
-        title: loc.title,
+      // Create Markers
+      locations.forEach((loc, index) => {
+        const marker = new google.maps.Marker({
+          position: loc.geo,
+          map: map,
+          icon: {
+            url: './assets/images/marker.svg',
+            scaledSize: new google.maps.Size(40, 40),
+          },
+          title: loc.title,
+        });
+
+        marker.addListener('click', () => {
+          handleLocationSelect(loc.id);
+        });
+
+        markers.push(marker);
       });
-
-      marker.addListener('click', () => {
-        handleLocationSelect(loc.id);
-      });
-
-      markers.push(marker);
-    });
     };
 
     // --- Load Map Script ---

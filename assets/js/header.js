@@ -2,32 +2,30 @@
 (function () {
   const header = document.getElementById('header');
 
-  // Header scroll effect
+  let lastScrollY = window.scrollY;
+  const hideThreshold = 100; // Only hide after scrolling 100px
+
+  // Header scroll effects (background and smart reveal)
   function handleScroll() {
-    // Use viewport height threshold like on main page
+    const currentScrollY = window.scrollY;
+
+    // 1. Background and Theme effects (already existed)
     const scrollThreshold = window.innerHeight * 0.1;
-    const isScrolled = window.scrollY > scrollThreshold;
+    const isScrolled = currentScrollY > scrollThreshold;
 
     if (isScrolled) {
       header.classList.add('bg-white/30', 'backdrop-blur-sm');
-
-      // For pages with data-theme="dark", change text color to dark when scrolled
       if (header.dataset.theme === 'dark') {
-        // Change text color to dark
         header.querySelectorAll('.text-white').forEach((el) => {
-          // Skip if this is the logo or inside the logo
           if (el.closest('a[href="index.html"]')) return;
-
           el.classList.remove('text-white');
           el.classList.add('text-text');
         });
-        // Change logo color
         const logo = header.querySelector('a[href="index.html"] svg');
         if (logo) {
           logo.classList.remove('text-white');
           logo.classList.add('text-brand');
         }
-        // Change burger icon
         const burgerIcon = header.querySelector('#mobile-menu-btn svg');
         if (burgerIcon) {
           burgerIcon.classList.remove('text-white');
@@ -36,24 +34,17 @@
       }
     } else {
       header.classList.remove('bg-white/30', 'backdrop-blur-sm');
-
-      // Only change colors back if it's a dark theme page
       if (header.dataset.theme === 'dark') {
-        // Change text color back to white
         header.querySelectorAll('.text-text').forEach((el) => {
-          // Skip if this is the logo or inside the logo
           if (el.closest('a[href="index.html"]')) return;
-
           el.classList.remove('text-text');
           el.classList.add('text-white');
         });
-        // Change logo color back
         const logo = header.querySelector('a[href="index.html"] svg');
         if (logo && logo.classList.contains('text-brand')) {
           logo.classList.remove('text-brand');
           logo.classList.add('text-white');
         }
-        // Change burger icon back
         const burgerIcon = header.querySelector('#mobile-menu-btn svg');
         if (burgerIcon && burgerIcon.classList.contains('text-text')) {
           burgerIcon.classList.remove('text-text');
@@ -61,6 +52,18 @@
         }
       }
     }
+
+    // 2. Smart Reveal logic
+    // Hide when scrolling down, show when scrolling up
+    if (currentScrollY > lastScrollY && currentScrollY > hideThreshold) {
+      // Scrolling DOWN
+      header.classList.add('header-hidden');
+    } else {
+      // Scrolling UP or near the top
+      header.classList.remove('header-hidden');
+    }
+
+    lastScrollY = currentScrollY;
   }
 
   window.addEventListener('scroll', handleScroll);
@@ -196,7 +199,7 @@
         // Header style - matches existing dropdown buttons
         if (lang.is_current) {
           link.className =
-            'paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 font-semibold transition';
+            'paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition';
         } else {
           link.className =
             'paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition';
@@ -270,7 +273,7 @@
 
         if (linkPage === currentPage) {
           link.classList.remove('text-text', 'hover:text-brand');
-          link.classList.add('text-brand', 'font-semibold');
+          link.classList.add('text-brand');
         } else {
           link.classList.remove('text-brand', 'font-semibold');
           link.classList.add('text-text', 'hover:text-brand');
