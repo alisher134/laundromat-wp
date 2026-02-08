@@ -508,7 +508,7 @@ add_action('pre_get_terms', 'laundromat_apply_term_order');
 
 function laundromat_apply_term_order($query)
 {
-    if (is_admin()) {
+    if (is_admin() || (defined('REST_REQUEST') && REST_REQUEST)) {
         return;
     }
 

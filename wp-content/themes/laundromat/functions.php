@@ -138,6 +138,7 @@ function laundromat_add_taxonomies_to_polylang($taxonomies, $is_settings)
     $taxonomies['content_category'] = 'content_category';
     $taxonomies['faq_category'] = 'faq_category';
     $taxonomies['instruction_category'] = 'instruction_category';
+    $taxonomies['service_category'] = 'service_category';
     return $taxonomies;
 }
 
@@ -166,7 +167,7 @@ add_action('admin_head', 'laundromat_simplify_category_screen');
 function laundromat_simplify_category_screen()
 {
     $screen = get_current_screen();
-    if ($screen && in_array($screen->taxonomy, ['content_category', 'faq_category', 'instruction_category'])) {
+    if ($screen && in_array($screen->taxonomy, ['content_category', 'faq_category', 'instruction_category', 'service_category'])) {
         ?>
         <style>
             /* Hide description column and field */

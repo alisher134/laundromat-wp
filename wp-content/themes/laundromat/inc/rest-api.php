@@ -1120,25 +1120,49 @@ function laundromat_get_faq_categories($request)
 function laundromat_get_service_categories($request)
 {
     $lang = $request->get_param('lang');
+    
+    // Fetch ALL terms first to diagnose if they exist at all
+    $all_terms_args = [
+        'taxonomy' => 'service_category',
+        'hide_empty' => false,
+    ];
+    $all_terms = get_terms($all_terms_args);
+    
+    error_log('Laundromat API DEBUG: Total service categories in DB: ' . (is_array($all_terms) ? count($all_terms) : 0));
 
     $args = [
         'taxonomy' => 'service_category',
         'hide_empty' => false,
-        'orderby' => 'meta_value_num',
-        'meta_key' => '_sort_order',
+        'orderby' => 'name',
         'order' => 'ASC',
     ];
 
-    // Add language filter for Polylang
-    if ($lang && function_exists('pll_current_language')) {
+    // If lang is provided, try to filter. If not, return all.
+    if ($lang) {
         $args['lang'] = $lang;
     }
 
     $terms = get_terms($args);
 
     if (is_wp_error($terms)) {
+        error_log('Laundromat API ERROR: ' . $terms->get_error_message());
         return [];
     }
+    
+    // If we got nothing with lang, maybe Polylang doesn't see them. 
+    // Let's try to manually filter as a fallback if terms is empty but all_terms is not.
+    if (empty($terms) && !empty($all_terms) && $lang && function_exists('pll_get_term_language')) {
+        error_log('Laundromat API DEBUG: No terms found for lang=' . $lang . ', trying manual filter.');
+        $terms = [];
+        foreach ($all_terms as $t) {
+            $t_lang = pll_get_term_language($t->term_id);
+            if ($t_lang == $lang) {
+                $terms[] = $t;
+            }
+        }
+    }
+
+    error_log('Laundromat API DEBUG: Final count for lang=' . $lang . ': ' . count($terms));
 
     $categories = [];
 
