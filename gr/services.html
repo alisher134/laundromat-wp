@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="el">
+<html lang="gr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -223,7 +223,7 @@
           <img
             alt=""
             aria-hidden="true"
-            class="absolute top-0 left-0 h-full w-full translate-x-[-140px] md:translate-x-[-250px] translate-y-[-40px] rotate-[170deg] object-contain"
+            class="absolute top-0 left-0 h-full w-full translate-x-[-140px] translate-y-[-40px] rotate-[170deg] object-contain md:translate-x-[-250px]"
             src="../assets/images/mobile-circle.png"
           />
 
@@ -378,55 +378,15 @@
         <!-- Categories (Mobile & Desktop) -->
         <div class="animate-fade-up">
           <!-- Mobile Slider -->
-          <div class="my-[32px] md:hidden">
-            <div class="keen-slider" id="filter-slider-mobile">
-              <!-- Category: Laundry services (Active) -->
-              <!-- Classes from Category.tsx: inline-flex ... min-w-fit px-[18px] py-[14px] bg-brand/6 text-brand -->
-              <button
-                class="keen-slider__slide bg-brand/6 text-brand inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border border-transparent px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg"
-                data-category="laundry"
-              >
-                Laundry services
-              </button>
-              <!-- Category: Drying services -->
-              <button
-                class="keen-slider__slide border-text/20 text-text inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg"
-                data-category="drying"
-              >
-                Drying services
-              </button>
-              <!-- Category: Special cleaning -->
-              <button
-                class="keen-slider__slide border-text/20 text-text inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg"
-                data-category="specialCleaning"
-              >
-                Special cleaning
-              </button>
+          <!-- Mobile Slider -->
+          <div class="my-[32px] -mr-[16px] md:hidden">
+            <div id="services-mobile-categories-slider" class="keen-slider">
+              <!-- Dynamic content will be loaded here -->
             </div>
           </div>
           <!-- Desktop Flex -->
-          <div class="my-[32px] hidden gap-2 md:flex">
-            <!-- Category: Laundry services (Active) -->
-            <button
-              class="category-btn bg-brand/6 text-brand inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border border-transparent px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg"
-              data-category="laundry"
-            >
-              Laundry services
-            </button>
-            <!-- Category: Drying services -->
-            <button
-              class="category-btn border-text/20 text-text inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg"
-              data-category="drying"
-            >
-              Drying services
-            </button>
-            <!-- Category: Special cleaning -->
-            <button
-              class="category-btn border-text/20 text-text inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg"
-              data-category="specialCleaning"
-            >
-              Special cleaning
-            </button>
+          <div id="services-desktop-categories-container" class="my-[32px] hidden gap-2 md:flex">
+            <!-- Dynamic content will be loaded here -->
           </div>
         </div>
 

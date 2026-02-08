@@ -39,8 +39,8 @@ const LaundroAPI = (function () {
   function detectLanguage() {
     const pathParts = window.location.pathname.split('/').filter((p) => p);
     // Check if we're in the /el/ directory
-    if (pathParts.includes('el')) {
-      return 'el';
+    if (pathParts.includes('gr')) {
+      return 'gr';
     }
     return 'en';
   }
@@ -140,7 +140,7 @@ const LaundroAPI = (function () {
   return {
     /**
      * Set current language for API requests
-     * @param {string} lang - Language code (e.g., 'en', 'el')
+     * @param {string} lang - Language code (e.g., 'en', 'gr')
      */
     setLanguage(lang) {
       currentLang = lang;

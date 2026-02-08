@@ -6,8 +6,8 @@
  */
 
 // Detect language
-const isGreek = window.location.pathname.includes('/el/');
-const lang = isGreek ? 'el' : 'en';
+const isGreek = window.location.pathname.includes('/gr/');
+const lang = isGreek ? 'gr' : 'en';
 
 const TRANSLATIONS = {
   en: {
@@ -18,7 +18,7 @@ const TRANSLATIONS = {
     title_desc: 'Title Z-A',
     sort_by: 'Sort by',
   },
-  el: {
+  gr: {
     all_articles: 'Όλα τα άρθρα',
     latest: 'Πιο πρόσφατα',
     oldest: 'Πιο παλιά',

@@ -176,7 +176,7 @@
             class="accordion-trigger flex cursor-pointer items-center justify-between pt-4 pr-3 pb-[17px] pl-4 text-left md:pt-[33px] md:pr-9 md:pb-9 md:pl-6 xl:pt-6 xl:pr-6 xl:pb-[25px] xl:pl-[22px] 2xl:pt-[33px] 2xl:pr-9 2xl:pb-9 2xl:pl-8"
           >
             <div class="flex w-full items-center justify-between">
-              <div class="flex items-start md:gap-[54px] xl:gap-[104px] 2xl:gap-[143px] transition-transform duration-300 group-hover:scale-[1.02] origin-left">
+              <div class="flex items-baseline md:gap-[54px] xl:gap-[104px] 2xl:gap-[143px] transition-transform duration-300 group-hover:scale-[1.02] origin-left">
                 <span
                   class="text-brand/70 hidden leading-[132%] font-normal tracking-[-0.01em] md:block md:text-lg xl:text-sm 2xl:text-lg"
                 >
@@ -224,12 +224,12 @@
           <div
             class="accordion-content h-0 overflow-hidden bg-transparent opacity-0 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
           >
-            <div class="flex items-start px-5 pt-0 pb-5 md:gap-[54px] md:px-6 md:pb-6 xl:gap-[104px] xl:px-[22px] xl:pb-[25px] 2xl:gap-[143px] 2xl:px-8 2xl:pb-9">
+            <div class="flex items-baseline px-5 pt-0 pb-5 md:gap-[54px] md:px-6 md:pb-6 xl:gap-[104px] xl:px-[22px] xl:pb-[25px] 2xl:gap-[143px] 2xl:px-8 2xl:pb-9">
               <span
-                class="pointer-events-none hidden font-normal opacity-0 md:block md:text-lg xl:text-sm 2xl:text-lg"
+                class="text-brand/70 pointer-events-none hidden leading-[132%] font-normal tracking-[-0.01em] opacity-0 md:block md:text-lg xl:text-sm 2xl:text-lg"
                 aria-hidden="true"
               >
-                ( 00 )
+                ( ${number} )
               </span>
               <div class="text-text max-w-full text-base leading-[150%] font-normal tracking-[-0.01em] md:max-w-[448px] md:text-lg xl:max-w-[500px] xl:text-base 2xl:max-w-[680px] 2xl:text-lg">
                 ${faq.answer || ''}

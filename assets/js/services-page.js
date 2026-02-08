@@ -356,8 +356,12 @@
 
     if (mobileSliderElement && typeof KeenSlider !== 'undefined' && mobileSliderElement.children.length > 0) {
       try {
-        // Destroy existing instance if any (not easily tracked here without global var, but new instance usually ok)
-        new KeenSlider(mobileSliderElement, {
+        // Destroy existing instance if possible (storing on element for retrieval)
+        if (mobileSliderElement.__keenSlider) {
+          mobileSliderElement.__keenSlider.destroy();
+        }
+
+        mobileSliderElement.__keenSlider = new KeenSlider(mobileSliderElement, {
           mode: 'free-snap',
           slides: {
             perView: 'auto',

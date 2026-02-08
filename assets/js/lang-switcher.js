@@ -43,10 +43,10 @@
     if (!currentPage) currentPage = 'index.html';
 
     // Strict check for Greek context: path ends with /el/filename or /el/ or /el
-    const isGreekPath = /\/el\/[^/]*$/.test(currentPath) || /\/el\/?$/.test(currentPath);
+    const isGreekPath = /\/gr\/[^/]*$/.test(currentPath) || /\/gr\/?$/.test(currentPath);
 
     console.log('[LangSwitcher] Switching language:', {
-      from: isGreekPath ? 'el' : 'en',
+      from: isGreekPath ? 'gr' : 'en',
       to: lang,
       currentPath,
       currentPage,
@@ -57,7 +57,7 @@
       // Switch to Greek
       if (!isGreekPath) {
         // We are in English context (root), navigate to ./el/PAGE
-        const target = 'el/' + currentPage;
+        const target = 'gr/' + currentPage;
         console.log('[LangSwitcher] Navigating to:', target);
         window.location.href = target;
       }

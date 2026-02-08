@@ -1,15 +1,14 @@
 <!doctype html>
-<html lang="el">
+<html lang="gr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Laundromat - Συμβουλές πλυντηρίου</title>
+    <title>Laundromat - Επεξεργασία Προσωπικών Δεδομένων</title>
 
     <link rel="icon" href="favicon.ico" type="image/x-icon" sizes="any" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css" rel="stylesheet" />
 
     <link href="../assets/css/output.css" rel="stylesheet" />
     <link href="../assets/css/animations.css" rel="stylesheet" />
@@ -104,7 +103,7 @@
             >8 800 600 14 41</a
           >
 
-          <button id="mobile-menu-btn" class="text-text block lg:hidden" aria-label="Menu">
+          <button id="mobile-menu-btn" class="block text-text lg:hidden" aria-label="Menu">
             <svg class="h-9 w-[38px]" viewBox="0 0 38 36" fill="none">
               <rect width="38" height="36" rx="10" fill-rule="evenodd" fill="currentColor" style="fill: currentColor !important" fill-opacity="0.01" />
               <rect x="0.5" y="0.5" width="37" height="35" rx="9.5" fill-rule="evenodd" stroke="currentColor" style="stroke: currentColor !important" stroke-opacity="0.8" />
@@ -258,86 +257,23 @@
 
     <!-- Main Content -->
     <main class="flex-grow">
-      <div class="mx-4 pt-[124px] md:mx-4 md:pt-[136px] xl:pt-[147px] 2xl:pt-[208px]">
-        <!-- Title -->
-        <h1
-          id="tips-title"
-          class="animate-fade-up-large heading-section mb-[32px] text-left md:mb-9 lg:mb-[45px] 2xl:mb-[56px]"
-        >
-          Συμβουλές πλυντηρίου
-        </h1>
-
-        <!-- Filters Section -->
-        <div
-          id="tips-filters"
-          class="animate-fade-up-small relative z-20 mb-[32px] flex flex-col gap-3 md:mb-9 lg:flex-row lg:items-center lg:justify-between lg:mb-[45px] 2xl:mb-[56px]"
-        >
-          <!-- Injected by JS, will contain #filter-slider-mobile -->
-        </div>
-
-        <!-- Desktop Grid -->
-        <div
-          id="tips-grid-desktop"
-          class="animate-fade-up-medium hidden gap-4 lg:mb-[86px] lg:grid lg:grid-cols-2 lg:gap-4 lg:gap-[14px] 2xl:mb-[116px] 2lg:gap-4"
-        >
+      <section class="mx-4 pt-[124px] md:mx-4 md:pt-[136px] xl:mx-6 xl:pt-[147px] 2xl:mx-9 2xl:pt-[208px]">
+        <!-- Article Header -->
+        <div id="article-header" class="mb-8 md:mb-[86px] xl:mb-[78px] 2xl:mb-[116px]">
           <!-- Injected by JS -->
         </div>
 
-        <!-- Mobile Grid (not slider!) -->
-        <div
-          id="tips-slider-mobile"
-          class="animate-fade-up-medium mb-[46px] grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-4 lg:hidden 2xl:mb-[116px]"
-        >
-          <!-- Injected by JS -->
-        </div>
-
-        <!-- Pagination -->
-        <!-- Pagination -->
-        <div id="tips-pagination" class="animate-fade-up-large flex flex-col items-center gap-6">
-          <!-- Desktop Pagination Component -->
-          <div class="hidden items-center gap-1 md:flex">
-            <!-- Active Item -->
-            <button
-              class="flex cursor-pointer items-center justify-center border border-[#414242]/25 leading-[132%] font-normal tracking-[-0.01em] text-[#414242] transition-colors md:size-[52px] md:rounded-[8px] md:text-sm 2xl:h-[54px] 2xl:w-[56px] 2xl:rounded-[6px]"
-            >
-              1
-            </button>
-            <!-- Inactive Item -->
-            <button
-              class="flex cursor-pointer items-center justify-center border border-transparent leading-[132%] font-normal tracking-[-0.01em] text-[#414242]/40 transition-colors hover:text-[#414242]/60 md:h-[42px] md:w-[35px] md:rounded-[8px] md:text-sm 2xl:h-[56px] 2xl:w-[47px] 2xl:rounded-[6px]"
-            >
-              2
-            </button>
-            <button
-              class="flex cursor-pointer items-center justify-center border border-transparent leading-[132%] font-normal tracking-[-0.01em] text-[#414242]/40 transition-colors hover:text-[#414242]/60 md:h-[42px] md:w-[35px] md:rounded-[8px] md:text-sm 2xl:h-[56px] 2xl:w-[47px] 2xl:rounded-[6px]"
-            >
-              3
-            </button>
-            <!-- Ellipsis -->
-            <span
-              class="flex items-center justify-center border border-transparent leading-[132%] font-normal tracking-[-0.01em] text-[#414242]/40 md:h-[42px] md:w-[35px] md:rounded-[8px] md:text-sm 2xl:h-[56px] 2xl:w-[47px] 2xl:rounded-[6px]"
-            >
-              …
-            </span>
-            <button
-              class="flex cursor-pointer items-center justify-center border border-transparent leading-[132%] font-normal tracking-[-0.01em] text-[#414242]/40 transition-colors hover:text-[#414242]/60 md:h-[42px] md:w-[35px] md:rounded-[8px] md:text-sm 2xl:h-[56px] 2xl:w-[47px] 2xl:rounded-[6px]"
-            >
-              10
-            </button>
+        <!-- Article Content -->
+        <div class="flex justify-center">
+          <!-- Content -->
+          <div id="article-content" class="w-full md:max-w-[670px] xl:max-w-[782px] 2xl:max-w-[967px]">
+            <!-- Injected by JS -->
           </div>
-
-          <button
-            id="load-more-btn"
-            class="action-tile border-text/20 text-text hover:bg-brand/5 flex h-[70px] w-[220px] cursor-pointer items-center justify-center rounded-[8px] border text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors 2xl:h-[83px] 2xl:w-[278px]"
-          >
-            Φόρτωση περισσότερων
-          </button>
         </div>
-      </div>
+      </section>
     </main>
 
-    <!-- Footer injected by footer.js (reusing structure) -->
-    <!-- Ideally just copy footer HTML here too -->
+    <!-- Footer -->
     <footer
       class="xl:px-container-tablet xl:pb-container-tablet 2xl:px-container-desktop 2xl:pb-container-desktop relative bg-white px-[6px] pt-[120px] pb-[6px] md:pt-[164px] xl:pt-[200px] 2xl:pt-[256px]"
     >
@@ -366,7 +302,7 @@
             <h3 class="paragraph-sm-default mb-3 text-white/50 xl:mb-5 2xl:mb-6 2xl:text-lg">Εταιρεία</h3>
             <ul class="flex flex-col gap-[6px] 2xl:gap-[8px]">
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
-                <a href="location.html">Τοποθεσία</a>
+                <a href="location.html">Η τοποθεσία μας</a>
               </li>
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
                 <a href="instructions.html">Οδηγίες</a>
@@ -375,7 +311,7 @@
                 <a href="tips.html">Συμβουλές πλυντηρίου</a>
               </li>
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
-                <a href="contact.html">Επικοινωνία</a>
+                <a href="contact.html">Επικοινωνήστε μαζί μας</a>
               </li>
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
                 <a href="faq.html">FAQ</a>
@@ -398,43 +334,18 @@
           </ul>
         </nav>
 
-          <!-- Desktop Lang Switcher -->
           <div class="hidden md:block">
-            <div class="relative" id="lang-switcher-footer">
+            <div class="group relative">
               <button
-                id="lang-button-footer"
                 class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
-                type="button"
               >
-                <span class="leading-[132%] tracking-[-0.01em] text-white">Gr</span>
+                <span class="leading-[132%] tracking-[-0.01em] text-white">En</span>
                 <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
                   <svg class="h-[3px] w-[5px] text-white" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0.5 0.5L2.9901 2.63438L5.48021 0.5" fill-rule="evenodd" stroke="currentColor" style="stroke: currentColor !important" stroke-linecap="round" />
                   </svg>
                 </span>
               </button>
-
-              <ul
-                id="lang-dropdown-footer"
-                class="absolute top-full right-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white/90 text-center shadow-xl backdrop-blur"
-              >
-                <li>
-                  <button
-                    class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
-                    type="button"
-                  >
-                    En
-                  </button>
-                </li>
-                <li>
-                  <button
-                    class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
-                    type="button"
-                  >
-                    Gr
-                  </button>
-                </li>
-              </ul>
             </div>
           </div>
         </div>
@@ -444,7 +355,7 @@
             <h3 class="paragraph-sm-default mb-3 text-white/50 md:text-base xl:text-lg">Εταιρεία</h3>
             <ul class="flex flex-col gap-[6px]">
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
-                <a href="location.html">Τοποθεσία</a>
+                <a href="location.html">Η τοποθεσία μας</a>
               </li>
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
                 <a href="instructions.html">Οδηγίες</a>
@@ -453,7 +364,7 @@
                 <a href="tips.html">Συμβουλές πλυντηρίου</a>
               </li>
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
-                <a href="contact.html">Επικοινωνία</a>
+                <a href="contact.html">Επικοινωνήστε μαζί μας</a>
               </li>
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
                 <a href="faq.html">FAQ</a>
@@ -476,63 +387,37 @@
         </nav>
         </div>
 
-        <!-- Mobile Lang Switcher -->
         <div class="mb-[29px] block md:hidden">
-          <div class="relative" id="lang-switcher-footer-mobile">
-            <button
-              id="lang-button-footer-mobile"
-              class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em]"
-              type="button"
-            >
-              <span class="leading-[132%] tracking-[-0.01em] text-white">Gr</span>
-              <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-                <svg class="h-[3px] w-[5px] text-white" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M0.5 0.5L2.9901 2.63438L5.48021 0.5" fill-rule="evenodd" stroke="currentColor" style="stroke: currentColor !important" stroke-linecap="round" />
-                </svg>
-              </span>
-            </button>
-
-            <ul
-              id="lang-dropdown-footer-mobile"
-              class="absolute top-full right-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white/90 text-center shadow-xl backdrop-blur"
-            >
-              <li>
-                <button
-                  class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
-                  type="button"
-                >
-                  En
-                </button>
-              </li>
-              <li>
-                <button
-                  class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
-                  type="button"
-                >
-                   Gr
-                </button>
-              </li>
-            </ul>
-          </div>
+          <button
+            class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em]"
+          >
+            <span class="leading-[132%] tracking-[-0.01em] text-white">En</span>
+            <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
+              <svg class="h-[3px] w-[5px] text-white" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0.5 0.5L2.9901 2.63438L5.48021 0.5" fill-rule="evenodd" stroke="currentColor" style="stroke: currentColor !important" stroke-linecap="round" />
+              </svg>
+            </span>
+          </button>
         </div>
 
-        <div class="md:w-[316px] xl:w-[332px] 2xl:w-[467px]">
+        <div class="md:w-[316px] xl:w-[332px] 2xl:w-[467px]" id="footer-form-container">
           <form
             class="rounded-card flex items-center justify-between border border-white/20 py-[10px] pr-[10px] pl-[21px] 2xl:py-[14px] 2xl:pr-[14px] 2xl:pl-[26px]"
             role="search"
+            id="newsletter-form"
           >
-            <label class="sr-only" for="newsletter-email"> e-mail για το newsletter </label>
+            <label class="sr-only" for="newsletter-email"> Εγγραφείτε στο newsletter </label>
             <input
-              class="paragraph-sm-default w-full bg-transparent text-white placeholder-white/60 outline-none xl:text-base 2xl:text-lg"
+              class="paragraph-sm-default w-full bg-transparent text-white outline-none placeholder:text-white/50 xl:text-base 2xl:text-lg"
               id="newsletter-email"
-              placeholder="e-mail για το newsletter"
+              placeholder="Εγγραφείτε στο newsletter"
               type="email"
             />
             <button
-              class="flex-center rounded-badge focus-brand flex size-[34px] shrink-0 items-center justify-center bg-white 2xl:size-12"
+              class="flex-center rounded-badge focus-brand size-[34px] shrink-0 cursor-pointer bg-white transition-transform hover:scale-105 2xl:size-12"
               type="submit"
             >
-              <svg class="text-brand size-[7px]" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg aria-hidden="true" class="text-brand size-[7px]" viewBox="0 0 9 9" fill="none">
                 <path
                   d="M0.5 3.98242L7.56066 4.02154M7.56066 4.02154L4.25395 0.5M7.56066 4.02154L4.25395 7.54308"
                   fill-rule="evenodd" stroke="currentColor" style="stroke: currentColor !important"
@@ -540,8 +425,7 @@
                 />
               </svg>
             </button>
-          </form>
-        </div>
+                    </form>
           <!-- Consent Checkbox -->
           <div class="mt-4">
             <label class="flex cursor-pointer items-start gap-[9px]" for="footer-consent">
@@ -552,18 +436,27 @@
               </div>
               <div class="text-white/40 max-w-[260px] text-xs leading-[132%] font-normal tracking-[-0.01em] 2xl:max-w-[400px] 2xl:text-sm">
                 Συμφωνώ με την
-                <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer" class="text-white/60 underline hover:text-white transition-colors">Πολιτική Αпоρρήτου</a>
+                <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer" class="text-white/60 underline hover:text-white transition-colors">Πολιτική Απορρήτου</a>
               </div>
             </label>
           </div>
+        </div>
 
-        <span aria-hidden="true" class="footer-circle-1"></span>
-        <span aria-hidden="true" class="footer-circle-2"></span>
+        <span aria-hidden class="footer-circle-1"></span>
+        <span aria-hidden class="footer-circle-2"></span>
       </div>
 
+      <!-- Copyright Bar -->
       <div
         class="mx-container-mobile xl:px-container-tablet origin-top rounded-b-[16px] bg-[#b0d4eb] px-4 pt-6 pb-5 xl:pt-[60px] xl:pb-5 2xl:mx-10"
+        id="footer-bottom-bar"
       >
+        <a
+          class="mb-5 inline-block text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/60 hover:text-white md:hidden"
+          href="privacy-policy.html"
+        >
+          Πολιτική Απορρήτου
+        </a>
         <div class="flex items-center justify-between">
           <p
             class="max-w-[120px] text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/60 md:max-w-full 2xl:text-lg"
@@ -582,30 +475,14 @@
             Website by <span class="font-medium text-white">AVA Digital</span>
           </p>
         </div>
-        <a
-          class="mt-4 mb-5 inline-block text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/60 hover:text-white md:hidden"
-          href="privacy-policy.html"
-        >
-          Πολιτική Απορρήτου
-        </a>
       </div>
     </footer>
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.js"></script>
     <script src="../assets/js/api.js"></script>
-    <script src="../assets/js/utils/spring.js"></script>
-    <script src="../assets/js/utils/scroll-utils.js"></script>
-    <script src="../assets/js/config/spring-configs.js"></script>
-    <script src="../assets/js/config/tips-data.js"></script>
     <script src="../assets/js/header.js"></script>
     <script src="../assets/js/lang-switcher.js"></script>
     <script src="../assets/js/mobile-menu.js"></script>
-    <script src="../assets/js/footer-data.js"></script>
-    <script src="../assets/js/footer.js"></script>
-    <script src="../assets/js/footer-animations.js"></script>
-    <script src="../assets/js/tips-page.js"></script>
-    <!-- Utility Injection to force generation of classes used in JS -->
-    <div class="z-[100] hidden border-neutral-200 shadow-md"></div>
+    <script src="../assets/js/personal-data.js"></script>
   </body>
 </html>

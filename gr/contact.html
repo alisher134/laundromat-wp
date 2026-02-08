@@ -1,26 +1,22 @@
 <!doctype html>
-<html lang="el">
+<html lang="gr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Laundromat - Οδηγίες</title>
+    <title>Laundromat - Επικοινωνία</title>
 
-    <link rel="icon" href="favicon.ico" type="image/x-icon" sizes="any" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css" rel="stylesheet" />
 
     <link href="../assets/css/output.css" rel="stylesheet" />
     <link href="../assets/css/animations.css" rel="stylesheet" />
   </head>
-  <body
-    class="bg-surface selection:bg-brand flex min-h-screen w-full flex-col justify-between overflow-x-hidden font-sans selection:text-white"
-  >
+  <body class="overflow-x-hidden">
+    <!-- HEADER CONTENT ... -->
     <header
       id="header"
-      data-theme="light"
-      data-header-style="dark"
+      data-theme="dark"
       class="px-container-mobile min-[1120px]:px-container-tablet 2xl:px-container-desktop fixed top-0 right-0 left-0 z-50 pt-4 pb-4 transition-all duration-500 md:pt-[18px] md:pb-[18px] lg:pt-[11px] lg:pb-[11px] 2xl:pt-[22px] 2xl:pb-[22px]"
     >
       <div class="flex items-center justify-between">
@@ -31,7 +27,7 @@
             viewBox="0 0 191 36"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            class="text-brand h-[30px] w-auto fill-current md:h-[32px] lg:h-[31px] 2xl:h-[39px]"
+            class="h-[30px] w-auto fill-current text-white md:h-[32px] lg:h-[31px] 2xl:h-[39px]"
           >
             <path
               fill-rule="evenodd"
@@ -77,7 +73,7 @@
         </a>
         <nav class="hidden items-center gap-[40px] lg:flex xl:gap-[123px]">
           <ul>
-            <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs hover:text-brand text-white transition-colors 2xl:text-lg">
               <a class="group hover:text-brand flex items-center gap-[6px] transition-colors" href="location.html">
                 Η τοποθεσία μας
                 <svg
@@ -101,31 +97,31 @@
           </ul>
 
           <ul class="flex items-center gap-[16px] xl:gap-[28px]">
-            <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs hover:text-brand text-white transition-colors 2xl:text-lg">
               <a class="hover:text-brand transition-colors" href="services.html">Υπηρεσίες</a>
             </li>
-            <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs hover:text-brand text-white transition-colors 2xl:text-lg">
               <a class="hover:text-brand transition-colors" href="instructions.html">Οδηγίες</a>
             </li>
-            <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs hover:text-brand text-white transition-colors 2xl:text-lg">
               <a class="hover:text-brand transition-colors" href="tips.html">Συμβουλές πλυντηρίου</a>
             </li>
-            <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
+            <li class="paragraph-body-xs hover:text-brand text-white transition-colors 2xl:text-lg">
               <a class="hover:text-brand transition-colors" href="contact.html">Επικοινωνήστε μαζί μας</a>
             </li>
           </ul>
         </nav>
 
         <div class="flex items-center gap-5 md:gap-[46px] lg:gap-[24px] xl:gap-[59px] 2xl:gap-[105px]">
-          <!-- Lang Switcher and Mobile Menu Button -->
           <div class="relative" id="lang-switcher">
             <button
               id="lang-button"
-              class="text-text flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
+              class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-lg"
+              type="button"
             >
               <span class="leading-[132%] tracking-[-0.01em]">Gr</span>
               <span class="bg-brand/8 rounded-[6px] px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-                <svg class="text-brand h-[3px] w-[5px]" viewBox="0 0 6 4" fill="none">
+                <svg class="h-[3px] w-[5px] text-white" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M0.5 0.5L2.9901 2.63438L5.48021 0.5"
                     fill-rule="evenodd"
@@ -136,11 +132,11 @@
                 </svg>
               </span>
             </button>
+
             <ul
               id="lang-dropdown"
-              class="absolute left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-black/10 bg-white shadow-xl"
+              class="absolute left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white/90 text-center shadow-xl backdrop-blur"
             >
-              <!-- Filled by JS or matches structure -->
               <li>
                 <button
                   class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
@@ -161,12 +157,13 @@
           </div>
 
           <a
-            class="text-text hidden text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors md:block 2xl:text-lg 2xl:font-medium"
+            class="hidden text-sm leading-[132%] font-normal tracking-[-0.01em] text-white md:block 2xl:text-lg 2xl:font-medium"
             href="tel:+88006001441"
-            >8 800 600 14 41</a
           >
+            8 800 600 14 41
+          </a>
 
-          <button id="mobile-menu-btn" class="text-text block lg:hidden" aria-label="Menu">
+          <button id="mobile-menu-btn" class="block text-white lg:hidden" aria-label="Menu">
             <svg class="h-9 w-[38px]" viewBox="0 0 38 36" fill="none">
               <rect
                 width="38"
@@ -214,7 +211,6 @@
       </div>
     </header>
 
-    <!-- Mobile Menu Overlay (Same as other pages) -->
     <div id="mobile-menu" class="invisible fixed inset-0 z-50" style="pointer-events: none">
       <div id="mobile-menu-overlay" class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300"></div>
 
@@ -366,88 +362,245 @@
       </div>
     </div>
 
-    <!-- Main Content -->
-    <main class="flex-grow">
-      <div class="mx-4 pt-[124px] md:mx-4 md:pt-[136px] xl:pt-[147px] 2xl:pt-[208px]">
-        <!-- Title -->
-        <h1
-          id="tips-title"
-          class="animate-fade-up-large heading-section mb-[32px] text-left md:mb-9 lg:mb-[45px] 2xl:mb-[56px]"
-        >
-          Οδηγίες
-        </h1>
+    <main>
+      <section class="relative min-h-screen w-full">
+        <div class="relative">
+          <div
+            class="fixed inset-0 -z-10 h-screen w-full bg-cover bg-left md:bg-center"
+            style="background-image: url('../assets/images/contact-background.png'); transform: translateY(-125px); height: calc(100vh + 125px);"
+          ></div>
 
-        <!-- Filters Section -->
-        <div
-          id="tips-filters"
-          class="animate-fade-up-small relative z-20 mb-[32px] flex flex-col gap-3 md:mb-9 lg:flex-row lg:items-center lg:justify-between lg:mb-[45px] 2xl:mb-[56px]"
-        >
-          <!-- Injected by JS, will contain #filter-slider-mobile -->
-        </div>
+          <div class="relative z-10 flex h-screen flex-col">
+            <h1
+              class="animate-on-scroll hidden translate-y-[100px] leading-[110%] font-normal tracking-[-0.04em] text-white opacity-0 transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:ml-4 md:block md:pt-[100px] md:text-[45px] xl:ml-6 xl:pt-[110px] 2xl:ml-9 2xl:pt-[140px] 2xl:text-[64px]"
+              data-delay="200"
+            >
+              Contact
+            </h1>
 
-        <!-- Desktop Grid -->
-        <div
-          id="tips-grid-desktop"
-          class="animate-fade-up-medium hidden gap-4 lg:mb-[86px] lg:grid lg:grid-cols-2 lg:gap-4 lg:gap-[14px] 2xl:mb-[116px] 2lg:gap-4"
-        >
-          <!-- Injected by JS -->
-        </div>
+            <div
+              class="container-responsive mt-auto pt-[60px] pb-4 md:pt-[80px] md:pb-[20px] xl:flex xl:items-start xl:gap-[100px] xl:pt-[40px] xl:pb-6 2xl:gap-[150px] 2xl:pt-[50px] 2xl:pb-[40px]"
+            >
+              <div
+                class="paragraph-sm-default mb-8 flex items-center gap-[11px] text-white md:max-w-[175px] md:text-base 2xl:max-w-[195px] 2xl:text-lg"
+              >
+                Contact information <span class="size-1 rounded-full bg-white"></span>
+              </div>
 
-        <!-- Mobile Grid (not slider!) -->
-        <div
-          id="tips-slider-mobile"
-          class="animate-fade-up-medium mb-[46px] grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-4 lg:hidden 2xl:mb-[116px]"
-        >
-          <!-- Injected by JS -->
-        </div>
+              <ul
+                class="ml-auto flex flex-1 flex-col gap-1 md:grid md:max-w-[736px] md:grid-cols-2 md:gap-2 xl:max-w-[872px] 2xl:max-w-[1066px]"
+              >
+                <!-- Address -->
+                <li
+                  class="animate-on-scroll order-2 flex h-[71px] w-full translate-y-[100px] flex-col justify-between rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-1 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
+                  data-delay="100"
+                >
+                  <p class="paragraph-xs-default text-left text-white/70 md:text-base">Διεύθυνση</p>
+                  <p class="paragraph-sm-default ml-auto max-w-[159px] text-right text-white md:max-w-[233px] md:text-lg">
+                    Ethniki Palaiokastritsas, Kerkira 491 00, Greece
+                  </p>
+                </li>
 
-        <!-- Pagination -->
-        <!-- Pagination -->
-        <div id="tips-pagination" class="animate-fade-up-large flex flex-col items-center gap-6">
-          <!-- Desktop Pagination Component -->
-          <div class="hidden items-center gap-1 md:flex">
-            <!-- Active Item -->
-            <button
-              class="flex cursor-pointer items-center justify-center border border-[#414242]/25 leading-[132%] font-normal tracking-[-0.01em] text-[#414242] transition-colors md:size-[52px] md:rounded-[8px] md:text-sm 2xl:h-[54px] 2xl:w-[56px] 2xl:rounded-[6px]"
-            >
-              1
-            </button>
-            <!-- Inactive Item -->
-            <button
-              class="flex cursor-pointer items-center justify-center border border-transparent leading-[132%] font-normal tracking-[-0.01em] text-[#414242]/40 transition-colors hover:text-[#414242]/60 md:h-[42px] md:w-[35px] md:rounded-[8px] md:text-sm 2xl:h-[56px] 2xl:w-[47px] 2xl:rounded-[6px]"
-            >
-              2
-            </button>
-            <button
-              class="flex cursor-pointer items-center justify-center border border-transparent leading-[132%] font-normal tracking-[-0.01em] text-[#414242]/40 transition-colors hover:text-[#414242]/60 md:h-[42px] md:w-[35px] md:rounded-[8px] md:text-sm 2xl:h-[56px] 2xl:w-[47px] 2xl:rounded-[6px]"
-            >
-              3
-            </button>
-            <!-- Ellipsis -->
-            <span
-              class="flex items-center justify-center border border-transparent leading-[132%] font-normal tracking-[-0.01em] text-[#414242]/40 md:h-[42px] md:w-[35px] md:rounded-[8px] md:text-sm 2xl:h-[56px] 2xl:w-[47px] 2xl:rounded-[6px]"
-            >
-              …
-            </span>
-            <button
-              class="flex cursor-pointer items-center justify-center border border-transparent leading-[132%] font-normal tracking-[-0.01em] text-[#414242]/40 transition-colors hover:text-[#414242]/60 md:h-[42px] md:w-[35px] md:rounded-[8px] md:text-sm 2xl:h-[56px] 2xl:w-[47px] 2xl:rounded-[6px]"
-            >
-              10
-            </button>
+                <!-- Phone -->
+                <li
+                  class="animate-on-scroll order-4 flex h-[71px] w-full translate-y-[100px] flex-col justify-between rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-2 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
+                  data-delay="250"
+                >
+                  <p class="paragraph-xs-default text-left text-white/70 md:text-base">Τηλέφωνο</p>
+                  <div
+                    class="text-right text-[21px] leading-[136%] font-normal tracking-[-0.02em] text-white md:text-[31px]"
+                  >
+                    <a class="block" href="tel:+88006001441"> 8 800 600 14 41 </a>
+                  </div>
+                </li>
+
+                <!-- Social -->
+                <li
+                  class="animate-on-scroll order-1 flex h-[71px] w-full translate-y-[100px] flex-col justify-between rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-3 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
+                  data-delay="400"
+                >
+                  <p class="paragraph-xs-default text-left text-white/70 md:text-base">Social</p>
+                  <div class="paragraph-sm-default ml-auto max-w-[92px] text-right text-white md:text-lg">
+                    <a class="block" href="https://www.facebook.com/laundromatgr"> Facebook </a>
+                    <a class="block" href="https://www.instagram.com/laundromatgr"> Instagram </a>
+                  </div>
+                </li>
+
+                <!-- Email -->
+                <li
+                  class="animate-on-scroll order-3 flex h-[71px] w-full translate-y-[100px] flex-col justify-between rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-4 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
+                  data-delay="550"
+                >
+                  <p class="paragraph-xs-default text-left text-white/70 md:text-base">Ηλεκτρονικό ταχυδρομείο</p>
+                  <div
+                    class="text-right text-[21px] leading-[136%] font-normal tracking-[-0.02em] text-white md:text-[24px] 2xl:text-[31px]"
+                  >
+                    <a class="block" href="mailto:info@laundromat.gr"> info@laundromat.gr </a>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
-
-          <button
-            id="load-more-btn"
-            class="action-tile border-text/20 text-text hover:bg-brand/5 flex h-[70px] w-[220px] cursor-pointer items-center justify-center rounded-[8px] border text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors 2xl:h-[83px] 2xl:w-[278px]"
-          >
-            Φόρτωση περισσότερων
-          </button>
         </div>
-      </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="relative w-full bg-[#f4f7fa]">
+        <div
+          class="container-responsive pt-[48px] md:pt-[60px] xl:flex xl:items-start xl:justify-between xl:gap-[86px] xl:pt-[60px] 2xl:gap-[200px] 2xl:pt-[60px]"
+        >
+          <h2
+            class="paragraph-heading-md animate-on-scroll text-text mb-9 max-w-[262px] translate-y-[100px] opacity-0 transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:mb-[46px] md:max-w-[360px] md:text-[45px] md:leading-[110%] xl:max-w-[360px] xl:text-[45px] 2xl:mb-[56px] 2xl:max-w-[546px] 2xl:text-[64px]"
+            data-delay="200"
+          >
+            Have a question? <span class="text-brand">Επικοινωνήστε μαζί μας!</span>
+          </h2>
+
+          <div
+            class="animate-on-scroll translate-y-[150px] opacity-0 transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
+            data-delay="300"
+          >
+            <form class="flex flex-1 flex-col gap-6 md:grid md:grid-cols-2 md:gap-6 2xl:gap-6">
+              <div>
+                <label
+                  class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]"
+                  for="first-name"
+                >
+                  Όνομα <span class="text-brand">*</span>
+                </label>
+                <input
+                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none xl:w-[428px] 2xl:w-[523px]"
+                  id="first-name"
+                  name="firstName"
+                  required
+                  type="text"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]"
+                  for="last-name"
+                >
+                  Επώνυμο
+                </label>
+                <input
+                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none xl:w-[428px] 2xl:w-[523px]"
+                  id="last-name"
+                  name="lastName"
+                  type="text"
+                />
+              </div>
+
+              <div>
+                <label class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]" for="phone">
+                  Τηλέφωνο <span class="text-brand">*</span>
+                </label>
+                <input
+                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none xl:w-[428px] 2xl:w-[523px]"
+                  id="phone"
+                  name="phone"
+                  required
+                  type="tel"
+                />
+              </div>
+
+              <div>
+                <label class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]" for="email">
+                  Ηλεκτρονικό ταχυδρομείο
+                </label>
+                <input
+                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none xl:w-[428px] 2xl:w-[523px]"
+                  id="email"
+                  name="email"
+                  type="email"
+                />
+              </div>
+
+              <div class="md:col-span-2">
+                <label
+                  class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]"
+                  for="message"
+                >
+                  Μήνυμα
+                </label>
+                <textarea
+                  class="text-text rounded-card h-[214px] w-full resize-none bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none xl:w-[872px] 2xl:w-[1071px]"
+                  id="message"
+                  name="message"
+                ></textarea>
+              </div>
+
+              <div class="mt-2 flex items-start gap-3 md:col-span-2">
+                <input class="peer sr-only" id="consent" name="consent" type="checkbox" />
+                <label class="flex cursor-pointer items-start gap-[9px]" for="consent">
+                  <div
+                    class="border-brand flex size-[21px] shrink-0 items-center justify-center rounded-[6px] border bg-white transition-colors"
+                    id="consent-visual"
+                  >
+                    <!-- JS to toggle inner Div -->
+                  </div>
+
+                  <div
+                    class="text-text/40 max-w-[268px] text-base leading-[132%] font-normal tracking-[-0.01em] md:max-w-[622px]"
+                  >
+                    Συμφωνώ με την επεξεργασία
+                    <span class="text-brand/60 underline"
+                      ><a href="personal-data.html" target="_blank" rel="noopener noreferrer">Προσωπικών δεδομένων</a></span
+                    >
+                    και με τους όρους της
+                    <span class="text-brand/60 underline"
+                      ><a href="privacy-policy.html" target="_blank" rel="noopener noreferrer">Πολιτική Απορρήτου</a></span
+                    >
+                  </div>
+                </label>
+              </div>
+
+              <div class="mt-2 md:col-span-2">
+                <button
+                  type="submit"
+                  id="submit-btn"
+                  class="group action-tile border-text/20 focus-visible:ring-brand appearance-none flex w-[196px] flex-1 cursor-pointer flex-col rounded-[7px] border bg-white pt-[14px] pr-3 pb-3 pl-4 text-left transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed md:h-[106px] md:w-[328px] xl:h-[75px] xl:w-[233px] 2xl:h-[106px] 2xl:w-[328px] 2xl:rounded-[10px] 2xl:pt-[18px] 2xl:pr-[14px] 2xl:pb-[14px] 2xl:pl-5"
+                  disabled
+                >
+                  <p
+                    class="text-text group-disabled:text-text/40 text-sm leading-[132%] font-medium tracking-[-0.01em] transition-colors 2xl:text-lg"
+                  >
+                    Αποστολή
+                  </p>
+
+                  <div class="mt-auto flex justify-end">
+                    <span
+                      class="bg-brand flex size-[17px] items-center justify-center rounded-full transition-opacity group-disabled:opacity-50 2xl:size-[22px]"
+                    >
+                      <svg
+                        aria-hidden="true"
+                        class="size-[6px] text-white 2xl:size-[8px]"
+                        viewBox="0 0 7 8"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M0.401367 5.81156C0.944808 6.43139 1.70294 6.82143 2.5225 6.90285C3.34207 6.98426 4.16193 6.75098 4.81634 6.25014C5.47075 5.74931 5.9109 5.01829 6.04781 4.20487C6.18471 3.39146 6.00817 2.55631 5.55385 1.86828M5.21495 1.43853C4.7966 0.99123 4.26066 0.671323 3.6688 0.515625"
+                          fill-rule="evenodd"
+                          stroke="currentColor"
+                          style="stroke: currentColor !important"
+                          stroke-width="1.06719"
+                        />
+                      </svg>
+                    </span>
+                  </div>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
     </main>
 
-    <!-- Footer injected by footer.js (reusing structure) -->
-    <!-- Ideally just copy footer HTML here too -->
     <footer
       class="xl:px-container-tablet xl:pb-container-tablet 2xl:px-container-desktop 2xl:pb-container-desktop relative bg-white px-[6px] pt-[120px] pb-[6px] md:pt-[164px] xl:pt-[200px] 2xl:pt-[256px]"
     >
@@ -457,6 +610,7 @@
         class="bg-brand px-container-mobile pb-container-mobile xl:px-container-tablet relative overflow-hidden rounded-[20px] pt-9 xl:py-[34px]"
       >
         <div class="mb-8 flex items-start justify-between xl:mb-[83px] 2xl:mb-[180px]">
+          <!-- Contacts -->
           <address class="flex flex-col items-start gap-[6px] not-italic xl:gap-2 2xl:gap-[10px]">
             <a
               class="text-4xl leading-[136%] font-normal tracking-[-0.04em] text-white md:text-[45px] xl:text-[64px] xl:leading-[110%] 2xl:text-[64px]"
@@ -472,11 +626,12 @@
             </a>
           </address>
 
+          <!-- Desktop Nav -->
           <nav class="hidden xl:block">
             <h3 class="paragraph-sm-default mb-3 text-white/50 xl:mb-5 2xl:mb-6 2xl:text-lg">Εταιρεία</h3>
             <ul class="flex flex-col gap-[6px] 2xl:gap-[8px]">
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
-                <a href="location.html">Τοποθεσία</a>
+                <a href="location.html">Η τοποθεσία μας</a>
               </li>
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
                 <a href="instructions.html">Οδηγίες</a>
@@ -485,7 +640,7 @@
                 <a href="tips.html">Συμβουλές πλυντηρίου</a>
               </li>
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
-                <a href="contact.html">Επικοινωνία</a>
+                <a href="contact.html">Επικοινωνήστε μαζί μας</a>
               </li>
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
                 <a href="faq.html">FAQ</a>
@@ -555,12 +710,13 @@
           </div>
         </div>
 
+        <!-- Mobile Nav -->
         <div class="mb-[70px] md:flex md:items-start md:gap-[198px] xl:hidden">
           <nav class="mb-[32px] not-last:mb-[32px]">
             <h3 class="paragraph-sm-default mb-3 text-white/50 md:text-base xl:text-lg">Εταιρεία</h3>
             <ul class="flex flex-col gap-[6px]">
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
-                <a href="location.html">Τοποθεσία</a>
+                <a href="location.html">Η τοποθεσία μας</a>
               </li>
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
                 <a href="instructions.html">Οδηγίες</a>
@@ -569,7 +725,7 @@
                 <a href="tips.html">Συμβουλές πλυντηρίου</a>
               </li>
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
-                <a href="contact.html">Επικοινωνία</a>
+                <a href="contact.html">Επικοινωνήστε μαζί μας</a>
               </li>
               <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
                 <a href="faq.html">FAQ</a>
@@ -638,23 +794,25 @@
           </div>
         </div>
 
-        <div class="md:w-[316px] xl:w-[332px] 2xl:w-[467px]">
+        <!-- Newsletter Form -->
+        <div class="md:w-[316px] xl:w-[332px] 2xl:w-[467px]" id="footer-form-container">
           <form
             class="rounded-card flex items-center justify-between border border-white/20 py-[10px] pr-[10px] pl-[21px] 2xl:py-[14px] 2xl:pr-[14px] 2xl:pl-[26px]"
             role="search"
+            id="newsletter-form"
           >
-            <label class="sr-only" for="newsletter-email"> e-mail για το newsletter </label>
+            <label class="sr-only" for="newsletter-email"> Εγγραφείτε στο newsletter </label>
             <input
-              class="paragraph-sm-default w-full bg-transparent text-white placeholder-white/60 outline-none xl:text-base 2xl:text-lg"
+              class="paragraph-sm-default w-full bg-transparent text-white outline-none placeholder:text-white/50 xl:text-base 2xl:text-lg"
               id="newsletter-email"
-              placeholder="e-mail για το newsletter"
+              placeholder="Εγγραφείτε στο newsletter"
               type="email"
             />
             <button
-              class="flex-center rounded-badge focus-brand flex size-[34px] shrink-0 items-center justify-center bg-white 2xl:size-12"
+              class="flex-center rounded-badge focus-brand size-[34px] shrink-0 cursor-pointer bg-white transition-transform hover:scale-105 2xl:size-12"
               type="submit"
             >
-              <svg class="text-brand size-[7px]" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg aria-hidden="true" class="text-brand size-[7px]" viewBox="0 0 9 9" fill="none">
                 <path
                   d="M0.5 3.98242L7.56066 4.02154M7.56066 4.02154L4.25395 0.5M7.56066 4.02154L4.25395 7.54308"
                   fill-rule="evenodd"
@@ -665,39 +823,47 @@
               </svg>
             </button>
           </form>
-        </div>
-        <!-- Consent Checkbox -->
-        <div class="mt-4">
-          <label class="flex cursor-pointer items-start gap-[9px]" for="footer-consent">
-            <div class="relative flex size-[18px] shrink-0 items-center justify-center">
-              <input class="peer sr-only" id="footer-consent" name="consent" type="checkbox" required />
-              <div class="absolute inset-0 rounded-[4px] border border-white/20 bg-white/5 transition-colors"></div>
+          <!-- Consent Checkbox -->
+          <div class="mt-4">
+            <label class="flex cursor-pointer items-start gap-[9px]" for="footer-consent">
+              <div class="relative flex size-[18px] shrink-0 items-center justify-center">
+                <input class="peer sr-only" id="footer-consent" name="consent" type="checkbox" required />
+                <div class="absolute inset-0 rounded-[4px] border border-white/20 bg-white/5 transition-colors"></div>
+                <div
+                  class="relative size-[10px] scale-0 rounded-[2px] bg-white transition-transform peer-checked:scale-100"
+                ></div>
+              </div>
               <div
-                class="relative size-[10px] scale-0 rounded-[2px] bg-white transition-transform peer-checked:scale-100"
-              ></div>
-            </div>
-            <div
-              class="max-w-[260px] text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/40 2xl:max-w-[400px] 2xl:text-sm"
-            >
-              Συμφωνώ με την
-              <a
-                href="privacy-policy.html"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-white/60 underline transition-colors hover:text-white"
-                >Πολιτική Αпоρρήτου</a
+                class="max-w-[260px] text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/40 2xl:max-w-[400px] 2xl:text-sm"
               >
-            </div>
-          </label>
+                Συμφωνώ με την
+                <a
+                  href="privacy-policy.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-white/60 underline transition-colors hover:text-white"
+                  >Πολιτική Απορρήτου</a
+                >
+              </div>
+            </label>
+          </div>
         </div>
 
-        <span aria-hidden="true" class="footer-circle-1"></span>
-        <span aria-hidden="true" class="footer-circle-2"></span>
+        <span aria-hidden class="footer-circle-1"></span>
+        <span aria-hidden class="footer-circle-2"></span>
       </div>
 
+      <!-- Copyright Bar -->
       <div
         class="mx-container-mobile xl:px-container-tablet origin-top rounded-b-[16px] bg-[#b0d4eb] px-4 pt-6 pb-5 xl:pt-[60px] xl:pb-5 2xl:mx-10"
+        id="footer-bottom-bar"
       >
+        <a
+          class="mb-5 inline-block text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/60 hover:text-white md:hidden"
+          href="privacy-policy.html"
+        >
+          Πολιτική Απορρήτου
+        </a>
         <div class="flex items-center justify-between">
           <p
             class="max-w-[120px] text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/60 md:max-w-full 2xl:text-lg"
@@ -716,30 +882,15 @@
             Website by <span class="font-medium text-white">AVA Digital</span>
           </p>
         </div>
-        <a
-          class="mt-4 mb-5 inline-block text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/60 hover:text-white md:hidden"
-          href="privacy-policy.html"
-        >
-          Πολιτική Απορρήτου
-        </a>
       </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.js"></script>
     <script src="../assets/js/api.js"></script>
-    <script src="../assets/js/utils/spring.js"></script>
-    <script src="../assets/js/utils/scroll-utils.js"></script>
-    <script src="../assets/js/config/spring-configs.js"></script>
-    <script src="../assets/js/config/tips-data.js"></script>
     <script src="../assets/js/header.js"></script>
     <script src="../assets/js/lang-switcher.js"></script>
     <script src="../assets/js/mobile-menu.js"></script>
+    <script src="../assets/js/contact.js"></script>
     <script src="../assets/js/footer-data.js"></script>
     <script src="../assets/js/footer.js"></script>
-    <script src="../assets/js/footer-animations.js"></script>
-    <script src="../assets/js/tips-page.js"></script>
-    <!-- Utility Injection to force generation of classes used in JS -->
-    <div class="z-[100] hidden border-neutral-200 shadow-md"></div>
   </body>
 </html>
