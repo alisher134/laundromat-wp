@@ -67,16 +67,31 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevBtn = document.getElementById('tips-prev-btn-mobile');
     const nextBtn = document.getElementById('tips-next-btn-mobile');
 
+    // Remove old listeners by cloning (simple and effective for this case)
+    // or by using named functions. Cloning is safer to wipe all previous listeners
+    // if we are unsure about their references.
     if (prevBtn) {
-      prevBtn.addEventListener('click', () => mobileTipsSlider.prev());
+      const newPrev = prevBtn.cloneNode(true);
+      prevBtn.parentNode.replaceChild(newPrev, prevBtn);
+      newPrev.addEventListener('click', () => {
+        if (mobileTipsSlider) mobileTipsSlider.prev();
+      });
     }
     if (nextBtn) {
-      nextBtn.addEventListener('click', () => mobileTipsSlider.next());
+      const newNext = nextBtn.cloneNode(true);
+      nextBtn.parentNode.replaceChild(newNext, nextBtn);
+      newNext.addEventListener('click', () => {
+        if (mobileTipsSlider) mobileTipsSlider.next();
+      });
     }
+
+    // Initial button state update
+    updateTipsButtons(mobileTipsSlider);
   }
 
   function updateTipsButtons(slider) {
     if (!slider) return;
+    // Re-select buttons because we replaced them with clones!
     const prevBtn = document.getElementById('tips-prev-btn-mobile');
     const nextBtn = document.getElementById('tips-next-btn-mobile');
     if (!prevBtn || !nextBtn) return;
@@ -84,17 +99,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const track = slider.track.details;
     if (!track) return;
 
-    prevBtn.disabled = track.rel === 0;
-    prevBtn.setAttribute('aria-disabled', track.rel === 0);
-    if (track.rel === 0) {
+    const currentSlide = track.rel;
+    const slidesCount = track.slides.length;
+
+    prevBtn.disabled = currentSlide === 0;
+    prevBtn.setAttribute('aria-disabled', currentSlide === 0);
+    if (currentSlide === 0) {
       prevBtn.classList.add('opacity-40');
+      // Ensure specific style if needed, but classList is usually enough
     } else {
       prevBtn.classList.remove('opacity-40');
     }
 
-    nextBtn.disabled = track.rel === track.slides.length - 1;
-    nextBtn.setAttribute('aria-disabled', track.rel === track.slides.length - 1);
-    if (track.rel === track.slides.length - 1) {
+    nextBtn.disabled = currentSlide === slidesCount - 1;
+    nextBtn.setAttribute('aria-disabled', currentSlide === slidesCount - 1);
+    if (currentSlide === slidesCount - 1) {
       nextBtn.classList.add('opacity-40');
     } else {
       nextBtn.classList.remove('opacity-40');
@@ -362,8 +381,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const link = 'tips-details.html';
 
     return `
-        <article class="tips-card w-full min-h-[418px] shrink-0 md:min-h-[386px] transition-all duration-300">
-          <div class="flex h-full w-full flex-1 flex-col rounded-card bg-white p-[20px] transition-all duration-300">
+        <article class="tips-card keen-slider__slide min-w-[300px] max-w-[300px] md:min-w-[379px] md:max-w-[379px] shrink-0 md:min-h-[386px]">
+          <div class="flex h-full w-full flex-1 flex-col rounded-card bg-white p-[20px]">
             <div class="flex justify-end">
               <div class="relative mb-[47px] h-[87px] w-[127px] md:mb-[35px] md:h-[99px] md:w-[149px]">
                  <img

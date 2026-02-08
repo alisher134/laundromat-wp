@@ -85,8 +85,8 @@
     const link = 'tips-details.html?id=' + item.id;
 
     return `
-      <article class="tips-card keen-slider__slide min-w-[300px] max-w-[300px] md:min-w-[379px] md:max-w-[379px] transition-all duration-300">
-        <div class="flex h-full w-full flex-1 flex-col rounded-card bg-white p-[20px] min-h-[418px] md:min-h-[386px] transition-all duration-300">
+      <article class="tips-card keen-slider__slide min-w-[300px] max-w-[300px] md:min-w-[379px] md:max-w-[379px] shrink-0">
+        <div class="flex h-full w-full flex-1 flex-col rounded-card bg-white p-[20px] min-h-[418px] md:min-h-[386px]">
           <div class="flex justify-end">
             <div class="relative mb-[47px] h-[87px] w-[127px] md:mb-[35px] md:h-[99px] md:w-[149px]">
               <img
