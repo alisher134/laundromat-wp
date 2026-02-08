@@ -189,9 +189,9 @@ function showEmptyState() {
   /**
    * Fetch data from server with pagination
    * @param {number} page - Page number to fetch
-   * @param {boolean} resetAccumulated - If true, reset mobile accumulated data
+   * @param {boolean} showFullLoader - If true, show the full content loading spinner
    */
-  async function loadPageData(page, resetAccumulated = false) {
+  async function loadPageData(page, resetAccumulated = false, showFullLoader = true) {
     if (isLoading || typeof LaundroAPI === 'undefined') return;
 
     isLoading = true;
@@ -203,8 +203,8 @@ function showEmptyState() {
       loadMoreBtn.textContent = 'Loading...';
     }
 
-    // Show loading only on initial load or desktop page switch
-    if (resetAccumulated || !isMobile()) {
+    // Show loading only on initial load or desktop page switch, and if explicit loader is requested
+    if (showFullLoader && (resetAccumulated || !isMobile())) {
       showContentLoading();
     }
 
@@ -330,8 +330,8 @@ function showEmptyState() {
     const sortLabelClass = currentSort ? 'text-text' : 'text-text/50';
 
     const sortHtml = `
-            <div class="relative w-full md:w-auto" id="sort-dropdown">
-                <button id="sort-trigger" class="cursor-pointer action-tile border-text/20 text-text flex min-h-[45px] w-full items-center justify-center gap-[23px] rounded-card border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] shadow-none md:min-w-[120px] md:justify-between md:gap-2">
+            <div class="relative w-full lg:w-auto" id="sort-dropdown">
+                <button id="sort-trigger" class="cursor-pointer action-tile border-text/20 text-text flex min-h-[45px] w-full items-center justify-center gap-[23px] rounded-card border px-[18px] py-[14px] text-sm leading-[132%] font-normal tracking-[-0.01em] shadow-none lg:min-w-[120px] lg:justify-between lg:gap-2">
                     <span id="sort-current-label" class="${sortLabelClass} whitespace-nowrap">${sortLabel}</span>
                     <svg class="text-text h-[15px] w-[15px] shrink-0" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M5.63346 1.77859V12.4505M2.07617 5.30624L5.63346 1.74895M8.59787 1.80824V12.4801L12.1552 8.92282" stroke="currentColor" stroke-width="1.06719" stroke-linecap="round" stroke-linejoin="round"/>
@@ -363,10 +363,10 @@ function showEmptyState() {
                     ${categoriesHtml}
                 </div>
             </div>
-            <div class="hidden gap-2 md:flex">
+            <div class="hidden gap-2 md:flex md:flex-wrap">
                 ${categoriesHtml}
             </div>
-            <div class="flex justify-start">
+            <div class="flex justify-start w-full lg:w-auto">
                 ${sortHtml}
             </div>
         `;
@@ -566,8 +566,8 @@ function showEmptyState() {
             // Increase perPage and reload all data
             currentPerPage += DEFAULT_ITEMS_PER_PAGE;
 
-            // Load from page 1 with increased perPage
-            await loadPageData(1, true);
+            // Load from page 1 with increased perPage, suppressing the full loader to prevent jump
+            await loadPageData(1, true, false);
           }
         });
       }
