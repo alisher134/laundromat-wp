@@ -247,7 +247,7 @@
                 8 800 600 14 41
               </a>
               <a
-                class="text-brand underline block w-fit touch-manipulation py-1 text-[18px] leading-[132%] font-normal tracking-[-0.01em] transition-opacity hover:opacity-70"
+                class="text-brand! underline block w-fit touch-manipulation py-1 text-[18px] leading-[132%] font-normal tracking-[-0.01em] transition-opacity hover:opacity-70"
                 href="mailto:info@Laundromat.gr"
               >
                 info@Laundromat.gr
@@ -428,6 +428,9 @@
         <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
           <a href="location.html">Location</a>
         </li>
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
+                <a href="instructions.html">Instructions</a>
+              </li>
         <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
           <a href="tips.html">Laundry tips</a>
         </li>
@@ -509,6 +512,9 @@
             <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
               <a href="location.html">Location</a>
             </li>
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
+                <a href="instructions.html">Instructions</a>
+              </li>
             <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
               <a href="tips.html">Laundry tips</a>
             </li>
@@ -599,6 +605,20 @@
               <svg class="text-brand size-[7px]" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.5 3.98242L7.56066 4.02154M7.56066 4.02154L4.25395 0.5M7.56066 4.02154L4.25395 7.54308" fill-rule="evenodd" stroke="currentColor" style="stroke: currentColor !important" stroke-linecap="round"/></svg>
             </button>
           </form>
+          <!-- Consent Checkbox -->
+          <div class="mt-4">
+            <label class="flex cursor-pointer items-start gap-[9px]" for="footer-consent">
+              <div class="relative flex size-[18px] shrink-0 items-center justify-center">
+                <input class="peer sr-only" id="footer-consent" name="consent" type="checkbox" required />
+                <div class="border-white/20 absolute inset-0 rounded-[4px] border bg-white/5 transition-colors"></div>
+                <div class="bg-white relative size-[10px] scale-0 rounded-[2px] transition-transform peer-checked:scale-100"></div>
+              </div>
+              <div class="text-white/40 max-w-[260px] text-xs leading-[132%] font-normal tracking-[-0.01em] 2xl:max-w-[400px] 2xl:text-sm">
+                I agree to the
+                <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer" class="text-white/60 underline hover:text-white transition-colors">Privacy Policy</a>
+              </div>
+            </label>
+          </div>
         </div>
 
         <span aria-hidden="true" class="footer-circle-1"></span>

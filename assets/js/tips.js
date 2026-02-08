@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <a class="flex items-center justify-between px-6 pb-6 2xl:px-8 mt-auto" href="${link}">
                 <p class="text-text/60 paragraph-sm-default 2xl:text-lg">${item.date}</p>
-                <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-badge 2xl:size-[57px]">
+                <span class="action-icon bg-brand/6 flex size-[41px] items-center justify-center rounded-badge 2xl:size-[57px]">
                   <svg class="text-brand h-[7px] w-[8px] 2xl:size-[10px]" viewBox="0 0 9 9" fill="none">
                     <path d="M0.75009 0.750399L7.62744 7.87305M7.62744 7.87305L7.84096 1.08657M7.62744 7.87305L0.840964 8.08657" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                   </svg>
@@ -319,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <a class="mt-auto flex items-center justify-between" href="${link}">
               <p class="text-text/60 paragraph-sm-default">${item.date}</p>
 
-              <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-badge">
+              <span class="action-icon bg-brand/6 flex size-[41px] items-center justify-center rounded-badge">
                 <svg class="text-brand h-[7px] w-[8px]" viewBox="0 0 9 9" fill="none">
                   <path d="M0.75009 0.750399L7.62744 7.87305M7.62744 7.87305L7.84096 1.08657M7.62744 7.87305L0.840964 8.08657" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>

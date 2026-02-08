@@ -61,14 +61,26 @@ const LaundroAPI = (function () {
     }
   }
 
+  // Simple memory cache to speed up repeat requests
+  const cache = new Map();
+  let apiWasAvailable = false;
+
   /**
-   * Helper: Fetch JSON from URL with error handling
+   * Helper: Fetch JSON from URL with error handling and caching
    * @param {string} endpoint - API endpoint
    * @param {Object} options - Fetch options
    * @param {boolean} returnHeaders - If true, return { data, headers } object
+   * @param {boolean} useCache - If true, check cache first
    */
-  async function fetchJSON(endpoint, options = {}, returnHeaders = false) {
+  async function fetchJSON(endpoint, options = {}, returnHeaders = false, useCache = true) {
     const url = `${CONFIG.API_BASE}${endpoint}`;
+
+    // Check cache first
+    if (useCache && !returnHeaders && cache.has(url)) {
+      log('Cache Hit:', url);
+      return cache.get(url);
+    }
+
     log('Fetching:', url);
 
     try {
@@ -85,6 +97,13 @@ const LaundroAPI = (function () {
 
       const data = await response.json();
       log('Response:', data);
+
+      apiWasAvailable = true;
+
+      // Store in cache (only if not returning headers which includes pagination metadata)
+      if (useCache && !returnHeaders) {
+        cache.set(url, data);
+      }
 
       if (returnHeaders) {
         return {
@@ -200,14 +219,15 @@ const LaundroAPI = (function () {
      * Fetch tips and map to existing frontend format
      * @returns {Promise<Array|null>}
      */
-    async getTips() {
-      const data = await fetchJSON(`${CONFIG.WP_API}/tips${buildQuery()}`);
+    async getTips(params = {}) {
+      const data = await fetchJSON(`${CONFIG.WP_API}/tips${buildQuery(params)}`);
       if (!data) return null;
 
       return data.map((item) => ({
         id: item.id,
         key: `tip-${item.id}`,
         image: item.featured_image_url || './assets/images/tips-1.png',
+        image_large: item.featured_image_large || item.featured_image_url || './assets/images/tips-1.png',
         category: item.category || 'Tips and tricks',
         title: item.title?.rendered || '',
         categorySlug: item.category_slug || '',
@@ -267,7 +287,7 @@ const LaundroAPI = (function () {
      * @returns {Promise<Array|null>}
      */
     async getHomepageTips() {
-      const data = await fetchJSON(`${CONFIG.CUSTOM_API}/homepage-tips${buildQuery()}`);
+      const data = await fetchJSON(`${CONFIG.CUSTOM_API}/homepage-tips${buildQuery({ per_page: 10 }, false)}`);
       if (!data) return null;
 
       return data.map((item) => ({
@@ -292,8 +312,8 @@ const LaundroAPI = (function () {
      * Fetch instructions and map to existing frontend format
      * @returns {Promise<Array|null>}
      */
-    async getInstructions() {
-      const data = await fetchJSON(`${CONFIG.WP_API}/instructions${buildQuery()}`);
+    async getInstructions(params = {}) {
+      const data = await fetchJSON(`${CONFIG.WP_API}/instructions${buildQuery(params)}`);
       if (!data) return null;
 
       return data.map((item) => ({
@@ -591,11 +611,14 @@ const LaundroAPI = (function () {
      * @returns {Promise<boolean>}
      */
     async isAvailable() {
+      if (apiWasAvailable) return true;
       try {
         const response = await fetch(`${CONFIG.API_BASE}`, {
           method: 'HEAD',
         });
-        return response.ok;
+        const isOk = response.ok;
+        if (isOk) apiWasAvailable = true;
+        return isOk;
       } catch {
         return false;
       }

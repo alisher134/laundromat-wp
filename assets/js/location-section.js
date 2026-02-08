@@ -506,8 +506,8 @@
     }
   }
 
-  // Initialize click handlers
-  function initClickHandlers() {
+  // Initialize event listeners (click and hover)
+  function initEventListeners() {
     // Desktop cards (slider items) & Mobile Cards - handle via Event Delegation on the slider container
     const sliderContainer = document.getElementById('location-slider');
     if (sliderContainer) {
@@ -518,9 +518,28 @@
           handleLocationSelect(index, false);
         }
       });
+
+      // Slider cards hover - synchronize map markers
+      sliderContainer.addEventListener('mouseover', (e) => {
+        const card = e.target.closest('.location-slide');
+        if (card) {
+          const index = parseInt(card.getAttribute('data-location-index'));
+          handleLocationSelect(index, false); // Don't move slider on hover
+        }
+      });
     }
 
-    // Map markers click handlers removed - now handled by <a> tags directly for navigation only
+    // Map markers hover - synchronize slider
+    const mapContainer = document.getElementById('location-map-container');
+    if (mapContainer) {
+      mapContainer.addEventListener('mouseover', (e) => {
+        const marker = e.target.closest('.location-marker');
+        if (marker) {
+          const index = parseInt(marker.getAttribute('data-location-index'));
+          handleLocationSelect(index, true); // true means move slider
+        }
+      });
+    }
   }
 
   // Initialize all components
@@ -532,7 +551,7 @@
 
     // THEN initialize slider (after cards are rendered)
     initMobileSlider();
-    initClickHandlers();
+    initEventListeners();
 
     // Listen for window resize to update marker positions
     window.addEventListener('resize', updateMarkerPositions);

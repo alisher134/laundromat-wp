@@ -112,24 +112,24 @@
 }
 
 /* Arrow inside Action Tile */
-.action-tile .mt-auto span,
 .action-tile .action-icon,
-.tips-card .mt-auto span {
+.action-tile .review-icon,
+.tips-card .action-icon {
   transition:
     transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
     background-color 0.3s ease !important;
 }
 
-.action-tile:hover .mt-auto span,
 .action-tile:hover .action-icon,
-.tips-card:hover .mt-auto span {
+.action-tile:hover .review-icon,
+.tips-card:hover .action-icon {
   transform: translate(3px, -3px);
   background-color: #3a6d90 !important; /* Text brand color */
 }
 
-.action-tile:hover .mt-auto span svg,
 .action-tile:hover .action-icon svg,
-.tips-card:hover .mt-auto span svg {
+.action-tile:hover .review-icon svg,
+.tips-card:hover .action-icon svg {
   color: white !important;
 }
 
@@ -151,6 +151,7 @@
 /* General Button Scaling */
 button:not(.action-tile),
 .category-btn,
+#hero-map,
 .social-icon,
 #mobile-menu-btn,
 #mobile-menu-close,
@@ -165,12 +166,14 @@ button:not(.action-tile),
 
 button:not(.action-tile):hover,
 .category-btn:hover,
+#hero-map:hover,
 [role='button']:not(.action-tile):hover {
   transform: scale(1.05);
 }
 
 button:not(.action-tile):active,
 .category-btn:active,
+#hero-map:active,
 [role='button']:not(.action-tile):active {
   transform: scale(0.95);
 }

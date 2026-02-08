@@ -163,12 +163,11 @@ function laundromat_register_cpts()
         'public' => false,
         'publicly_queryable' => false,
         'show_ui' => true,
-        'show_in_menu' => true,
+        'show_in_menu' => 'laundromat-homepage-settings',
         'show_in_rest' => true,
         'rest_base' => 'about_items',
         'supports' => ['title', 'thumbnail', 'page-attributes'],
         'menu_icon' => 'dashicons-info',
-        'menu_position' => 10,
     ]);
 
     // Reviews CPT (for homepage reviews section)
@@ -188,12 +187,11 @@ function laundromat_register_cpts()
         'public' => false,
         'publicly_queryable' => false,
         'show_ui' => true,
-        'show_in_menu' => true,
+        'show_in_menu' => 'laundromat-homepage-settings',
         'show_in_rest' => true,
         'rest_base' => 'reviews',
         'supports' => ['title', 'editor', 'thumbnail', 'page-attributes'],
         'menu_icon' => 'dashicons-star-filled',
-        'menu_position' => 11,
     ]);
 
     // Contact Messages CPT (for storing form submissions)

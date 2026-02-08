@@ -62,12 +62,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Load Related Articles ---
   async function loadRelatedArticles() {
     try {
-      // Load tips or instructions based on article type
+      // Load limited number of tips or instructions based on article type
       let articles;
+      const params = { per_page: 4 }; // Fetch 4 to allow filtering out current one
+
       if (articleType === 'instruction') {
-        articles = await LaundroAPI.getInstructions();
+        articles = await LaundroAPI.getInstructions(params);
       } else {
-        articles = await LaundroAPI.getTips();
+        articles = await LaundroAPI.getTips(params);
       }
 
       if (articles && articles.length > 0) {
@@ -341,7 +343,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </p>
             <a class="mt-auto flex items-center justify-between group" href="${detailUrl}">
               <p class="text-text/60 paragraph-sm-default">${item.date}</p>
-              <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-[9px] group-hover:bg-brand/10 transition-colors">
+              <span class="action-icon bg-brand/6 flex size-[41px] items-center justify-center rounded-[9px] group-hover:bg-brand/10 transition-colors">
                 <svg viewBox="0 0 9 9" fill="none" class="text-brand h-[7px] w-[8px]"><path d="M0.5 3.98242L7.56066 4.02154M7.56066 4.02154L4.25395 0.5M7.56066 4.02154L4.25395 7.54308" stroke="currentColor" stroke-linecap="round"/></svg>
               </span>
             </a>
@@ -366,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </a>
           <a class="flex items-center justify-between px-6 pb-6 2xl:px-8 group" href="${detailUrl}">
             <p class="text-text/60 paragraph-sm-default 2xl:text-lg">${item.date}</p>
-            <span class="bg-brand/6 flex size-[41px] items-center justify-center rounded-[9px] 2xl:size-[57px] group-hover:bg-brand/10 transition-colors">
+            <span class="action-icon bg-brand/6 flex size-[41px] items-center justify-center rounded-[9px] 2xl:size-[57px] group-hover:bg-brand/10 transition-colors">
               <svg viewBox="0 0 9 9" fill="none" class="text-brand h-[7px] w-[8px] 2xl:size-[10px]"><path d="M0.5 3.98242L7.56066 4.02154M7.56066 4.02154L4.25395 0.5M7.56066 4.02154L4.25395 7.54308" stroke="currentColor" stroke-linecap="round"/></svg>
             </span>
           </a>

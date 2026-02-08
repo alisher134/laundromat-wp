@@ -133,13 +133,36 @@
         totalSlides = slider.track.details.slides.length;
         maxIdx = slider.track.details.maxIdx;
         updateButtons();
+        updateMask(slider);
       },
       slideChanged: (slider) => {
         currentSlide = slider.track.details.rel;
         maxIdx = slider.track.details.maxIdx;
         updateButtons();
       },
+      detailsChanged: (slider) => {
+        updateMask(slider);
+      },
     });
+  }
+
+  /**
+   * Update the slider mask-image based on scroll position
+   * Removes the left shadow when at the very beginning
+   */
+  function updateMask(slider) {
+    if (!sliderEl) return;
+
+    // progress is 0 at the start, increases as we scroll right
+    const progress = slider.track.details.progress;
+
+    if (progress <= 0) {
+      sliderEl.style.maskImage = 'none';
+      sliderEl.style.webkitMaskImage = 'none';
+    } else {
+      sliderEl.style.maskImage = 'linear-gradient(to right, transparent 0%, black 4%, black 100%)';
+      sliderEl.style.webkitMaskImage = 'linear-gradient(to right, transparent 0%, black 4%, black 100%)';
+    }
   }
 
   // Update button states

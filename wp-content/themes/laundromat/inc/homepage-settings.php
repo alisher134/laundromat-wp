@@ -43,13 +43,22 @@ add_action('admin_menu', 'laundromat_add_homepage_settings_page');
 function laundromat_add_homepage_settings_page()
 {
     add_menu_page(
-        __('Homepage Settings', 'laundromat'),
-        __('Homepage Settings', 'laundromat'),
-        'manage_options',
+        __('Homepage', 'laundromat'), // Changed from 'Homepage Settings' to be more inclusive
+        __('Homepage', 'laundromat'),
+        'edit_posts', // Using edit_posts so it matches the CPT requirements
         'laundromat-homepage-settings',
         'laundromat_homepage_settings_page_callback',
         'dashicons-admin-home',
         25
+    );
+    // Add explicitly named first submenu
+    add_submenu_page(
+        'laundromat-homepage-settings',
+        __('Tips Selection', 'laundromat'),
+        __('Tips Selection', 'laundromat'),
+        'edit_posts',
+        'laundromat-homepage-settings',
+        'laundromat_homepage_settings_page_callback'
     );
 }
 
@@ -64,6 +73,37 @@ function laundromat_homepage_settings_scripts($hook)
         return;
     }
     wp_enqueue_script('jquery-ui-sortable');
+}
+
+/**
+ * Add Shared Tabs to Homepage-related CPT screens
+ */
+add_action('all_admin_notices', 'laundromat_homepage_tabs_nav');
+
+function laundromat_homepage_tabs_nav()
+{
+    $screen = get_current_screen();
+    $relevant_post_types = ['about_items', 'reviews'];
+    $is_homepage_settings = isset($_GET['page']) && $_GET['page'] === 'laundromat-homepage-settings';
+
+    if (!$is_homepage_settings && (!$screen || !in_array($screen->post_type, $relevant_post_types))) {
+        return;
+    }
+
+    // Don't show on individual post edit screens, only on lists
+    if ($screen && $screen->base !== 'edit') {
+        // return; // Actually, maybe show everywhere for ease of navigation?
+    }
+
+    ?>
+    <div class="wrap" style="margin-bottom: -20px; padding-top: 10px;">
+        <nav class="nav-tab-wrapper wp-clearfix">
+            <a href="<?php echo admin_url('admin.php?page=laundromat-homepage-settings'); ?>" class="nav-tab <?php echo $is_homepage_settings ? 'nav-tab-active' : ''; ?>"><?php _e('Tips Selection', 'laundromat'); ?></a>
+            <a href="<?php echo admin_url('edit.php?post_type=about_items'); ?>" class="nav-tab <?php echo ($screen && $screen->post_type === 'about_items') ? 'nav-tab-active' : ''; ?>"><?php _e('About Items', 'laundromat'); ?></a>
+            <a href="<?php echo admin_url('edit.php?post_type=reviews'); ?>" class="nav-tab <?php echo ($screen && $screen->post_type === 'reviews') ? 'nav-tab-active' : ''; ?>"><?php _e('Reviews', 'laundromat'); ?></a>
+        </nav>
+    </div>
+    <?php
 }
 
 /**
@@ -119,16 +159,23 @@ function laundromat_homepage_settings_page_callback()
     $active_lang = isset($_POST['active_lang']) ? sanitize_text_field($_POST['active_lang']) : $languages[0]['slug'];
 
     ?>
+    ?>
     <div class="wrap laundromat-homepage-settings">
-        <h1><?php echo esc_html(get_admin_page_title()); ?></h1>
+        <h1><?php echo esc_html(__('Homepage Content Management', 'laundromat')); ?></h1>
 
-        <p class="description"><?php _e('Select and reorder tips for the homepage. Drag items in the "Selected" panel to change display order. If no tips are selected, all published tips will be shown.', 'laundromat'); ?></p>
+        <nav class="nav-tab-wrapper wp-clearfix" style="margin-bottom: 20px;">
+            <a href="<?php echo admin_url('admin.php?page=laundromat-homepage-settings'); ?>" class="nav-tab nav-tab-active"><?php _e('Tips Selection', 'laundromat'); ?></a>
+            <a href="<?php echo admin_url('edit.php?post_type=about_items'); ?>" class="nav-tab"><?php _e('About Items', 'laundromat'); ?></a>
+            <a href="<?php echo admin_url('edit.php?post_type=reviews'); ?>" class="nav-tab"><?php _e('Reviews', 'laundromat'); ?></a>
+        </nav>
+
+        <p class="description"><?php _e('Select and reorder tips for the homepage. Drag items in the "Selected" panel to change display order.', 'laundromat'); ?></p>
 
         <form method="post" action="">
             <?php wp_nonce_field('laundromat_homepage_tips_nonce'); ?>
             <input type="hidden" name="active_lang" id="active_lang" value="<?php echo esc_attr($active_lang); ?>">
 
-            <h2 class="nav-tab-wrapper laundromat-lang-tabs">
+            <h2 class="nav-tab-wrapper laundromat-lang-tabs" style="border-bottom: none; margin-bottom: 0; padding-bottom: 0;">
                 <?php foreach ($languages as $index => $lang) : ?>
                     <a href="#" class="nav-tab <?php echo $lang['slug'] === $active_lang ? 'nav-tab-active' : ''; ?>" data-lang="<?php echo esc_attr($lang['slug']); ?>">
                         <?php echo esc_html($lang['name']); ?>
