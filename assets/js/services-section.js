@@ -544,7 +544,7 @@
       const smallSize = CARD_SIZES.small[breakpoint];
       imageWrapper.style.height = `${smallSize.height}px`;
       imageWrapper.style.width = `${smallSize.width}px`;
-      imageWrapper.style.transition = 'all 4000ms cubic-bezier(0.23, 1, 0.32, 1)'; // Extremely slow, gradual expansion
+      imageWrapper.style.transition = 'width 5500ms cubic-bezier(0.23, 1, 0.32, 1), height 2700ms cubic-bezier(0.23, 1, 0.32, 1)'; // Extremely slow, gradual expansion
       imageWrapper.style.willChange = 'height, width';
 
       if (border) {
@@ -580,8 +580,11 @@
           entry.isExpanded = shouldExpand;
           const size = shouldExpand ? CARD_SIZES.large[breakpoint] : CARD_SIZES.small[breakpoint];
 
-          entry.imageWrapper.style.height = `${size.height}px`;
-          entry.imageWrapper.style.width = `${size.width}px`;
+          // Force browser to apply both properties simultaneously
+          requestAnimationFrame(() => {
+            entry.imageWrapper.style.width = `${size.width}px`;
+            entry.imageWrapper.style.height = `${size.height}px`;
+          });
 
           // If this card expands, it potentially triggers the PREVIOUS card's border
           if (i > 0 && shouldExpand) {
