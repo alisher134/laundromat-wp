@@ -232,6 +232,25 @@
   let animationFrameId = null;
   let mapAnimationScrollListenersAdded = false;
 
+  // Track viewport height to prevent jumps when DevTools opens
+  let cachedViewportHeight = window.innerHeight;
+  let resizeTimeout = null;
+
+  // Local version of getMapScrollProgress that uses cached viewport height
+  function getMapScrollProgressCached(element) {
+    const rect = element.getBoundingClientRect();
+    const windowHeight = cachedViewportHeight; // Use cached height instead of window.innerHeight
+    const elementTop = rect.top;
+
+    const startPoint = windowHeight;
+    const endPoint = windowHeight * 0.3;
+
+    let progress = (startPoint - elementTop) / (startPoint - endPoint);
+    progress = Math.max(0, Math.min(1, progress));
+
+    return progress;
+  }
+
   function initMapAnimation() {
     const mapContainer = document.getElementById('location-map-container');
     if (!mapContainer) return;
@@ -246,6 +265,9 @@
     mapSpring.target = 0;
     markersOpacitySpring.current = 0;
     markersOpacitySpring.target = 0;
+
+    // Initialize cached viewport height
+    cachedViewportHeight = window.innerHeight;
 
     const initialMapY = 150;
     const width = window.innerWidth;
@@ -285,7 +307,7 @@
       const deltaTime = currentTime - lastTime;
       lastTime = currentTime;
 
-      const mapProgress = getMapScrollProgress(mapContainer);
+      const mapProgress = getMapScrollProgressCached(mapContainer);
       mapSpring.setTarget(mapProgress);
       markersOpacitySpring.setTarget(mapProgress);
 
@@ -354,6 +376,13 @@
 
     function onResize() {
       lastTime = performance.now();
+
+      // Debounce viewport height updates to prevent jumps when DevTools opens
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        cachedViewportHeight = window.innerHeight;
+      }, 150); // Small delay to smooth out the transition
+
       if (!animationFrameId) {
         animationFrameId = requestAnimationFrame(updateMapAnimation);
       }

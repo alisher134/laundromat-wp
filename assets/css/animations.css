@@ -235,7 +235,8 @@ button[id*='prev']:hover svg,
 nav a,
 footer a:not(.text-white\/60),
 .social-link,
-.interactive-link {
+.interactive-link,
+.header-phone-link {
   display: inline-flex;
   align-items: center;
   transition:
@@ -250,14 +251,21 @@ header nav a svg path {
 nav a:hover,
 footer a:not(.text-white\/60):hover,
 .social-link:hover,
-.interactive-link:hover {
+.interactive-link:hover,
+.header-phone-link:hover {
   transform: scale(1.06);
 }
 
 nav a:active,
 .social-link:active,
-.interactive-link:active {
+.interactive-link:active,
+.header-phone-link:active {
   transform: scale(0.94);
+}
+
+/* Specific icon scale for phone link matching "Our location" */
+.header-phone-link:hover svg {
+  transform: scale(1.25);
 }
 
 /* Animation for links with circles/arrows */
