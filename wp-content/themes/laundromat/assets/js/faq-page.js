@@ -224,7 +224,7 @@
           <div
             class="accordion-content h-0 overflow-hidden bg-transparent opacity-0 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
           >
-            <div class="flex items-start px-5 pt-0 pb-5 md:gap-[54px] md:px-6 md:pb-6 xl:gap-[104px] xl:px-[22px] xl:pb-[25px] 2xl:gap-[143px] 2xl:px-8 2xl:pb-9">
+            <div class="flex items-start pl-4 pr-5 pt-0 pb-5 md:gap-[54px] md:pl-6 md:pr-6 md:pb-6 xl:gap-[104px] xl:pl-[22px] xl:pr-[22px] xl:pb-[25px] 2xl:gap-[143px] 2xl:pl-8 2xl:pr-8 2xl:pb-9">
               <span
                 class="pointer-events-none hidden font-normal opacity-0 md:block md:text-lg xl:text-sm 2xl:text-lg"
                 aria-hidden="true"

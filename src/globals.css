@@ -286,6 +286,41 @@
     @apply text-brand text-sm leading-[132%] font-normal tracking-[-0.01em] underline underline-offset-4 2xl:text-lg;
   }
 
+  /* Ensure lang dropdowns have consistent styles - force same styling for mobile as header */
+  #lang-dropdown a,
+  #lang-dropdown button,
+  #lang-dropdown-mobile a,
+  #lang-dropdown-mobile button {
+    @apply text-sm leading-[132%] font-normal tracking-[-0.01em] flex w-full cursor-pointer items-center justify-center px-3 py-2 transition;
+    /* Force dark text, never white */
+    color: inherit !important;
+  }
+  
+  /* Active language item - ensure same colors */
+  #lang-dropdown a[class*="bg-brand/10"],
+  #lang-dropdown button[class*="bg-brand/10"],
+  #lang-dropdown-mobile a[class*="bg-brand/10"],
+  #lang-dropdown-mobile button[class*="bg-brand/10"] {
+    background-color: rgb(58 109 144 / 0.1) !important;
+    color: #3a6d90 !important;
+  }
+  
+  /* Inactive language item - ensure same colors, override any white text */
+  #lang-dropdown a:not([class*="bg-brand/10"]),
+  #lang-dropdown button:not([class*="bg-brand/10"]),
+  #lang-dropdown-mobile a:not([class*="bg-brand/10"]),
+  #lang-dropdown-mobile button:not([class*="bg-brand/10"]) {
+    color: #414242 !important;
+  }
+  
+  #lang-dropdown a:not([class*="bg-brand/10"]):hover,
+  #lang-dropdown button:not([class*="bg-brand/10"]):hover,
+  #lang-dropdown-mobile a:not([class*="bg-brand/10"]):hover,
+  #lang-dropdown-mobile button:not([class*="bg-brand/10"]):hover {
+    background-color: rgb(58 109 144 / 0.05) !important;
+    color: #414242 !important;
+  }
+
   @keyframes accordion-down {
     from {
       height: 0;

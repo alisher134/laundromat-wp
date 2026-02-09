@@ -419,6 +419,7 @@ const LaundroAPI = (function () {
         slug: item.slug || '',
         description: item.content?.rendered || '',
         category: item.meta?.service_category || 'laundry',
+        categoryName: item.category_name || '', // Human-readable category name
         menu_order: item.menu_order || 0,
         image: item.featured_image_url || '',
         // Price rows array: each row has { feature, time, time_unit, price }

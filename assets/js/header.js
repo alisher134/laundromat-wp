@@ -18,6 +18,8 @@
       if (header.dataset.theme === 'dark') {
         header.querySelectorAll('.text-white').forEach((el) => {
           if (el.closest('a[href="index.html"]')) return;
+          // Exclude only dropdown menus from color change (button should change)
+          if (el.closest('#lang-dropdown') || el.closest('#lang-dropdown-mobile')) return;
           el.classList.remove('text-white');
           el.classList.add('text-text');
         });
@@ -37,6 +39,8 @@
       if (header.dataset.theme === 'dark') {
         header.querySelectorAll('.text-text').forEach((el) => {
           if (el.closest('a[href="index.html"]')) return;
+          // Exclude only dropdown menus from color change (button should change)
+          if (el.closest('#lang-dropdown') || el.closest('#lang-dropdown-mobile')) return;
           el.classList.remove('text-text');
           el.classList.add('text-white');
         });
@@ -177,6 +181,24 @@
 
     // Determine if this is a footer switcher (different styling)
     const isFooter = buttonId.includes('footer');
+    const isMobile = buttonId.includes('mobile');
+
+    // Update dropdown container background for footer and mobile switchers
+    if (isFooter || isMobile) {
+      // Use white background without transparency for footer and mobile (same as header)
+      dropdown.classList.remove('bg-white/90', 'bg-gray-900');
+      dropdown.classList.add('bg-white');
+      // Update border to match header dropdown (border-text/20 for consistency)
+      if (isMobile) {
+        dropdown.classList.remove('border-white/20', 'border-black/10');
+        dropdown.classList.add('border-text/20');
+      }
+    }
+    // Ensure header dropdown also uses border-text/20 for consistency
+    if (!isFooter && !isMobile) {
+      dropdown.classList.remove('border-white/20');
+      dropdown.classList.add('border-text/20');
+    }
 
     // Clear dropdown and populate with languages
     dropdown.innerHTML = '';
@@ -189,14 +211,18 @@
       link.textContent = lang.code.toUpperCase();
 
       // Apply appropriate classes based on footer vs header
+      // Mobile dropdown uses same styles as header dropdown
       if (isFooter) {
-        // Footer style - simpler white text on dark background
-        link.className = 'block px-4 py-2 text-sm text-white hover:bg-white/10 transition-colors';
+        // Footer style - matches header style (dark text on white background)
         if (lang.is_current) {
-          link.className += ' font-semibold bg-white/5';
+          link.className =
+            'paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition';
+        } else {
+          link.className =
+            'paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition';
         }
       } else {
-        // Header style - matches existing dropdown buttons
+        // Header and mobile style - same styling for both
         if (lang.is_current) {
           link.className =
             'paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition';

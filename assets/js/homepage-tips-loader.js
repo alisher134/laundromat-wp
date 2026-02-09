@@ -36,7 +36,7 @@
     const link = 'tips-details.html?id=' + item.id;
 
     return `
-      <article class="tips-card flex flex-col rounded-card bg-white/80 backdrop-blur-[30px] backdrop-filter ${heightClass} 2xl:rounded-card ${bigImageClass} ${paddingClass} transition-all duration-300" data-tip-index="${index}">
+      <a href="${link}" class="tips-card flex flex-col rounded-card bg-white/80 backdrop-blur-[30px] backdrop-filter ${heightClass} 2xl:rounded-card ${bigImageClass} ${paddingClass} transition-all duration-300 cursor-pointer" data-tip-index="${index}">
         ${
           isBigImage
             ? `
@@ -62,19 +62,19 @@
           }
         </div>
 
-        <a class="text-text hover:text-brand block cursor-pointer pl-6 text-lg leading-[132%] font-normal tracking-[-0.01em] transition-colors md:max-w-[390px] lg:mb-4 2xl:mb-[3px] 2xl:max-w-[515px] 2xl:text-2xl 2xl:leading-[136%] 2xl:tracking-[-0.02em] ${isBigImage ? '2xl:max-w-[560px]' : ''}" href="${link}">
+        <div class="text-text hover:text-brand block pl-6 text-lg leading-[132%] font-normal tracking-[-0.01em] transition-colors md:max-w-[390px] lg:mb-4 2xl:mb-[3px] 2xl:max-w-[515px] 2xl:text-2xl 2xl:leading-[136%] 2xl:tracking-[-0.02em] ${isBigImage ? '2xl:max-w-[560px]' : ''}">
           <span class="line-clamp-2 ${isBigImage ? 'line-clamp-3' : ''}">${item.title}</span>
-        </a>
+        </div>
 
-        <a class="flex items-center justify-between px-6 pb-6 2xl:px-8 mt-auto" href="${link}">
+        <div class="flex items-center justify-between px-6 pb-6 2xl:px-8 mt-auto">
           <p class="text-text/60 paragraph-sm-default 2xl:text-lg">${item.date}</p>
           <span class="action-icon bg-brand/6 flex size-[41px] items-center justify-center rounded-badge 2xl:size-[57px]">
             <svg class="text-brand h-[7px] w-[8px] 2xl:size-[10px]" viewBox="0 0 9 9" fill="none">
               <path d="M0.75009 0.750399L7.62744 7.87305M7.62744 7.87305L7.84096 1.08657M7.62744 7.87305L0.840964 8.08657" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
             </svg>
           </span>
-        </a>
-      </article>
+        </div>
+      </a>
     `;
   }
 
@@ -85,7 +85,7 @@
     const link = 'tips-details.html?id=' + item.id;
 
     return `
-      <article class="tips-card keen-slider__slide min-w-[300px] max-w-[300px] md:min-w-[379px] md:max-w-[379px] shrink-0">
+      <a href="${link}" class="tips-card keen-slider__slide min-w-[300px] max-w-[300px] md:min-w-[379px] md:max-w-[379px] shrink-0 cursor-pointer">
         <div class="flex h-full w-full flex-1 flex-col rounded-card bg-white p-[20px] min-h-[418px] md:min-h-[386px]">
           <div class="flex justify-end">
             <div class="relative mb-[47px] h-[87px] w-[127px] md:mb-[35px] md:h-[99px] md:w-[149px]">
@@ -106,7 +106,7 @@
             ${item.title}
           </p>
 
-          <a class="mt-auto flex items-center justify-between" href="${link}">
+          <div class="mt-auto flex items-center justify-between">
             <p class="text-text/60 paragraph-sm-default">${item.date}</p>
 
             <span class="action-icon bg-brand/6 flex size-[41px] items-center justify-center rounded-badge">
@@ -114,9 +114,9 @@
                 <path d="M0.75009 0.750399L7.62744 7.87305M7.62744 7.87305L7.84096 1.08657M7.62744 7.87305L0.840964 8.08657" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
               </svg>
             </span>
-          </a>
+          </div>
         </div>
-      </article>
+      </a>
     `;
   }
 

@@ -30,6 +30,8 @@
       header.classList.add('bg-white/30', 'backdrop-blur-sm');
       // Change text color to dark
       header.querySelectorAll('.text-white').forEach((el) => {
+        // Exclude only dropdown menus from color change (button should change)
+        if (el.closest('#lang-dropdown') || el.closest('#lang-dropdown-mobile')) return;
         el.classList.remove('text-white');
         el.classList.add('text-text');
       });
@@ -46,6 +48,8 @@
       header.classList.remove('bg-white/30', 'backdrop-blur-sm');
       // Change text color back to white
       header.querySelectorAll('.text-text').forEach((el) => {
+        // Exclude only dropdown menus from color change (button should change)
+        if (el.closest('#lang-dropdown') || el.closest('#lang-dropdown-mobile')) return;
         el.classList.remove('text-text');
         el.classList.add('text-white');
       });
