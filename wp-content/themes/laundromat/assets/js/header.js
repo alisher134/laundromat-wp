@@ -134,9 +134,23 @@
 
   // Initialize language switcher with API data
   async function initLanguageSwitcher() {
+    // Check if we're on a static HTML page (has .html extension)
+    const isStaticHTML = window.location.pathname.endsWith('.html');
+    if (isStaticHTML) {
+      console.log('[Header] Static HTML page detected - using static HTML language switcher');
+      return;
+    }
+
     // Check if API is available
     if (typeof window.LaundroAPI === 'undefined') {
-      console.warn('[Header] LaundroAPI not available for language switching');
+      console.log('[Header] LaundroAPI not available - using static HTML language switcher');
+      return;
+    }
+
+    // Check if WordPress API is actually accessible
+    const isApiAvailable = await window.LaundroAPI.isAvailable();
+    if (!isApiAvailable) {
+      console.log('[Header] WordPress API not accessible - using static HTML language switcher');
       return;
     }
 
@@ -144,11 +158,30 @@
       const languageData = await window.LaundroAPI.getLanguages();
 
       if (!languageData || !languageData.languages) {
-        console.warn('[Header] No language data received');
+        console.log('[Header] No language data received - using static HTML language switcher');
         return;
       }
 
       const { current, languages } = languageData;
+
+      // Check if URLs from API match current origin
+      // If not, we're probably on static HTML files and should use static switcher
+      const currentOrigin = window.location.origin;
+      const hasMatchingOrigin = languages.some((lang) => {
+        try {
+          const url = new URL(lang.url);
+          return url.origin === currentOrigin;
+        } catch {
+          return false;
+        }
+      });
+
+      if (!hasMatchingOrigin) {
+        console.log('[Header] API URLs do not match current origin - using static HTML language switcher');
+        console.log('[Header] Current origin:', currentOrigin);
+        console.log('[Header] API URLs:', languages.map((l) => l.url));
+        return;
+      }
 
       // Update all language switchers
       updateLanguageSwitcher('lang-button', 'lang-dropdown', current, languages);
@@ -158,7 +191,7 @@
 
       console.log('[Header] Language switcher initialized with', languages.length, 'languages');
     } catch (error) {
-      console.error('[Header] Error initializing language switcher:', error);
+      console.log('[Header] Error initializing language switcher - using static HTML language switcher:', error.message);
     }
   }
 

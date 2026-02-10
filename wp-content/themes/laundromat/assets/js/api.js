@@ -27,9 +27,9 @@ const LaundroAPI = (function () {
   // Auto-detect language from URL path
   function detectLanguage() {
     const pathParts = window.location.pathname.split('/').filter((p) => p);
-    // Check if we're in the /el/ directory
-    if (pathParts.includes('el')) {
-      return 'el';
+    // Check if we're in the /gr/ directory (Greek language)
+    if (pathParts.includes('gr')) {
+      return 'gr';
     }
     return 'en';
   }

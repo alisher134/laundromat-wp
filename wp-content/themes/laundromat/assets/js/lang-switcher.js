@@ -1,4 +1,6 @@
-// Language switcher functionality for static HTML files
+// Language switcher functionality for WordPress + Polylang
+// This script handles dropdown toggle behavior only.
+// Language URLs are populated by header.js using the WordPress REST API.
 (function () {
   // Setup function for a single language switcher
   function setupSwitcher(switcherId, buttonId, dropdownId) {
@@ -21,55 +23,9 @@
       }
     });
 
-    // Language switching - handle both buttons and links
-    const langOptions = dropdown.querySelectorAll('button, a');
-    langOptions.forEach((option) => {
-      option.addEventListener('click', function (e) {
-        // Only prevent default for buttons, not links
-        if (this.tagName === 'BUTTON') {
-          e.preventDefault();
-          const newLang = this.textContent.trim();
-          switchLanguage(newLang);
-        }
-        // Links will navigate naturally
-      });
-    });
-  }
-
-  function switchLanguage(lang) {
-    const currentPath = window.location.pathname;
-    // Get filename or default to index.html
-    let currentPage = currentPath.split('/').pop();
-    if (!currentPage) currentPage = 'index.html';
-
-    // Strict check for Greek context: path ends with /el/filename or /el/ or /el
-    const isGreekPath = /\/el\/[^/]*$/.test(currentPath) || /\/el\/?$/.test(currentPath);
-
-    console.log('[LangSwitcher] Switching language:', {
-      from: isGreekPath ? 'el' : 'en',
-      to: lang,
-      currentPath,
-      currentPage,
-      isGreekPath,
-    });
-
-    if (lang === 'Gr' || lang === 'GR') {
-      // Switch to Greek
-      if (!isGreekPath) {
-        // We are in English context (root), navigate to ./el/PAGE
-        const target = 'el/' + currentPage;
-        console.log('[LangSwitcher] Navigating to:', target);
-        window.location.href = target;
-      }
-    } else if (lang === 'En' || lang === 'EN') {
-      // Switch to English
-      if (isGreekPath) {
-        // We are in Greek context (subdir), navigate to ../PAGE
-        const target = '../' + currentPage;
-        console.log('[LangSwitcher] Navigating to:', target);
-        window.location.href = target;
-      }
-    }
+    // Language links are populated by header.js with correct URLs from Polylang
+    // The links will navigate naturally to preserve the current page in the new language
+    console.log('[LangSwitcher] Initialized switcher:', buttonId);
   }
 
   // Initialize all language switchers after DOM is ready
@@ -85,6 +41,8 @@
 
     // Mobile footer switcher
     setupSwitcher('lang-switcher-footer-mobile', 'lang-button-footer-mobile', 'lang-dropdown-footer-mobile');
+
+    console.log('[LangSwitcher] All switchers initialized. Language URLs will be loaded from WordPress API.');
   }
 
   // Run on DOM ready

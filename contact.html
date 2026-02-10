@@ -116,12 +116,12 @@
           <div class="hidden lg:relative lg:block" id="lang-switcher">
             <button
               id="lang-button"
-              class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] text-text 2xl:text-lg"
+              class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-lg"
               type="button"
             >
               <span class="leading-[132%] tracking-[-0.01em]">En</span>
               <span class="bg-brand/8 rounded-[6px] px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-                <svg class="h-[3px] w-[5px] text-text" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="h-[3px] w-[5px] text-white" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M0.5 0.5L2.9901 2.63438L5.48021 0.5"
                     fill-rule="evenodd"
@@ -135,11 +135,11 @@
 
             <ul
               id="lang-dropdown"
-              class="absolute left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white text-center shadow-xl backdrop-blur"
+              class="absolute left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white/90 text-center shadow-xl backdrop-blur"
             >
               <li>
                 <button
-                  class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                  class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition font-medium"
                   type="button"
                 >
                   En
@@ -147,7 +147,7 @@
               </li>
               <li>
                 <button
-                  class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                  class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition font-medium"
                   type="button"
                 >
                   Gr
@@ -230,18 +230,18 @@
             <div class="relative" id="lang-switcher-mobile">
               <button
                 id="lang-button-mobile"
-                class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] text-text 2xl:text-lg"
+                class="text-text flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
                 type="button"
               >
                 <span class="leading-[132%] tracking-[-0.01em]">En</span>
                 <span class="bg-brand/8 rounded-[6px] px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-                  <svg class="h-[3px] w-[5px] text-text" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 4" class="text-brand h-[3px] w-[5px]">
                     <path
                       fill-rule="evenodd"
                       stroke="currentColor"
                       style="stroke: currentColor !important"
                       stroke-linecap="round"
-                      d="M0.5 0.5L2.9901 2.63438L5.48021 0.5"
+                      d="m.5.5 2.49 2.134L5.48.5"
                     ></path>
                   </svg>
                 </span>
@@ -249,11 +249,11 @@
 
               <ul
                 id="lang-dropdown-mobile"
-                class="absolute left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-black/10 bg-white text-center shadow-xl backdrop-blur"
+                class="absolute left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white/90 text-center shadow-xl backdrop-blur"
               >
                 <li>
                   <button
-                    class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                    class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition font-medium"
                     type="button"
                   >
                     En
@@ -261,7 +261,7 @@
                 </li>
                 <li>
                   <button
-                    class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                    class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition font-medium"
                     type="button"
                   >
                     Gr
@@ -382,22 +382,22 @@
               class="container-responsive mt-auto pt-[60px] pb-4 md:pt-[80px] md:pb-[20px] xl:flex xl:items-start xl:justify-between xl:pt-[40px] xl:pb-6 2xl:pt-[50px] 2xl:pb-[40px]"
             >
               <div
-                class="paragraph-sm-default mb-8 flex items-center gap-[11px] text-white md:max-w-[175px] lg:max-w-full md:text-base 2xl:max-w-[195px] 2xl:text-lg"
+                class="paragraph-sm-default mb-8 flex items-center gap-[11px] text-white md:max-w-[175px] md:text-base 2xl:max-w-[195px] 2xl:text-lg"
               >
                 Contact information <span class="size-1 rounded-full bg-white"></span>
               </div>
 
               <ul
-                class="flex flex-1 flex-col gap-1 md:grid md:max-w-[736px] md:grid-cols-2 md:gap-2 lg:grid-cols-2 lg:max-w-full xl:max-w-[872px] 2xl:max-w-[1066px]"
+                class="ml-auto flex flex-1 flex-col justify-between md:grid md:max-w-[736px] md:grid-cols-2 xl:max-w-[872px] 2xl:max-w-[1066px]"
               >
                 <!-- Address -->
                 <li
-                  class="animate-on-scroll order-2 flex h-[71px] w-full translate-y-[100px] flex-col justify-between rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-1 md:h-[139px] md:max-w-[364px] md:p-5 lg:max-w-full xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
+                  class="animate-on-scroll order-2 flex h-[71px] w-full translate-y-[100px] flex-col justify-between rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-1 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
                   data-delay="100"
                 >
                   <p class="paragraph-xs-default text-left text-white/70 md:text-base">Address</p>
                   <p
-                    class="contact-address paragraph-sm-default ml-auto max-w-[159px] text-right text-white md:max-w-[233px] md:text-lg"
+                    class="contact-address paragraph-sm-default max-w-[159px] text-right text-white md:max-w-[233px] md:text-lg"
                   >
                     Ethniki Palaiokastritsas, Kerkira 491 00, Greece
                   </p>
@@ -405,7 +405,7 @@
 
                 <!-- Phone -->
                 <li
-                  class="animate-on-scroll order-4 flex h-[71px] w-full translate-y-[100px] flex-col justify-between rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-2 md:h-[139px] md:max-w-[364px] md:p-5 lg:max-w-full xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
+                  class="animate-on-scroll order-4 flex h-[71px] w-full translate-y-[100px] flex-col justify-between rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-2 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
                   data-delay="250"
                 >
                   <p class="paragraph-xs-default text-left text-white/70 md:text-base">Phone</p>
@@ -418,11 +418,11 @@
 
                 <!-- Social -->
                 <li
-                  class="animate-on-scroll order-1 flex h-[71px] w-full translate-y-[100px] flex-col justify-between rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-3 md:h-[139px] md:max-w-[364px] md:p-5 lg:max-w-full xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
+                  class="animate-on-scroll order-1 flex h-[71px] w-full translate-y-[100px] flex-col justify-between rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-3 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
                   data-delay="400"
                 >
                   <p class="paragraph-xs-default text-left text-white/70 md:text-base">Social</p>
-                  <div class="paragraph-sm-default ml-auto max-w-[92px] text-right text-white md:text-lg">
+                  <div class="paragraph-sm-default max-w-[92px] text-right text-white md:text-lg">
                     <a class="contact-facebook block" href="https://www.facebook.com/laundromatgr"> Facebook </a>
                     <a class="contact-instagram block" href="https://www.instagram.com/laundromatgr"> Instagram </a>
                   </div>
@@ -430,7 +430,7 @@
 
                 <!-- Email -->
                 <li
-                  class="animate-on-scroll order-3 flex h-[71px] w-full translate-y-[100px] flex-col justify-between rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-4 md:h-[139px] md:max-w-[364px] md:p-5 lg:max-w-full xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
+                  class="animate-on-scroll order-3 flex h-[71px] w-full translate-y-[100px] flex-col justify-between rounded-[8px] bg-[#4B9FBD]/12 px-[14px] py-[12px] opacity-0 backdrop-blur-[60px] transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:order-4 md:h-[139px] md:max-w-[364px] md:p-5 xl:max-w-[432px] 2xl:max-w-[529px] 2xl:px-[28px] 2xl:pt-6 2xl:pb-5"
                   data-delay="550"
                 >
                   <p class="paragraph-xs-default text-left text-white/70 md:text-base">E-mail</p>
@@ -452,7 +452,7 @@
 
       <section class="relative w-full bg-[#f4f7fa]">
         <div
-          class="container-responsive pt-[48px] md:pt-[60px] xl:flex xl:items-start xl:justify-between xl:gap-[86px] xl:pt-[60px] 2xl:gap-[200px] 2xl:pt-[60px]"
+          class="container-responsive pt-[48px] md:pt-[60px] xl:flex xl:items-start xl:justify-between xl:pt-[60px] 2xl:pt-[60px]"
         >
           <h2
             class="paragraph-heading-md text-text mb-9 max-w-[262px] md:mb-[46px] md:max-w-[360px] md:text-[45px] md:leading-[110%] xl:max-w-[360px] xl:text-[45px] 2xl:mb-[56px] 2xl:max-w-[546px] 2xl:text-[64px]"
@@ -462,11 +462,11 @@
           </h2>
 
           <div
-            class="animate-on-scroll translate-y-[150px] opacity-0 transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)] md:max-w-[736px] lg:max-w-full xl:flex-1 xl:max-w-[872px] xl:min-w-0 2xl:max-w-[1066px]"
+            class="animate-on-scroll xl:ml-auto md:max-w-[736px] xl:max-w-[872px] 2xl:max-w-[1066px] translate-y-[150px] opacity-0 transition-all duration-[600ms] ease-[cubic-bezier(0.16,1,0.3,1)]"
             data-delay="300"
           >
-            <form class="flex w-full flex-col gap-6 md:grid md:grid-cols-2 md:gap-6 xl:gap-6 2xl:gap-6">
-              <div class="min-w-0">
+            <form class="flex flex-1 flex-col gap-6 md:grid md:grid-cols-2 md:gap-6 2xl:gap-6">
+              <div>
                 <label
                   class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]"
                   for="first-name"
@@ -474,7 +474,7 @@
                   First name <span class="text-brand">*</span>
                 </label>
                 <input
-                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
+                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none xl:w-[428px] 2xl:w-[523px]"
                   id="first-name"
                   name="firstName"
                   required
@@ -482,7 +482,7 @@
                 />
               </div>
 
-              <div class="min-w-0">
+              <div>
                 <label
                   class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]"
                   for="last-name"
@@ -490,19 +490,19 @@
                   Last name
                 </label>
                 <input
-                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
+                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none xl:w-[428px] 2xl:w-[523px]"
                   id="last-name"
                   name="lastName"
                   type="text"
                 />
               </div>
 
-              <div class="min-w-0">
+              <div>
                 <label class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]" for="phone">
                   Phone <span class="text-brand">*</span>
                 </label>
                 <input
-                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
+                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none xl:w-[428px] 2xl:w-[523px]"
                   id="phone"
                   name="phone"
                   required
@@ -510,12 +510,12 @@
                 />
               </div>
 
-              <div class="min-w-0">
+              <div>
                 <label class="text-text/40 mb-3 block text-base leading-[132%] font-normal tracking-[-0.01em]" for="email">
                   E-mail
                 </label>
                 <input
-                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
+                  class="text-text rounded-card h-[76px] w-full bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none xl:w-[428px] 2xl:w-[523px]"
                   id="email"
                   name="email"
                   type="email"
@@ -530,7 +530,7 @@
                   Message
                 </label>
                 <textarea
-                  class="text-text rounded-card h-[214px] w-full resize-none bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none"
+                  class="text-text rounded-card h-[214px] w-full resize-none bg-white px-4 py-[18px] text-base leading-[132%] font-normal tracking-[-0.01em] outline-none xl:w-[872px] 2xl:w-[1071px]"
                   id="message"
                   name="message"
                 ></textarea>
@@ -675,7 +675,7 @@
               >
                 <span class="leading-[132%] tracking-[-0.01em] text-white">En</span>
                 <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-                  <svg class="h-[3px] w-[5px] text-text" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg class="h-[3px] w-[5px] text-white" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M0.5 0.5L2.9901 2.63438L5.48021 0.5"
                       fill-rule="evenodd"
@@ -689,11 +689,11 @@
 
               <ul
                 id="lang-dropdown-footer"
-                class="absolute top-full right-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white text-center shadow-xl backdrop-blur"
+                class="absolute top-full right-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white/90 text-center shadow-xl backdrop-blur"
               >
                 <li>
                   <button
-                    class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                    class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition font-medium"
                     type="button"
                   >
                     En
@@ -701,7 +701,7 @@
                 </li>
                 <li>
                   <button
-                    class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                    class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition font-medium"
                     type="button"
                   >
                     Gr
@@ -760,7 +760,7 @@
             >
               <span class="leading-[132%] tracking-[-0.01em] text-white">En</span>
               <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-                <svg class="h-[3px] w-[5px] text-text" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="h-[3px] w-[5px] text-white" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M0.5 0.5L2.9901 2.63438L5.48021 0.5"
                     fill-rule="evenodd"
@@ -774,11 +774,11 @@
 
             <ul
               id="lang-dropdown-footer-mobile"
-              class="absolute top-full right-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white text-center shadow-xl backdrop-blur"
+              class="absolute top-full right-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white/90 text-center shadow-xl backdrop-blur"
             >
               <li>
                 <button
-                  class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                  class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition font-medium"
                   type="button"
                 >
                   En
@@ -786,7 +786,7 @@
               </li>
               <li>
                 <button
-                  class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                  class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition font-medium"
                   type="button"
                 >
                   Gr
