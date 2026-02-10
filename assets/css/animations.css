@@ -232,6 +232,10 @@ button[id*='prev']:hover svg,
 }
 
 /* --- Interactive Links & Social --- */
+/* Plain text nav links need inline-block for transform - "Our location" has flex, works already */
+#header nav a:not(.flex) {
+  display: inline-block;
+}
 nav a,
 footer a:not(.text-white\/60),
 .social-link,

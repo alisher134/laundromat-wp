@@ -31,25 +31,18 @@
   }
 
   /**
-   * Helper to create a category button
+   * Helper to create a category button (no active state - all buttons look the same)
    * @param {Object} category - category object from API
-   * @param {Boolean} isActive - is this the active category
    * @param {Boolean} isMobile - applies different classes for mobile slider
    */
-  function createCategoryButton(category, isActive, isMobile) {
+  function createCategoryButton(category, isMobile) {
     const btn = document.createElement('button');
-    btn.setAttribute('data-category', category.key);
+    const normalizedKey = normalizeCategory(category.key, category.label || category.name);
+    btn.setAttribute('data-category', normalizedKey || category.key);
 
-    // Base classes common to both
+    // Base classes - same style for all (no active state)
     let classes =
-      'inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg';
-
-    // Active vs Inactive classes
-    if (isActive) {
-      classes += ' bg-brand/6 text-brand border-transparent';
-    } else {
-      classes += ' border-text/20 text-text';
-    }
+      'inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border border-text/20 text-text px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg';
 
     // Mobile specific (slider class) checks
     if (isMobile) {
@@ -62,6 +55,24 @@
     btn.textContent = category.label;
 
     return btn;
+  }
+
+  /**
+   * Normalize API category to match section id (laundry, drying, specialCleaning)
+   */
+  function normalizeCategory(apiCategory, categoryName) {
+    if (!apiCategory) return null;
+    let decoded = apiCategory;
+    try {
+      if (apiCategory.includes('%')) decoded = decodeURIComponent(apiCategory);
+    } catch (e) {
+      decoded = apiCategory;
+    }
+    const text = (categoryName || decoded).toLowerCase().trim();
+    if (text.includes('special') || text.includes('cleaning') || text.includes('ειδικό') || text.includes('καθαρισμό')) return 'specialCleaning';
+    if (text.includes('laundry') || text.includes('πλύσιμο') || text.includes('plysimo')) return 'laundry';
+    if (text.includes('drying') || text.includes('στέγνωμα') || text.includes('στεγνώσιμο') || (text.includes('dry') && !text.includes('laundry'))) return 'drying';
+    return null;
   }
 
   // Fetch services from WordPress API and update DOM
@@ -80,25 +91,20 @@
 
       console.log(`[Services] Loaded ${services.length} services from API`);
 
-      // Sort services by menu_order
-      services.sort((a, b) => (a.menu_order || 0) - (b.menu_order || 0));
-
       const servicesList = document.getElementById('services-list');
       if (!servicesList) return;
 
       const serviceSections = servicesList.querySelectorAll('[data-service]');
 
-      // Map services to sections by index
-      serviceSections.forEach((section, index) => {
-        const serviceData = services[index];
+      // Map services to sections by CATEGORY (id), not by index - anchors #laundry, #drying, #specialCleaning must stay correct
+      serviceSections.forEach((section) => {
+        const sectionId = section.id; // "laundry", "drying", "specialCleaning"
+        const serviceData = services.find((s) => normalizeCategory(s.category, s.categoryName) === sectionId);
         if (!serviceData) return;
 
-        // CRITICAL: Update the data-service attribute to match the API category key
-        // This links the service section to the correct category button
-        if (serviceData.category) {
-          section.setAttribute('data-service', serviceData.category);
-          console.log(`[Services] Linked section ${index} to category "${serviceData.category}"`);
-        }
+        // Use normalized value so category buttons (data-category) match sections (data-service)
+        const normalized = normalizeCategory(serviceData.category, serviceData.categoryName);
+        if (normalized) section.setAttribute('data-service', normalized);
 
         // Update title
         const titleEl = section.querySelector('h2');
@@ -180,14 +186,12 @@
       if (mobileSlider) mobileSlider.innerHTML = '';
       if (desktopContainer) desktopContainer.innerHTML = '';
 
-      categories.forEach((cat, index) => {
-        const isActive = index === 0; // First one active by default
-
+      categories.forEach((cat) => {
         if (mobileSlider) {
-          mobileSlider.appendChild(createCategoryButton(cat, isActive, true));
+          mobileSlider.appendChild(createCategoryButton(cat, true));
         }
         if (desktopContainer) {
-          desktopContainer.appendChild(createCategoryButton(cat, isActive, false));
+          desktopContainer.appendChild(createCategoryButton(cat, false));
         }
       });
     } catch (err) {
@@ -312,18 +316,7 @@
       return servicesList.querySelector(`[data-service="${category}"]`);
     }
 
-    function setActiveCategory(category) {
-      categoryButtons.forEach((btn) => {
-        const btnCategory = btn.getAttribute('data-category');
-        if (btnCategory === category) {
-          btn.classList.remove('border-text/20', 'text-text');
-          btn.classList.add('bg-brand/6', 'text-brand', 'border-transparent');
-        } else {
-          btn.classList.remove('bg-brand/6', 'text-brand', 'border-transparent');
-          btn.classList.add('border-text/20', 'text-text');
-        }
-      });
-
+    function scrollToCategory(category) {
       const targetCard = getServiceCard(category);
       if (targetCard) {
         const headerHeight = 120;
@@ -345,7 +338,7 @@
         e.preventDefault();
         const category = newBtn.getAttribute('data-category');
         if (category) {
-          setActiveCategory(category);
+          scrollToCategory(category);
         }
       });
     });

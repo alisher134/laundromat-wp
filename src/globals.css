@@ -86,6 +86,10 @@
     @apply border-border outline-ring/50;
     -webkit-user-select: none;
   }
+  /* Offset anchor scroll for fixed header - #laundry, #drying etc. land below header */
+  html {
+    scroll-padding-top: 120px;
+  }
   body {
     @apply text-foreground bg-[#C7D8E333];
     overscroll-behavior: none;
