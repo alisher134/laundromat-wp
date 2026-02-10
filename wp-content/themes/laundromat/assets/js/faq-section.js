@@ -101,7 +101,7 @@
           >
             <div class="flex items-start pl-4 pr-5 pt-0 pb-5 md:gap-[54px] md:pl-6 md:pr-6 md:pb-6 xl:gap-[104px] xl:pl-[22px] xl:pr-[22px] xl:pb-[25px] 2xl:gap-[143px] 2xl:pl-8 2xl:pr-8 2xl:pb-9">
               <span
-                class="pointer-events-none hidden font-normal opacity-0 md:block md:text-lg xl:text-sm 2xl:text-lg"
+                class="pointer-events-none hidden font-normal leading-[132%] tracking-[-0.01em] opacity-0 md:block md:text-[21px] xl:text-base 2xl:text-[21px]"
                 aria-hidden="true"
               >
                 ( 00 )
