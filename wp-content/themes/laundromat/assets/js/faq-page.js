@@ -229,7 +229,7 @@
                 class="pointer-events-none hidden font-normal leading-[132%] tracking-[-0.01em] opacity-0 md:block md:text-[21px] xl:text-base 2xl:text-[21px]"
                 aria-hidden="true"
               >
-                ( 00 )
+                ( ${number} )
               </span>
               <div class="text-text max-w-full text-base leading-[150%] font-normal tracking-[-0.01em] md:max-w-[448px] md:text-lg xl:max-w-[500px] xl:text-base 2xl:max-w-[680px] 2xl:text-lg">
                 ${faq.answer || ''}
