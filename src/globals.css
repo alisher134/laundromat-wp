@@ -220,19 +220,11 @@
     @apply mx-container-mobile xl:mx-container-tablet 2xl:mx-container-desktop;
   }
 
-  /* Contact info: layout as 1024 from sm (640px) down to mobile */
-  @media (min-width: 640px) {
-    .contact-info-cards {
-      max-width: none !important;
-    }
-  }
-
-  /* Contact form: full width from lg (1024px) */
+  /* Contact form: flex layout from lg (1024px) */
   @media (min-width: 1024px) {
     .contact-form-section .contact-form-container {
       flex: 1 1 0%;
       min-width: 0;
-      max-width: none !important;
     }
   }
 
