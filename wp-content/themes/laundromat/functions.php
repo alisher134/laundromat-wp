@@ -64,6 +64,8 @@ add_action('init', function () {
         'Contact us',
         'Send message',
         'Subscribe',
+        'Subscription successful',
+        'Please agree to the Privacy Policy to subscribe',
         'All articles',
         'Tips and tricks',
         'Useful resources',

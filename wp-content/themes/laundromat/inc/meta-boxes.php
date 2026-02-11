@@ -165,6 +165,37 @@ function laundromat_render_image_upload_field($post_id, $label = 'Image', $descr
 }
 
 /**
+ * Newsletter Subscriptions Admin Columns
+ */
+add_filter('manage_lm_newsletter_posts_columns', 'laundromat_newsletter_columns');
+add_action('manage_lm_newsletter_posts_custom_column', 'laundromat_newsletter_column_content', 10, 2);
+add_filter('manage_edit-lm_newsletter_sortable_columns', 'laundromat_newsletter_sortable_columns');
+
+function laundromat_newsletter_columns($columns)
+{
+    return [
+        'cb' => $columns['cb'] ?? '',
+        'title' => __('Email', 'laundromat'),
+        'date' => __('Date', 'laundromat'),
+    ];
+}
+
+function laundromat_newsletter_column_content($column, $post_id)
+{
+    if ($column === 'title') {
+        $email = get_post_meta($post_id, 'newsletter_email', true) ?: get_the_title($post_id);
+        echo $email ? '<a href="mailto:' . esc_attr($email) . '">' . esc_html($email) . '</a>' : '—';
+    }
+}
+
+function laundromat_newsletter_sortable_columns($columns)
+{
+    $columns['title'] = 'title';
+    $columns['date'] = 'date';
+    return $columns;
+}
+
+/**
  * Add Meta Boxes
  */
 add_action('add_meta_boxes', 'laundromat_add_meta_boxes');
@@ -198,6 +229,16 @@ function laundromat_add_meta_boxes()
         'laundromat_contact_details_meta_box_callback',
         'contact_messages',
         'side',
+        'high'
+    );
+
+    // Newsletter Subscription Details Meta Box
+    add_meta_box(
+        'newsletter_details',
+        __('Subscription Details', 'laundromat'),
+        'laundromat_newsletter_details_meta_box_callback',
+        'lm_newsletter',
+        'normal',
         'high'
     );
 
@@ -575,6 +616,41 @@ function laundromat_contact_details_meta_box_callback($post)
                     <span class="no-value"><?php _e('Not provided', 'laundromat'); ?></span>
                 <?php endif; ?>
             </div>
+        </div>
+    </div>
+    <?php
+}
+
+/**
+ * Newsletter Subscription Details Meta Box Callback
+ */
+function laundromat_newsletter_details_meta_box_callback($post)
+{
+    $email = get_post_meta($post->ID, 'newsletter_email', true) ?: $post->post_title;
+    $date = get_the_date('', $post->ID);
+    ?>
+    <style>
+        .newsletter-details-box { display: grid; gap: 12px; }
+        .newsletter-details-box .newsletter-field { display: grid; gap: 4px; }
+        .newsletter-details-box .newsletter-label { font-weight: 600; color: #1d2327; font-size: 13px; }
+        .newsletter-details-box .newsletter-value { color: #2c3338; font-size: 13px; word-break: break-word; }
+        .newsletter-details-box .newsletter-value a { color: #2271b1; text-decoration: none; }
+        .newsletter-details-box .newsletter-value a:hover { color: #135e96; text-decoration: underline; }
+    </style>
+    <div class="newsletter-details-box">
+        <div class="newsletter-field">
+            <div class="newsletter-label"><?php _e('Email', 'laundromat'); ?></div>
+            <div class="newsletter-value">
+                <?php if ($email): ?>
+                    <a href="mailto:<?php echo esc_attr($email); ?>"><?php echo esc_html($email); ?></a>
+                <?php else: ?>
+                    <span class="no-value"><?php _e('Not provided', 'laundromat'); ?></span>
+                <?php endif; ?>
+            </div>
+        </div>
+        <div class="newsletter-field">
+            <div class="newsletter-label"><?php _e('Date', 'laundromat'); ?></div>
+            <div class="newsletter-value"><?php echo esc_html($date); ?></div>
         </div>
     </div>
     <?php

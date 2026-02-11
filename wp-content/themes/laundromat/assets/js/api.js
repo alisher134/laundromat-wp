@@ -571,6 +571,40 @@ const LaundroAPI = (function () {
     },
 
     /**
+     * Submit newsletter form (footer)
+     * @param {Object} formData - Form data { email, consent }
+     * @returns {Promise<Object>}
+     */
+    async submitNewsletter(formData) {
+      try {
+        const response = await fetch(`${CONFIG.API_BASE}${CONFIG.CUSTOM_API}/newsletter`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          return {
+            success: false,
+            message: result.message || 'Failed to subscribe',
+          };
+        }
+
+        return result;
+      } catch (error) {
+        console.error('[LaundroAPI] Newsletter form error:', error);
+        return {
+          success: false,
+          message: 'Network error. Please try again.',
+        };
+      }
+    },
+
+    /**
      * Check if API is available
      * @returns {Promise<boolean>}
      */

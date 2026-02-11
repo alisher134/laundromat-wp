@@ -85,10 +85,56 @@ document.addEventListener('DOMContentLoaded', () => {
     emailInput.addEventListener('input', validateFooterForm);
   }
 
-  newsletterForm.addEventListener('submit', (e) => {
+  newsletterForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
     if (consentCheckbox && !consentCheckbox.checked) {
-      e.preventDefault();
       alert('Please agree to the Privacy Policy to subscribe.');
+      return;
+    }
+
+    const emailInput = document.getElementById('newsletter-email');
+    const email = emailInput?.value?.trim() || '';
+    if (!email) return;
+
+    const formData = {
+      email,
+      consent: consentCheckbox?.checked ?? false,
+    };
+
+    if (typeof window.LaundroAPI !== 'undefined') {
+      const originalOpacity = submitBtn?.style.opacity;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.5';
+      }
+
+      try {
+        const result = await window.LaundroAPI.submitNewsletter(formData);
+
+        if (result.success) {
+          alert('Thank you! You have been subscribed successfully.');
+          newsletterForm.reset();
+          consentCheckbox && (consentCheckbox.checked = false);
+          validateFooterForm();
+        } else {
+          alert(result.message || 'Failed to subscribe. Please try again.');
+        }
+      } catch (error) {
+        console.error('[Footer] Newsletter submit error:', error);
+        alert('An error occurred. Please try again later.');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.style.opacity = originalOpacity ?? '1';
+        }
+        validateFooterForm();
+      }
+    } else {
+      alert('Thank you! You have been subscribed (API not available).');
+      newsletterForm.reset();
+      consentCheckbox && (consentCheckbox.checked = false);
+      validateFooterForm();
     }
   });
 

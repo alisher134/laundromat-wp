@@ -529,6 +529,13 @@ function laundromat_register_rest_routes()
         'permission_callback' => '__return_true',
     ]);
 
+    // Newsletter form submission endpoint (footer)
+    register_rest_route('laundromat/v1', '/newsletter', [
+        'methods' => 'POST',
+        'callback' => 'laundromat_handle_newsletter_form',
+        'permission_callback' => '__return_true',
+    ]);
+
     // Categories endpoint for frontend (Tips)
     register_rest_route('laundromat/v1', '/categories', [
         'methods' => 'GET',
@@ -1033,6 +1040,70 @@ function laundromat_handle_contact_form($request)
     return [
         'success' => true,
         'message' => __('Message sent successfully', 'laundromat'),
+    ];
+}
+
+/**
+ * Handle Newsletter Form Submission (footer)
+ * Saves email with consent as private post
+ */
+function laundromat_handle_newsletter_form($request)
+{
+    $params = $request->get_json_params();
+
+    $email = sanitize_email($params['email'] ?? '');
+    $consent = !empty($params['consent']);
+
+    if (empty($email) || !is_email($email)) {
+        return new WP_Error(
+            'invalid_email',
+            __('Invalid email address', 'laundromat'),
+            ['status' => 400]
+        );
+    }
+
+    if (!$consent) {
+        return new WP_Error(
+            'consent_required',
+            __('Please agree to the Privacy Policy to subscribe', 'laundromat'),
+            ['status' => 400]
+        );
+    }
+
+    $post_id = wp_insert_post([
+        'post_type' => 'lm_newsletter',
+        'post_title' => $email,
+        'post_content' => '',
+        'post_status' => 'private',
+    ]);
+
+    if (is_wp_error($post_id)) {
+        return new WP_Error(
+            'save_failed',
+            __('Failed to save subscription', 'laundromat'),
+            ['status' => 500]
+        );
+    }
+
+    update_post_meta($post_id, 'newsletter_email', $email);
+    update_post_meta($post_id, 'newsletter_consent', 1);
+
+    $admin_email = get_option('admin_email');
+    $site_name = get_bloginfo('name');
+
+    $subject = sprintf('[%s] New newsletter subscription', $site_name);
+    $body = sprintf(
+        "New newsletter subscription:\n\nEmail: %s\n\n---\nView in admin: %s\nSent from %s",
+        $email,
+        admin_url('edit.php?post_type=lm_newsletter'),
+        home_url()
+    );
+
+    @wp_mail($admin_email, $subject, $body);
+
+    return [
+        'success' => true,
+        'message' => __('Subscription successful', 'laundromat'),
     ];
 }
 

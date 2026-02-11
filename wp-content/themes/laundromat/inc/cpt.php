@@ -213,7 +213,32 @@ function laundromat_register_cpts()
         'menu_icon' => 'dashicons-email-alt',
         'menu_position' => 25,
         'capabilities' => [
-            'create_posts' => false, // Disable creating from admin
+            'create_posts' => false,
+        ],
+        'map_meta_cap' => true,
+    ]);
+
+    // Newsletter Subscriptions CPT (footer form) - max 20 chars for slug
+    register_post_type('lm_newsletter', [
+        'labels' => [
+            'name' => __('Subscribe to newsletter', 'laundromat'),
+            'menu_name' => __('Subscribe to newsletter', 'laundromat'),
+            'singular_name' => __('Newsletter Subscription', 'laundromat'),
+            'all_items' => __('All Subscriptions', 'laundromat'),
+            'view_item' => __('View Subscription', 'laundromat'),
+            'search_items' => __('Search Subscriptions', 'laundromat'),
+            'not_found' => __('No subscriptions found', 'laundromat'),
+        ],
+        'public' => false,
+        'publicly_queryable' => false,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'show_in_rest' => false,
+        'supports' => ['title'],
+        'menu_icon' => 'dashicons-email',
+        'menu_position' => 26,
+        'capabilities' => [
+            'create_posts' => false,
         ],
         'map_meta_cap' => true,
     ]);
