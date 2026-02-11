@@ -115,10 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
           </span>
         </div>
       </div>
-      <div class="animate-fade-up delay-200 relative h-[380px] w-full md:h-[380px] xl:h-[560px] 2xl:h-[910px]">
+      <div class="animate-fade-up delay-200 relative h-[380px] w-full overflow-hidden rounded-[6px] md:h-[380px] xl:h-[560px] 2xl:h-[910px]">
         <img
           alt="${articleData.title}"
-          class="rounded-[6px] object-cover h-full w-full"
+          class="h-full w-full rounded-[6px] object-cover"
           src="${articleData.image}"
         />
       </div>

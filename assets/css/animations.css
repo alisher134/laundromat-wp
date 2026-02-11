@@ -265,6 +265,14 @@ nav a:active,
   transform: scale(0.94);
 }
 
+/* Burger menu nav – без hover/active анимаций */
+#mobile-menu nav a,
+#mobile-menu nav a:hover,
+#mobile-menu nav a:active {
+  transform: none !important;
+  transition: none !important;
+}
+
 /* Specific icon scale for phone link matching "Our location" */
 .header-phone-link:hover svg {
   transform: scale(1.25);

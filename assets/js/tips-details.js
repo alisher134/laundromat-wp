@@ -121,10 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
           </span>
         </div>
       </div>
-      <div class="animate-fade-up delay-200 relative h-[380px] w-full md:h-[380px] xl:h-[560px] 2xl:h-[910px]">
+      <div class="animate-fade-up delay-200 relative h-[380px] w-full overflow-hidden rounded-[6px] md:h-[380px] xl:h-[560px] 2xl:h-[910px]">
         <img
           alt="${articleData.title}"
-          class="rounded-[6px] object-cover h-full w-full"
+          class="h-full w-full rounded-[6px] object-cover"
           src="${articleData.image}"
         />
       </div>
@@ -181,11 +181,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       }
 
-      // Create wrapper for hero-style sizing
+      // Create wrapper - высоты по макету
       const wrapper = document.createElement('div');
-      // User provided classes
       wrapper.className =
-        'relative mb-[56px] h-[338px] w-full md:mb-[116px] md:h-[475px] xl:h-[475px] 2xl:mb-[48px] 2xl:h-[600px]';
+        'relative mb-[56px] h-[338px] w-full overflow-hidden rounded-[6px] md:mb-[116px] md:h-[475px] xl:h-[475px] 2xl:mb-[48px] 2xl:h-[600px]';
 
       // Insert wrapper before image
       if (img.parentNode) {
@@ -193,8 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         wrapper.appendChild(img);
       }
 
-      // Apply styles to image to fill the wrapper
-      img.classList.add('w-full', 'h-full', 'object-cover', 'rounded-[6px]', 'absolute', 'top-0', 'left-0');
+      img.classList.add('h-full', 'w-full', 'object-contain', 'rounded-[6px]');
 
       // Remove old margin classes and layout classes that conflict
       img.classList.remove(
