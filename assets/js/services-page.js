@@ -33,23 +33,15 @@
   /**
    * Helper to create a category button
    * @param {Object} category - category object from API
-   * @param {Boolean} isActive - is this the active category
    * @param {Boolean} isMobile - applies different classes for mobile slider
    */
-  function createCategoryButton(category, isActive, isMobile) {
+  function createCategoryButton(category, isMobile) {
     const btn = document.createElement('button');
     btn.setAttribute('data-category', category.key);
 
-    // Base classes common to both
+    // Base classes - all buttons use same inactive style (no active state)
     let classes =
-      'inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg';
-
-    // Active vs Inactive classes
-    if (isActive) {
-      classes += ' bg-brand/6 text-brand border-transparent';
-    } else {
-      classes += ' border-text/20 text-text';
-    }
+      'inline-flex min-w-fit cursor-pointer items-center justify-center !rounded-[12px] rounded-[12px] border border-text/20 px-[18px] py-[14px] !text-sm text-base leading-[132%] font-normal tracking-[-0.01em] text-text whitespace-nowrap transition-colors duration-200 md:rounded-[16px] 2xl:text-lg';
 
     // Mobile specific (slider class) checks
     if (isMobile) {
@@ -180,14 +172,12 @@
       if (mobileSlider) mobileSlider.innerHTML = '';
       if (desktopContainer) desktopContainer.innerHTML = '';
 
-      categories.forEach((cat, index) => {
-        const isActive = index === 0; // First one active by default
-
+      categories.forEach((cat) => {
         if (mobileSlider) {
-          mobileSlider.appendChild(createCategoryButton(cat, isActive, true));
+          mobileSlider.appendChild(createCategoryButton(cat, true));
         }
         if (desktopContainer) {
-          desktopContainer.appendChild(createCategoryButton(cat, isActive, false));
+          desktopContainer.appendChild(createCategoryButton(cat, false));
         }
       });
     } catch (err) {
@@ -313,17 +303,6 @@
     }
 
     function setActiveCategory(category) {
-      categoryButtons.forEach((btn) => {
-        const btnCategory = btn.getAttribute('data-category');
-        if (btnCategory === category) {
-          btn.classList.remove('border-text/20', 'text-text');
-          btn.classList.add('bg-brand/6', 'text-brand', 'border-transparent');
-        } else {
-          btn.classList.remove('bg-brand/6', 'text-brand', 'border-transparent');
-          btn.classList.add('border-text/20', 'text-text');
-        }
-      });
-
       const targetCard = getServiceCard(category);
       if (targetCard) {
         const headerHeight = 120;
