@@ -267,8 +267,12 @@ function laundromat_location_meta_box_callback($post)
     $google_maps_url = get_post_meta($post->ID, 'google_maps_url', true);
     $map_pos_mobile_top = get_post_meta($post->ID, 'map_pos_mobile_top', true);
     $map_pos_mobile_left = get_post_meta($post->ID, 'map_pos_mobile_left', true);
-    $map_pos_desktop_top = get_post_meta($post->ID, 'map_pos_desktop_top', true);
-    $map_pos_desktop_left = get_post_meta($post->ID, 'map_pos_desktop_left', true);
+    $map_pos_tablet_top = get_post_meta($post->ID, 'map_pos_tablet_top', true);
+    $map_pos_tablet_left = get_post_meta($post->ID, 'map_pos_tablet_left', true);
+    $map_pos_medium_top = get_post_meta($post->ID, 'map_pos_medium_top', true);
+    $map_pos_medium_left = get_post_meta($post->ID, 'map_pos_medium_left', true);
+    $map_pos_large_top = get_post_meta($post->ID, 'map_pos_large_top', true);
+    $map_pos_large_left = get_post_meta($post->ID, 'map_pos_large_left', true);
     ?>
     <style>
         .laundromat-meta-box { display: grid; gap: 15px; }
@@ -326,32 +330,67 @@ function laundromat_location_meta_box_callback($post)
                     </div>
                 </div>
                 <div class="field-group">
-                    <label><?php _e('Desktop Position', 'laundromat'); ?></label>
+                    <label><?php _e('Tablet Position', 'laundromat'); ?></label>
                     <div style="display: flex; gap: 10px;">
-                        <input type="text" id="map_pos_desktop_top" name="map_pos_desktop_top" value="<?php echo esc_attr($map_pos_desktop_top); ?>" placeholder="Top %" style="width: 80px;">
-                        <input type="text" id="map_pos_desktop_left" name="map_pos_desktop_left" value="<?php echo esc_attr($map_pos_desktop_left); ?>" placeholder="Left %" style="width: 80px;">
+                        <input type="text" id="map_pos_tablet_top" name="map_pos_tablet_top" value="<?php echo esc_attr($map_pos_tablet_top); ?>" placeholder="Top %" style="width: 80px;">
+                        <input type="text" id="map_pos_tablet_left" name="map_pos_tablet_left" value="<?php echo esc_attr($map_pos_tablet_left); ?>" placeholder="Left %" style="width: 80px;">
                     </div>
                 </div>
             </div>
 
-            <div class="map-picker-tabs" style="margin-bottom: 10px; border-bottom: 1px solid #ccc; display: flex;">
-                <button type="button" class="button picker-tab-btn" data-tab="mobile" style="margin-right: 5px;"><?php _e('Mobile Map Preview', 'laundromat'); ?></button>
-                <button type="button" class="button picker-tab-btn" data-tab="desktop"><?php _e('Desktop Map Preview', 'laundromat'); ?></button>
+            <div class="field-row" style="margin-bottom: 20px;">
+                <div class="field-group">
+                    <label><?php _e('Medium Position', 'laundromat'); ?></label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="map_pos_medium_top" name="map_pos_medium_top" value="<?php echo esc_attr($map_pos_medium_top); ?>" placeholder="Top %" style="width: 80px;">
+                        <input type="text" id="map_pos_medium_left" name="map_pos_medium_left" value="<?php echo esc_attr($map_pos_medium_left); ?>" placeholder="Left %" style="width: 80px;">
+                    </div>
+                </div>
+                <div class="field-group">
+                    <label><?php _e('Large Position', 'laundromat'); ?></label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="map_pos_large_top" name="map_pos_large_top" value="<?php echo esc_attr($map_pos_large_top); ?>" placeholder="Top %" style="width: 80px;">
+                        <input type="text" id="map_pos_large_left" name="map_pos_large_left" value="<?php echo esc_attr($map_pos_large_left); ?>" placeholder="Left %" style="width: 80px;">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="map-picker-tabs" style="margin-bottom: 10px; border-bottom: 1px solid #ccc; display: flex; flex-wrap: wrap; gap: 6px;">
+                <button type="button" class="button picker-tab-btn" data-tab="mobile"><?php _e('Mobile Map Preview', 'laundromat'); ?></button>
+                <button type="button" class="button picker-tab-btn" data-tab="tablet"><?php _e('Tablet Map Preview', 'laundromat'); ?></button>
+                <button type="button" class="button picker-tab-btn" data-tab="medium"><?php _e('Medium Map Preview', 'laundromat'); ?></button>
+                <button type="button" class="button picker-tab-btn" data-tab="large"><?php _e('Large Map Preview', 'laundromat'); ?></button>
             </div>
             
-            <div class="map-picker-content mobile-picker" id="mobile-map-picker">
+            <div class="map-picker-content mobile-picker" id="mobile-map-picker" data-scale="mobile">
                 <div class="map-container-relative">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/big-map-preview.png" draggable="false">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/mobile-map-image.png" draggable="false">
                     <div class="picker-marker" id="mobile-marker"></div>
                 </div>
             </div>
-            
-            <div class="map-picker-content desktop-picker" id="desktop-map-picker">
+
+            <div class="map-picker-content tablet-picker" id="tablet-map-picker" data-scale="tablet">
                 <div class="map-container-relative">
-                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/desktop-map-preview.png" draggable="false">
-                    <div class="picker-marker" id="desktop-marker"></div>
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/tablet-map-image.png" draggable="false">
+                    <div class="picker-marker" id="tablet-marker"></div>
                 </div>
             </div>
+
+            <div class="map-picker-content medium-picker" id="medium-map-picker" data-scale="medium">
+                <div class="map-container-relative">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/medium-map-image.png" draggable="false">
+                    <div class="picker-marker" id="medium-marker"></div>
+                </div>
+            </div>
+
+            <div class="map-picker-content large-picker" id="large-map-picker" data-scale="large">
+                <div class="map-container-relative">
+                    <img src="<?php echo get_template_directory_uri(); ?>/assets/images/large-map-image.png" draggable="false">
+                    <div class="picker-marker" id="large-marker"></div>
+                </div>
+            </div>
+            
             
             <p class="description" style="margin-top: 10px;"><?php _e('Click on the map preview to set the marker position. You can also manually adjust the percentage values above.', 'laundromat'); ?></p>
         </div>
@@ -408,7 +447,7 @@ function laundromat_location_meta_box_callback($post)
         });
 
         // Initialize first tab
-        $('.picker-tab-btn[data-tab="desktop"]').trigger('click');
+        $('.picker-tab-btn[data-tab="mobile"]').trigger('click');
 
         // Update markers from inputs
         function updateMarkersFromInputs() {
@@ -421,13 +460,19 @@ function laundromat_location_meta_box_callback($post)
 
             var mTop = ensurePercent($('#map_pos_mobile_top').val());
             var mLeft = ensurePercent($('#map_pos_mobile_left').val());
-            var dTop = ensurePercent($('#map_pos_desktop_top').val());
-            var dLeft = ensurePercent($('#map_pos_desktop_left').val());
+            var tTop = ensurePercent($('#map_pos_tablet_top').val());
+            var tLeft = ensurePercent($('#map_pos_tablet_left').val());
+            var medTop = ensurePercent($('#map_pos_medium_top').val());
+            var medLeft = ensurePercent($('#map_pos_medium_left').val());
+            var lTop = ensurePercent($('#map_pos_large_top').val());
+            var lLeft = ensurePercent($('#map_pos_large_left').val());
             
-            console.log('Map Picker: Updating markers:', { mTop, mLeft, dTop, dLeft });
+            console.log('Map Picker: Updating markers:', { mTop, mLeft, tTop, tLeft, medTop, medLeft, lTop, lLeft });
             
             $('#mobile-marker').css({ 'top': mTop, 'left': mLeft });
-            $('#desktop-marker').css({ 'top': dTop, 'left': dLeft });
+            $('#tablet-marker').css({ 'top': tTop, 'left': tLeft });
+            $('#medium-marker').css({ 'top': medTop, 'left': medLeft });
+            $('#large-marker').css({ 'top': lTop, 'left': lLeft });
         }
 
         // Auto-fix units on blur
@@ -463,13 +508,19 @@ function laundromat_location_meta_box_callback($post)
             
             console.log('Map Picker: Clicked at', { x, y, xPct, yPct });
 
-            var isMobile = $container.closest('.map-picker-content').hasClass('mobile-picker');
-            if (isMobile) {
+            var scale = $container.closest('.map-picker-content').data('scale') || 'mobile';
+            if (scale === 'mobile') {
                 $('#map_pos_mobile_top').val(yPct);
                 $('#map_pos_mobile_left').val(xPct);
-            } else {
-                $('#map_pos_desktop_top').val(yPct);
-                $('#map_pos_desktop_left').val(xPct);
+            } else if (scale === 'tablet') {
+                $('#map_pos_tablet_top').val(yPct);
+                $('#map_pos_tablet_left').val(xPct);
+            } else if (scale === 'medium') {
+                $('#map_pos_medium_top').val(yPct);
+                $('#map_pos_medium_left').val(xPct);
+            } else if (scale === 'large') {
+                $('#map_pos_large_top').val(yPct);
+                $('#map_pos_large_left').val(xPct);
             }
             updateMarkersFromInputs();
         });
@@ -897,7 +948,9 @@ function laundromat_save_meta_boxes($post_id)
         $location_fields = [
             'address', 'store_hours', 'phone', 'google_maps_url',
             'map_pos_mobile_top', 'map_pos_mobile_left',
-            'map_pos_desktop_top', 'map_pos_desktop_left'
+            'map_pos_tablet_top', 'map_pos_tablet_left',
+            'map_pos_medium_top', 'map_pos_medium_left',
+            'map_pos_large_top', 'map_pos_large_left',
         ];
 
         foreach ($location_fields as $field) {

@@ -177,10 +177,20 @@ const LaundroAPI = (function () {
           top: item.map_position?.mobile?.top || '0%',
           left: item.map_position?.mobile?.left || '0%',
         })),
-        desktop: data.map((item) => ({
+        tablet: data.map((item) => ({
           id: item.id,
-          top: item.map_position?.desktop?.top || '0%',
-          left: item.map_position?.desktop?.left || '0%',
+          top: item.map_position?.tablet?.top || '0%',
+          left: item.map_position?.tablet?.left || '0%',
+        })),
+        medium: data.map((item) => ({
+          id: item.id,
+          top: item.map_position?.medium?.top || '0%',
+          left: item.map_position?.medium?.left || '0%',
+        })),
+        large: data.map((item) => ({
+          id: item.id,
+          top: item.map_position?.large?.top || '0%',
+          left: item.map_position?.large?.left || '0%',
         })),
       };
     },

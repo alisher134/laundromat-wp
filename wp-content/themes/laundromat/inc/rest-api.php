@@ -274,9 +274,17 @@ function laundromat_enhance_location_response($response, $post, $request)
             'top' => get_post_meta($post->ID, 'map_pos_mobile_top', true) ?: '0%',
             'left' => get_post_meta($post->ID, 'map_pos_mobile_left', true) ?: '0%',
         ],
-        'desktop' => [
-            'top' => get_post_meta($post->ID, 'map_pos_desktop_top', true) ?: '0%',
-            'left' => get_post_meta($post->ID, 'map_pos_desktop_left', true) ?: '0%',
+        'tablet' => [
+            'top' => get_post_meta($post->ID, 'map_pos_tablet_top', true) ?: '0%',
+            'left' => get_post_meta($post->ID, 'map_pos_tablet_left', true) ?: '0%',
+        ],
+        'medium' => [
+            'top' => get_post_meta($post->ID, 'map_pos_medium_top', true) ?: '0%',
+            'left' => get_post_meta($post->ID, 'map_pos_medium_left', true) ?: '0%',
+        ],
+        'large' => [
+            'top' => get_post_meta($post->ID, 'map_pos_large_top', true) ?: '0%',
+            'left' => get_post_meta($post->ID, 'map_pos_large_left', true) ?: '0%',
         ],
     ];
 
@@ -877,9 +885,17 @@ function laundromat_get_filtered_locations($request)
                     'top' => get_post_meta($post->ID, 'map_pos_mobile_top', true) ?: '0%',
                     'left' => get_post_meta($post->ID, 'map_pos_mobile_left', true) ?: '0%',
                 ],
-                'desktop' => [
-                    'top' => get_post_meta($post->ID, 'map_pos_desktop_top', true) ?: '0%',
-                    'left' => get_post_meta($post->ID, 'map_pos_desktop_left', true) ?: '0%',
+                'tablet' => [
+                    'top' => get_post_meta($post->ID, 'map_pos_tablet_top', true) ?: '0%',
+                    'left' => get_post_meta($post->ID, 'map_pos_tablet_left', true) ?: '0%',
+                ],
+                'medium' => [
+                    'top' => get_post_meta($post->ID, 'map_pos_medium_top', true) ?: '0%',
+                    'left' => get_post_meta($post->ID, 'map_pos_medium_left', true) ?: '0%',
+                ],
+                'large' => [
+                    'top' => get_post_meta($post->ID, 'map_pos_large_top', true) ?: '0%',
+                    'left' => get_post_meta($post->ID, 'map_pos_large_left', true) ?: '0%',
                 ],
             ],
         ];

@@ -343,8 +343,12 @@ function laundromat_register_meta_fields()
         'google_maps_url' => 'string',
         'map_pos_mobile_top' => 'string',
         'map_pos_mobile_left' => 'string',
-        'map_pos_desktop_top' => 'string',
-        'map_pos_desktop_left' => 'string',
+        'map_pos_tablet_top' => 'string',
+        'map_pos_tablet_left' => 'string',
+        'map_pos_medium_top' => 'string',
+        'map_pos_medium_left' => 'string',
+        'map_pos_large_top' => 'string',
+        'map_pos_large_left' => 'string',
     ];
 
     foreach ($location_fields as $field => $type) {

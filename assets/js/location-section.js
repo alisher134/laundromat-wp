@@ -5,8 +5,45 @@
   // Positions - loaded from API (start empty, fallback handled in updateMarkerPositions)
   let LOCATIONS_POSITIONS = {
     mobile: [],
-    desktop: [],
+    tablet: [],
+    medium: [],
+    large: [],
   };
+
+  const MAP_SCALES = ['mobile', 'tablet', 'medium', 'large'];
+
+  function getCurrentMapScale() {
+    const width = window.innerWidth;
+    if (width >= 1920) return 'large';
+    if (width >= 1366) return 'medium';
+    if (width >= 768) return 'tablet';
+    return 'mobile';
+  }
+
+  function getMapLayerElement(scale) {
+    return document.getElementById(`location-map-${scale}`);
+  }
+
+  function getAnimatedMapLayer() {
+    const scale = getCurrentMapScale();
+    if (scale === 'mobile') return null;
+    return getMapLayerElement(scale);
+  }
+
+  function normalizePositions(apiPositions) {
+    const normalized = {
+      mobile: apiPositions?.mobile || [],
+      tablet: apiPositions?.tablet || [],
+      medium: apiPositions?.medium || [],
+      large: apiPositions?.large || [],
+    };
+
+    if (normalized.tablet.length === 0 && normalized.mobile.length > 0) normalized.tablet = normalized.mobile;
+    if (normalized.medium.length === 0 && normalized.tablet.length > 0) normalized.medium = normalized.tablet;
+    if (normalized.large.length === 0 && normalized.medium.length > 0) normalized.large = normalized.medium;
+
+    return normalized;
+  }
 
   // Load locations from API
   async function loadLocationsFromAPI() {
@@ -28,8 +65,8 @@
         console.log('[Locations] Loaded', apiLocations.length, 'locations from API');
       }
 
-      if (apiPositions && apiPositions.mobile && apiPositions.desktop) {
-        LOCATIONS_POSITIONS = apiPositions;
+      if (apiPositions && (apiPositions.mobile || apiPositions.tablet || apiPositions.medium || apiPositions.large)) {
+        LOCATIONS_POSITIONS = normalizePositions(apiPositions);
         console.log('[Locations] Loaded positions from API');
       }
 
@@ -45,7 +82,7 @@
 
   // Dynamically render map markers from API data
   function updateMapMarkers() {
-    function updateGroup(parentSelector, isDesktop) {
+    function updateGroup(parentSelector, scale) {
       const parent = document.querySelector(parentSelector);
       if (!parent) return;
 
@@ -100,13 +137,13 @@
       });
 
       // 3. Render markers with percentage positions relative to the wrapper (the actual image)
-      const positions = isDesktop ? LOCATIONS_POSITIONS.desktop : LOCATIONS_POSITIONS.mobile;
+      const positions = LOCATIONS_POSITIONS[scale] || [];
 
       const markersHTML = locations
         .map((location, index) => {
           const position = positions.find((p) => p.id === location.id) || { top: '0%', left: '0%' };
-          // For desktop, markers start hidden and are shown by initMapAnimation
-          const initialOpacity = isDesktop ? '0' : '1';
+          // For non-mobile, markers start hidden and are shown by initMapAnimation
+          const initialOpacity = scale === 'mobile' ? '1' : '0';
 
           return `
           <a
@@ -133,11 +170,11 @@
       wrapper.innerHTML = markersHTML;
     }
 
-    // Update Mobile
-    updateGroup('#location-map-container > div:first-child', false);
-
-    // Update Desktop
-    updateGroup('#location-map-desktop', true);
+    // Update all map layers
+    updateGroup('#location-map-mobile', 'mobile');
+    updateGroup('#location-map-tablet', 'tablet');
+    updateGroup('#location-map-medium', 'medium');
+    updateGroup('#location-map-large', 'large');
   }
   // Dynamically render location cards from API data
   function updateLocationCards() {
@@ -217,7 +254,13 @@
   // Update marker positions based on API data (regenerate on resize)
   function updateMarkerPositions() {
     // If no positions loaded, don't update
-    if (!LOCATIONS_POSITIONS.mobile || !LOCATIONS_POSITIONS.desktop) return;
+    if (
+      !LOCATIONS_POSITIONS.mobile ||
+      !LOCATIONS_POSITIONS.tablet ||
+      !LOCATIONS_POSITIONS.medium ||
+      !LOCATIONS_POSITIONS.large
+    )
+      return;
     if (locations.length === 0) return;
 
     // Regenerate markers with correct positions for current screen size
@@ -255,9 +298,6 @@
     const mapContainer = document.getElementById('location-map-container');
     if (!mapContainer) return;
 
-    const desktopMap = document.getElementById('location-map-desktop');
-    if (!desktopMap) return;
-
     mapSpring = new Spring(SPRING_CONFIGS.LOCATION);
     markersOpacitySpring = new Spring(SPRING_CONFIGS.LOCATION);
 
@@ -269,37 +309,58 @@
     // Initialize cached viewport height
     cachedViewportHeight = window.innerHeight;
 
-    const initialMapY = 150;
-    const width = window.innerWidth;
-    let baseTranslateX = 0;
-    let baseTranslateY = 0;
+    function getBaseTranslate(width) {
+      let baseTranslateX = 0;
+      let baseTranslateY = 0;
 
-    if (width >= 1536) {
-      baseTranslateX = 800;
-      baseTranslateY = 0;
-    } else if (width >= 1280) {
-      baseTranslateX = 503;
-      baseTranslateY = -50;
-    } else if (width >= 1024) {
-      baseTranslateX = 183;
-      baseTranslateY = -100;
-    } else if (width >= 768) {
-      baseTranslateX = 53;
-      baseTranslateY = -100;
-    } else {
-      baseTranslateX = -50;
-      baseTranslateY = 0;
+      if (width >= 1920) {
+        baseTranslateX = (window.innerWidth * 0.24);
+        baseTranslateY = -132;
+      } else if (width >= 1450) {
+        baseTranslateX = (window.innerWidth * 0.18);
+        baseTranslateY = -96;
+      } else if (width >= 1366) {
+        baseTranslateX = (window.innerWidth * 0.24);
+        baseTranslateY = -60;
+      } else if (width >= 1024) {
+        baseTranslateX = (window.innerWidth * 0.24);
+        baseTranslateY = -24;
+      } else if (width >= 768) {
+        baseTranslateX = (window.innerWidth * 0.48);
+        baseTranslateY = 120;
+      } else if (width >= 550) {
+        baseTranslateX = (window.innerWidth * 0.24);
+        baseTranslateY = 84;
+      } else {
+        baseTranslateX = -12;
+        baseTranslateY = 156;
+      }
+
+      return { baseTranslateX, baseTranslateY };
     }
 
-    desktopMap.style.transform = `translateX(${baseTranslateX}px) translateY(${baseTranslateY + initialMapY}px)`;
+    function applyInitialState() {
+      const scale = getCurrentMapScale();
+      const mapLayer = getMapLayerElement(scale);
+      if (!mapLayer) return;
 
-    const desktopMarkers = document.querySelectorAll('#location-map-desktop .location-marker');
-    desktopMarkers.forEach((marker) => {
-      marker.style.opacity = '0';
-    });
+      const initialMapY = scale === 'mobile' ? 0 : 150;
+      const { baseTranslateX, baseTranslateY } = getBaseTranslate(window.innerWidth);
+      // Neutralize any Tailwind translate utilities to avoid double-offsets
+      mapLayer.style.translate = '0 0';
+      mapLayer.style.transform = `translateX(${baseTranslateX}px) translateY(${baseTranslateY + initialMapY}px)`;
+
+      const markers = mapLayer.querySelectorAll('.location-marker');
+      markers.forEach((marker) => {
+        marker.style.opacity = '0';
+      });
+    }
+
+    applyInitialState();
 
     function updateMapAnimation() {
-      if (!document.contains(mapContainer) || !document.contains(desktopMap)) {
+      const mapLayer = getAnimatedMapLayer();
+      if (!mapLayer || !document.contains(mapContainer) || !document.contains(mapLayer)) {
         animationFrameId = null;
         return;
       }
@@ -322,31 +383,14 @@
       // Base transforms from Next.js: -translate-x-[50px] md:translate-x-[53px] md:translate-y-[-100px] lg:translate-x-[183px] lg:translate-y-[-100px] xl:translate-x-[503px] xl:translate-y-[-50px] 2xl:translate-x-[800px]
       // We apply all transforms via inline styles to match exactly
 
-      const width = window.innerWidth;
-      let baseTranslateX = 0;
-      let baseTranslateY = 0;
+      const { baseTranslateX, baseTranslateY } = getBaseTranslate(window.innerWidth);
 
-      if (width >= 1536) {
-        baseTranslateX = 800;
-        baseTranslateY = 0;
-      } else if (width >= 1280) {
-        baseTranslateX = 503;
-        baseTranslateY = -50;
-      } else if (width >= 1024) {
-        baseTranslateX = 183;
-        baseTranslateY = -100;
-      } else if (width >= 768) {
-        baseTranslateX = 53;
-        baseTranslateY = -100;
-      } else {
-        baseTranslateX = -50;
-        baseTranslateY = 0;
-      }
+      // Neutralize any Tailwind translate utilities to avoid double-offsets
+      mapLayer.style.translate = '0 0';
+      mapLayer.style.transform = `translateX(${baseTranslateX}px) translateY(${baseTranslateY + mapY}px)`;
 
-      desktopMap.style.transform = `translateX(${baseTranslateX}px) translateY(${baseTranslateY + mapY}px)`;
-
-      const desktopMarkers = document.querySelectorAll('#location-map-desktop .location-marker');
-      desktopMarkers.forEach((marker) => {
+      const markers = mapLayer.querySelectorAll('.location-marker');
+      markers.forEach((marker) => {
         marker.style.opacity = markersOpacity;
       });
 
@@ -382,6 +426,8 @@
       resizeTimeout = setTimeout(() => {
         cachedViewportHeight = window.innerHeight;
       }, 150); // Small delay to smooth out the transition
+
+      applyInitialState();
 
       if (!animationFrameId) {
         animationFrameId = requestAnimationFrame(updateMapAnimation);
@@ -502,10 +548,9 @@
 
   // Update static markers (for preview map)
   function updateStaticMarkers() {
-    const mobileMarkers = document.querySelectorAll('#location-map-container > div:not([id]) .location-marker');
-    const desktopMarkers = document.querySelectorAll('#location-map-desktop .location-marker');
+    const allMarkers = document.querySelectorAll('#location-map-container .location-marker');
 
-    [...mobileMarkers, ...desktopMarkers].forEach((marker) => {
+    [...allMarkers].forEach((marker) => {
       const markerIndex = parseInt(marker.getAttribute('data-location-index'));
       const isActive = activeLocationIndex === markerIndex;
 
