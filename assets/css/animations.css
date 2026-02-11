@@ -232,6 +232,10 @@ button[id*='prev']:hover svg,
 }
 
 /* --- Interactive Links & Social --- */
+/* Plain text nav links need inline-block for transform - "Our location" has flex, works already */
+#header nav a:not(.flex) {
+  display: inline-block;
+}
 nav a,
 footer a:not(.text-white\/60),
 .social-link,
@@ -259,6 +263,14 @@ nav a:active,
 .interactive-link:active,
 .header-phone-link:active {
   transform: scale(0.94);
+}
+
+/* Burger menu – без hover/active анимаций */
+#mobile-menu nav a,
+#mobile-menu nav a:hover,
+#mobile-menu nav a:active {
+  transform: none !important;
+  transition: none !important;
 }
 
 /* Specific icon scale for phone link matching "Our location" */

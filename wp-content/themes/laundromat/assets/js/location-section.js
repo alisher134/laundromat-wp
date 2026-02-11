@@ -123,7 +123,7 @@
         parent.querySelectorAll(':scope > .location-marker').forEach((m) => m.remove());
 
         wrapper = document.createElement('div');
-        wrapper.className = 'marker-container-wrapper absolute z-10 pointer-events-none';
+        wrapper.className = 'marker-container-wrapper absolute z-999 pointer-events-none';
         parent.appendChild(wrapper);
       }
 
@@ -150,7 +150,7 @@
             href="${location.googleMapsUrl || '#'}"
             target="_blank"
             rel="noopener noreferrer"
-            class="location-marker absolute z-10 flex -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center transition-transform hover:scale-110"
+            class="location-marker absolute z-999 flex -translate-x-1/2 -translate-y-1/2 cursor-pointer items-center justify-center transition-transform hover:scale-110"
             style="top: ${position.top}; left: ${position.left}; pointer-events: auto; opacity: ${initialOpacity};"
             data-location-index="${index}"
           >
@@ -314,22 +314,22 @@
       let baseTranslateY = 0;
 
       if (width >= 1920) {
-        baseTranslateX = (window.innerWidth * 0.24);
+        baseTranslateX = window.innerWidth * 0.24;
         baseTranslateY = -132;
       } else if (width >= 1450) {
-        baseTranslateX = (window.innerWidth * 0.18);
+        baseTranslateX = window.innerWidth * 0.18;
         baseTranslateY = -96;
       } else if (width >= 1366) {
-        baseTranslateX = (window.innerWidth * 0.24);
+        baseTranslateX = window.innerWidth * 0.24;
         baseTranslateY = -60;
       } else if (width >= 1024) {
-        baseTranslateX = (window.innerWidth * 0.24);
+        baseTranslateX = window.innerWidth * 0.24;
         baseTranslateY = -24;
       } else if (width >= 768) {
-        baseTranslateX = (window.innerWidth * 0.48);
+        baseTranslateX = window.innerWidth * 0.48;
         baseTranslateY = 120;
       } else if (width >= 550) {
-        baseTranslateX = (window.innerWidth * 0.24);
+        baseTranslateX = window.innerWidth * 0.24;
         baseTranslateY = 84;
       } else {
         baseTranslateX = -12;

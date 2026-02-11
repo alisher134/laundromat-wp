@@ -578,12 +578,23 @@
 
         if (shouldExpand !== entry.isExpanded) {
           entry.isExpanded = shouldExpand;
-          const size = shouldExpand ? CARD_SIZES.large[breakpoint] : CARD_SIZES.small[breakpoint];
+          const smallSize = CARD_SIZES.small[breakpoint];
+          const largeSize = CARD_SIZES.large[breakpoint];
 
           // Force browser to apply both properties simultaneously
           requestAnimationFrame(() => {
-            entry.imageWrapper.style.width = `${size.width}px`;
-            entry.imageWrapper.style.height = `${size.height}px`;
+            if (shouldExpand) {
+              const wrapper = entry.card.querySelector('.service-card-wrapper');
+              const contentCol = wrapper?.children[0];
+              // Use content column height, slightly less for visual balance
+              const baseHeight = contentCol ? contentCol.offsetHeight : largeSize.height;
+              const targetHeight = Math.max(largeSize.height, baseHeight - 16);
+              entry.imageWrapper.style.width = `${largeSize.width}px`;
+              entry.imageWrapper.style.height = `${targetHeight}px`;
+            } else {
+              entry.imageWrapper.style.width = `${smallSize.width}px`;
+              entry.imageWrapper.style.height = `${smallSize.height}px`;
+            }
           });
 
           // If this card expands, it potentially triggers the PREVIOUS card's border
@@ -628,8 +639,18 @@
           if (!document.contains(entry.card)) return;
           const { imageWrapper } = entry;
           const smallSize = CARD_SIZES.small[breakpoint];
-          imageWrapper.style.height = `${smallSize.height}px`;
-          imageWrapper.style.width = `${smallSize.width}px`;
+          if (entry.isExpanded) {
+            const largeSize = CARD_SIZES.large[breakpoint];
+            const wrapper = entry.card.querySelector('.service-card-wrapper');
+            const contentCol = wrapper?.children[0];
+            const baseHeight = contentCol ? contentCol.offsetHeight : largeSize.height;
+            const targetHeight = Math.max(largeSize.height, baseHeight - 16);
+            imageWrapper.style.height = `${targetHeight}px`;
+            imageWrapper.style.width = `${largeSize.width}px`;
+          } else {
+            imageWrapper.style.height = `${smallSize.height}px`;
+            imageWrapper.style.width = `${smallSize.width}px`;
+          }
         });
         onScroll();
       });
