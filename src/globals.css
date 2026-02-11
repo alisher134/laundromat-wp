@@ -366,6 +366,18 @@
     color: #414242 !important;
   }
 
+  /* Lang switcher icon: dark (text-text) on light pages, white in footer */
+  #header[data-theme='light'] #lang-switcher svg {
+    @apply text-text;
+    color: var(--color-text) !important;
+  }
+
+  #lang-switcher-footer svg,
+  #lang-switcher-footer-mobile svg {
+    @apply text-white;
+    color: white !important;
+  }
+
   @keyframes accordion-down {
     from {
       height: 0;

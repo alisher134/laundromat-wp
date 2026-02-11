@@ -118,7 +118,7 @@
           <div class="hidden lg:relative lg:block" id="lang-switcher">
             <button
               id="lang-button"
-              class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] text-text 2xl:text-lg"
+              class="text-text flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
               type="button"
             >
               <span class="leading-[132%] tracking-[-0.01em]">En</span>
@@ -232,12 +232,12 @@
             <div class="relative" id="lang-switcher-mobile">
               <button
                 id="lang-button-mobile"
-                class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] text-text 2xl:text-lg"
+                class="text-text flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
                 type="button"
               >
                 <span class="leading-[132%] tracking-[-0.01em]">En</span>
                 <span class="bg-brand/8 rounded-[6px] px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-                  <svg class="h-[3px] w-[5px] text-text" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg class="text-text h-[3px] w-[5px]" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       fill-rule="evenodd"
                       stroke="currentColor"
@@ -483,7 +483,7 @@
               >
                 <span class="leading-[132%] tracking-[-0.01em] text-white">En</span>
                 <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-                  <svg class="h-[3px] w-[5px] text-text" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <svg class="text-text h-[3px] w-[5px]" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M0.5 0.5L2.9901 2.63438L5.48021 0.5"
                       fill-rule="evenodd"
@@ -568,7 +568,7 @@
             >
               <span class="leading-[132%] tracking-[-0.01em] text-white">En</span>
               <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-                <svg class="h-[3px] w-[5px] text-text" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="text-text h-[3px] w-[5px]" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path
                     d="M0.5 0.5L2.9901 2.63438L5.48021 0.5"
                     fill-rule="evenodd"
@@ -660,35 +660,49 @@
         </div>
 
         <!-- FooterBg -->
-              <div class="footer-circle-first flex items-center justify-center">
-                <svg width="514" height="579" viewBox="0 0 514 579" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M0.375977 478.04C49.3618 533.932 117.7 569.104 191.576 576.446C265.451 583.787 339.353 562.751 398.342 517.589C457.331 472.426 497.006 406.508 509.347 333.158C521.688 259.809 505.774 184.501 464.822 122.457M434.274 83.7059C396.563 43.3707 348.253 14.5233 294.903 0.483398"
-                    stroke="url(#paint0_linear_4056_1454)" />
-                  <defs>
-                    <linearGradient id="paint0_linear_4056_1454" x1="517.968" y1="440.234" x2="118.497" y2="35.3274"
-                      gradientUnits="userSpaceOnUse">
-                      <stop stop-color="white" stop-opacity="0.2" />
-                      <stop offset="1" stop-color="white" stop-opacity="0" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </div>
-              <div class="footer-circle-last flex items-center justify-center">
-                <svg width="514" height="579" viewBox="0 0 514 579" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    d="M0.375977 478.04C49.3618 533.932 117.7 569.104 191.576 576.446C265.451 583.787 339.353 562.751 398.342 517.589C457.331 472.426 497.006 406.508 509.347 333.158C521.688 259.809 505.774 184.501 464.822 122.457M434.274 83.7059C396.563 43.3707 348.253 14.5233 294.903 0.483398"
-                    stroke="url(#paint0_linear_4056_1456)" />
-                  <defs>
-                    <linearGradient id="paint0_linear_4056_1456" x1="608.02" y1="457.034" x2="-31.2888" y2="93.3203"
-                      gradientUnits="userSpaceOnUse">
-                      <stop offset="0.16263" stop-color="white" stop-opacity="0.3" />
-                      <stop offset="1" stop-color="white" stop-opacity="0" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </div>
-              <!-- <span aria-hidden="true" class="footer-circle-1"></span>
+        <div class="footer-circle-first flex items-center justify-center">
+          <svg width="514" height="579" viewBox="0 0 514 579" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M0.375977 478.04C49.3618 533.932 117.7 569.104 191.576 576.446C265.451 583.787 339.353 562.751 398.342 517.589C457.331 472.426 497.006 406.508 509.347 333.158C521.688 259.809 505.774 184.501 464.822 122.457M434.274 83.7059C396.563 43.3707 348.253 14.5233 294.903 0.483398"
+              stroke="url(#paint0_linear_4056_1454)"
+            />
+            <defs>
+              <linearGradient
+                id="paint0_linear_4056_1454"
+                x1="517.968"
+                y1="440.234"
+                x2="118.497"
+                y2="35.3274"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stop-color="white" stop-opacity="0.2" />
+                <stop offset="1" stop-color="white" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="footer-circle-last flex items-center justify-center">
+          <svg width="514" height="579" viewBox="0 0 514 579" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M0.375977 478.04C49.3618 533.932 117.7 569.104 191.576 576.446C265.451 583.787 339.353 562.751 398.342 517.589C457.331 472.426 497.006 406.508 509.347 333.158C521.688 259.809 505.774 184.501 464.822 122.457M434.274 83.7059C396.563 43.3707 348.253 14.5233 294.903 0.483398"
+              stroke="url(#paint0_linear_4056_1456)"
+            />
+            <defs>
+              <linearGradient
+                id="paint0_linear_4056_1456"
+                x1="608.02"
+                y1="457.034"
+                x2="-31.2888"
+                y2="93.3203"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop offset="0.16263" stop-color="white" stop-opacity="0.3" />
+                <stop offset="1" stop-color="white" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <!-- <span aria-hidden="true" class="footer-circle-1"></span>
                 <span aria-hidden="true" class="footer-circle-2"></span> -->
       </div>
 

@@ -1,552 +1,751 @@
 <!doctype html>
 <html lang="gr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Laundromat - Τοποθεσία</title>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Laundromat - Τοποθεσία</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css" rel="stylesheet" />
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.css" rel="stylesheet" />
+    <link href="../assets/css/output.css" rel="stylesheet" />
+    <link href="../assets/css/animations.css" rel="stylesheet" />
+  </head>
 
-  <link href="../assets/css/output.css" rel="stylesheet" />
-  <link href="../assets/css/animations.css" rel="stylesheet" />
-</head>
-
-<body>
-  <!-- HEADER CONTENT ... -->
-  <header id="header" data-header-style="dark" data-theme="light"
-    class="px-container-mobile min-[1120px]:px-container-tablet 2xl:px-container-desktop fixed top-0 right-0 left-0 z-50 pt-4 pb-4 transition-all duration-500 md:pt-[18px] md:pb-[18px] lg:pt-[11px] lg:pb-[11px] 2xl:pt-[22px] 2xl:pb-[22px]">
-    <div class="flex items-center justify-between">
-      <a href="index.html">
-        <svg width="191" height="36" viewBox="0 0 191 36" fill="none" xmlns="http://www.w3.org/2000/svg"
-          class="text-brand h-[30px] w-auto fill-current md:h-[32px] lg:h-[31px] 2xl:h-[39px]">
-          <path fill-rule="evenodd" clip-rule="evenodd"
-            d="M1.39516 15.5984C1.4599 15.5984 1.52333 15.6053 1.58586 15.6158V7.60834C1.58586 6.79675 2.25498 6.13658 3.07736 6.13658H22.8511C23.6734 6.13658 24.3426 6.79685 24.3426 7.60834V15.6158C24.9719 15.6218 25.5032 15.615 25.9287 15.6158V7.60834C25.9287 5.94406 24.5481 4.58984 22.8511 4.58984H3.07736C1.38041 4.58984 0 5.94396 0 7.60834V15.6132C0.413801 15.6126 0.880896 15.6077 1.39516 15.5984Z" />
-          <path fill-rule="evenodd" clip-rule="evenodd"
-            d="M25.7002 15.4887C25.6949 15.4887 25.69 15.4887 25.6848 15.4886C24.9997 15.479 24.5539 15.4741 24.3426 15.4737V28.3916C24.3426 29.2031 23.6734 29.8634 22.8511 29.8634H3.07736C2.25498 29.8634 1.58585 29.2031 1.58585 28.3916V15.4325C1.47465 15.4688 1.35732 15.4881 1.23769 15.486C0.919667 15.168 0.414002 15.474 0 15.4722V28.3916C0 30.0559 1.38041 31.4101 3.07736 31.4101H22.8511C24.5481 31.4101 25.9287 30.0559 25.9287 28.3916V15.4632C25.8549 15.4793 25.7786 15.4887 25.7002 15.4887Z" />
-          <path fill-rule="evenodd" clip-rule="evenodd"
-            d="M14.7559 8.22535C14.7559 8.57467 14.3333 8.85792 13.8121 8.85792H3.43345C2.91276 8.85792 2.49023 8.57467 2.49023 8.22535C2.49023 7.87603 2.91286 7.59277 3.43345 7.59277H13.8121C14.3333 7.59277 14.7559 7.87603 14.7559 8.22535Z" />
-          <path fill-rule="evenodd" clip-rule="evenodd"
-            d="M23.2853 8.2182C23.2853 8.92966 22.6941 9.50645 21.9643 9.50645C21.2347 9.50645 20.6436 8.92957 20.6436 8.2182C20.6436 7.50684 21.2348 6.93005 21.9643 6.93005C22.6942 6.93015 23.2853 7.50684 23.2853 8.2182Z" />
-          <path fill-rule="evenodd" clip-rule="evenodd"
-            d="M16.1891 16.5374L17.2506 15.6344C16.6507 14.9912 15.8911 14.4918 15.0337 14.1965L14.2402 15.3949C14.9997 15.5871 15.6728 15.9909 16.1891 16.5374Z" />
-          <path fill-rule="evenodd" clip-rule="evenodd"
-            d="M17.803 16.332L16.7249 17.2488C17.0605 17.8212 17.2538 18.4824 17.2538 19.1874C17.2538 21.3508 15.4489 23.111 13.2306 23.111C11.9656 23.111 10.8367 22.5387 10.0985 21.646L9.30566 22.8441C10.2954 23.854 11.6883 24.4853 13.2306 24.4853C16.2261 24.4853 18.6632 22.1088 18.6632 19.1874C18.6631 18.1362 18.3466 17.1565 17.803 16.332Z" />
-          <path fill-rule="evenodd" clip-rule="evenodd"
-            d="M13.2322 27.5376C8.50771 27.5376 4.66406 23.7892 4.66406 19.1816C4.66406 14.5744 8.50771 10.8259 13.2322 10.8259C17.9568 10.8259 21.8002 14.5744 21.8002 19.1816C21.8002 23.7892 17.9568 27.5376 13.2322 27.5376ZM13.2999 12.4506C9.74828 12.4506 6.65004 15.7185 6.65004 19.1816C6.65004 22.6453 9.68066 25.7503 13.2322 25.7503C16.7836 25.7503 19.9497 22.6453 19.9497 19.1815C19.9497 15.7184 16.8513 12.4506 13.2999 12.4506Z" />
-          <path fill-rule="evenodd" clip-rule="evenodd"
-            d="M38.0317 24.516H44.3767V27H34.9537V8.235H38.0317V24.516ZM44.8448 19.494C44.8448 18 45.1508 16.677 45.7628 15.525C46.3928 14.373 47.2388 13.482 48.3008 12.852C49.3808 12.204 50.5688 11.88 51.8648 11.88C53.0348 11.88 54.0518 12.114 54.9158 12.582C55.7978 13.032 56.4998 13.599 57.0218 14.283V12.123H60.1268V27H57.0218V24.786C56.4998 25.488 55.7888 26.073 54.8888 26.541C53.9888 27.009 52.9628 27.243 51.8108 27.243C50.5328 27.243 49.3628 26.919 48.3008 26.271C47.2388 25.605 46.3928 24.687 45.7628 23.517C45.1508 22.329 44.8448 20.988 44.8448 19.494ZM57.0218 19.548C57.0218 18.522 56.8058 17.631 56.3738 16.875C55.9598 16.119 55.4108 15.543 54.7268 15.147C54.0428 14.751 53.3048 14.553 52.5128 14.553C51.7208 14.553 50.9828 14.751 50.2988 15.147C49.6148 15.525 49.0568 16.092 48.6248 16.848C48.2108 17.586 48.0038 18.468 48.0038 19.494C48.0038 20.52 48.2108 21.42 48.6248 22.194C49.0568 22.968 49.6148 23.562 50.2988 23.976C51.0008 24.372 51.7388 24.57 52.5128 24.57C53.3048 24.57 54.0428 24.372 54.7268 23.976C55.4108 23.58 55.9598 23.004 56.3738 22.248C56.8058 21.474 57.0218 20.574 57.0218 19.548ZM76.5626 12.123V27H73.4846V25.245C72.9986 25.857 72.3596 26.343 71.5676 26.703C70.7936 27.045 69.9656 27.216 69.0836 27.216C67.9136 27.216 66.8606 26.973 65.9246 26.487C65.0066 26.001 64.2776 25.281 63.7376 24.327C63.2156 23.373 62.9546 22.221 62.9546 20.871V12.123H66.0056V20.412C66.0056 21.744 66.3386 22.77 67.0046 23.49C67.6706 24.192 68.5796 24.543 69.7316 24.543C70.8836 24.543 71.7926 24.192 72.4586 23.49C73.1426 22.77 73.4846 21.744 73.4846 20.412V12.123H76.5626ZM87.0498 11.88C88.2198 11.88 89.2638 12.123 90.1818 12.609C91.1178 13.095 91.8468 13.815 92.3688 14.769C92.8908 15.723 93.1518 16.875 93.1518 18.225V27H90.1008V18.684C90.1008 17.352 89.7678 16.335 89.1018 15.633C88.4358 14.913 87.5268 14.553 86.3748 14.553C85.2228 14.553 84.3048 14.913 83.6208 15.633C82.9548 16.335 82.6218 17.352 82.6218 18.684V27H79.5438V12.123H82.6218V13.824C83.1258 13.212 83.7648 12.735 84.5388 12.393C85.3308 12.051 86.1678 11.88 87.0498 11.88ZM94.972 19.494C94.972 18 95.278 16.677 95.89 15.525C96.52 14.373 97.366 13.482 98.428 12.852C99.508 12.204 100.705 11.88 102.019 11.88C102.991 11.88 103.945 12.096 104.881 12.528C105.835 12.942 106.591 13.5 107.149 14.202V7.02H110.254V27H107.149V24.759C106.645 25.479 105.943 26.073 105.043 26.541C104.161 27.009 103.144 27.243 101.992 27.243C100.696 27.243 99.508 26.919 98.428 26.271C97.366 25.605 96.52 24.687 95.89 23.517C95.278 22.329 94.972 20.988 94.972 19.494ZM107.149 19.548C107.149 18.522 106.933 17.631 106.501 16.875C106.087 16.119 105.538 15.543 104.854 15.147C104.17 14.751 103.432 14.553 102.64 14.553C101.848 14.553 101.11 14.751 100.426 15.147C99.742 15.525 99.184 16.092 98.752 16.848C98.338 17.586 98.131 18.468 98.131 19.494C98.131 20.52 98.338 21.42 98.752 22.194C99.184 22.968 99.742 23.562 100.426 23.976C101.128 24.372 101.866 24.57 102.64 24.57C103.432 24.57 104.17 24.372 104.854 23.976C105.538 23.58 106.087 23.004 106.501 22.248C106.933 21.474 107.149 20.574 107.149 19.548ZM116.295 14.283C116.745 13.527 117.339 12.942 118.077 12.528C118.833 12.096 119.724 11.88 120.75 11.88V15.066H119.967C118.761 15.066 117.843 15.372 117.213 15.984C116.601 16.596 116.295 17.658 116.295 19.17V27H113.217V12.123H116.295V14.283ZM128.952 27.243C127.548 27.243 126.279 26.928 125.145 26.298C124.011 25.65 123.12 24.75 122.472 23.598C121.824 22.428 121.5 21.078 121.5 19.548C121.5 18.036 121.833 16.695 122.499 15.525C123.165 14.355 124.074 13.455 125.226 12.825C126.378 12.195 127.665 11.88 129.087 11.88C130.509 11.88 131.796 12.195 132.948 12.825C134.1 13.455 135.009 14.355 135.675 15.525C136.341 16.695 136.674 18.036 136.674 19.548C136.674 21.06 136.332 22.401 135.648 23.571C134.964 24.741 134.028 25.65 132.84 26.298C131.67 26.928 130.374 27.243 128.952 27.243ZM128.952 24.57C129.744 24.57 130.482 24.381 131.166 24.003C131.868 23.625 132.435 23.058 132.867 22.302C133.299 21.546 133.515 20.628 133.515 19.548C133.515 18.468 133.308 17.559 132.894 16.821C132.48 16.065 131.931 15.498 131.247 15.12C130.563 14.742 129.825 14.553 129.033 14.553C128.241 14.553 127.503 14.742 126.819 15.12C126.153 15.498 125.622 16.065 125.226 16.821C124.83 17.559 124.632 18.468 124.632 19.548C124.632 21.15 125.037 22.392 125.847 23.274C126.675 24.138 127.71 24.57 128.952 24.57ZM156.646 11.88C157.816 11.88 158.86 12.123 159.778 12.609C160.714 13.095 161.443 13.815 161.965 14.769C162.505 15.723 162.775 16.875 162.775 18.225V27H159.724V18.684C159.724 17.352 159.391 16.335 158.725 15.633C158.059 14.913 157.15 14.553 155.998 14.553C154.846 14.553 153.928 14.913 153.244 15.633C152.578 16.335 152.245 17.352 152.245 18.684V27H149.194V18.684C149.194 17.352 148.861 16.335 148.195 15.633C147.529 14.913 146.62 14.553 145.468 14.553C144.316 14.553 143.398 14.913 142.714 15.633C142.048 16.335 141.715 17.352 141.715 18.684V27H138.637V12.123H141.715V13.824C142.219 13.212 142.858 12.735 143.632 12.393C144.406 12.051 145.234 11.88 146.116 11.88C147.304 11.88 148.366 12.132 149.302 12.636C150.238 13.14 150.958 13.869 151.462 14.823C151.912 13.923 152.614 13.212 153.568 12.69C154.522 12.15 155.548 11.88 156.646 11.88ZM164.586 19.494C164.586 18 164.892 16.677 165.504 15.525C166.134 14.373 166.98 13.482 168.042 12.852C169.122 12.204 170.31 11.88 171.606 11.88C172.776 11.88 173.793 12.114 174.657 12.582C175.539 13.032 176.241 13.599 176.763 14.283V12.123H179.868V27H176.763V24.786C176.241 25.488 175.53 26.073 174.63 26.541C173.73 27.009 172.704 27.243 171.552 27.243C170.274 27.243 169.104 26.919 168.042 26.271C166.98 25.605 166.134 24.687 165.504 23.517C164.892 22.329 164.586 20.988 164.586 19.494ZM176.763 19.548C176.763 18.522 176.547 17.631 176.115 16.875C175.701 16.119 175.152 15.543 174.468 15.147C173.784 14.751 173.046 14.553 172.254 14.553C171.462 14.553 170.724 14.751 170.04 15.147C169.356 15.525 168.798 16.092 168.366 16.848C167.952 17.586 167.745 18.468 167.745 19.494C167.745 20.52 167.952 21.42 168.366 22.194C168.798 22.968 169.356 23.562 170.04 23.976C170.742 24.372 171.48 24.57 172.254 24.57C173.046 24.57 173.784 24.372 174.468 23.976C175.152 23.58 175.701 23.004 176.115 22.248C176.547 21.474 176.763 20.574 176.763 19.548ZM186.421 14.634V22.869C186.421 23.427 186.547 23.832 186.799 24.084C187.069 24.318 187.519 24.435 188.149 24.435H190.039V27H187.609C186.223 27 185.161 26.676 184.423 26.028C183.685 25.38 183.316 24.327 183.316 22.869V14.634H181.561V12.123H183.316V8.424H186.421V12.123H190.039V14.634H186.421Z" />
-        </svg>
-      </a>
-      <nav class="hidden items-center gap-[40px] lg:flex xl:gap-[123px]">
-        <ul>
-          <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
-            <a class="group hover:text-brand flex items-center gap-[6px] transition-colors" href="location.html">
-              Η τοποθεσία μας
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 11 10" aria-hidden="true"
-                class="h-[10px] w-[11px] transition-transform duration-300 group-hover:scale-125">
-                <path fill="currentColor"
-                  d="M5.127 10C2.3 10 0 7.757 0 5s2.3-5 5.127-5 5.127 2.243 5.127 5-2.3 5-5.127 5m0-8.759C3.002 1.241 1.273 2.928 1.273 5s1.729 3.758 3.854 3.758S8.981 7.073 8.981 5 7.252 1.24 5.127 1.24">
-                </path>
-                <path fill="currentColor"
-                  d="m6.898 3.413.635-.54a3.3 3.3 0 0 0-1.326-.861l-.475.717c.454.115.857.357 1.166.684M7.864 3.292l-.645.548c.2.343.316.738.316 1.16 0 1.295-1.08 2.348-2.407 2.348a2.43 2.43 0 0 1-1.874-.877l-.475.717a3.28 3.28 0 0 0 2.349.982c1.792 0 3.25-1.422 3.25-3.17 0-.629-.189-1.215-.514-1.708">
-                </path>
-              </svg>
-            </a>
-          </li>
-        </ul>
-
-        <ul class="flex items-center gap-[16px] xl:gap-[28px]">
-          <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
-            <a class="hover:text-brand transition-colors" href="services.html">Υπηρεσίες</a>
-          </li>
-          <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
-            <a class="hover:text-brand transition-colors" href="instructions.html">Οδηγίες</a>
-          </li>
-          <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
-            <a class="hover:text-brand transition-colors" href="tips.html">Συμβουλές πλυντηρίου</a>
-          </li>
-          <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
-            <a class="hover:text-brand transition-colors" href="contact.html">Επικοινωνήστε μαζί μας</a>
-          </li>
-        </ul>
-      </nav>
-
-      <div class="flex items-center gap-5 md:gap-[46px] lg:gap-[24px] xl:gap-[59px] 2xl:gap-[105px]">
-        <div class="hidden lg:relative lg:block" id="lang-switcher">
-          <button id="lang-button"
-            class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] text-text 2xl:text-lg"
-            type="button">
-            <span class="leading-[132%] tracking-[-0.01em]">Gr</span>
-            <span class="bg-brand/8 rounded-[6px] px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-              <svg class="text-text h-[3px] w-[5px]" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.5 0.5L2.9901 2.63438L5.48021 0.5" fill-rule="evenodd" stroke="currentColor"
-                  style="stroke: currentColor !important" stroke-linecap="round" />
-              </svg>
-            </span>
-          </button>
-
-          <ul id="lang-dropdown"
-            class="absolute left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white text-center shadow-xl backdrop-blur">
-            <li>
-              <button
-                class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
-                type="button">
-                Gr
-              </button>
-            </li>
-            <li>
-              <button
-                class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
-                type="button">
-                En
-              </button>
+  <body>
+    <!-- HEADER CONTENT ... -->
+    <header
+      id="header"
+      data-header-style="dark"
+      data-theme="light"
+      class="px-container-mobile min-[1120px]:px-container-tablet 2xl:px-container-desktop fixed top-0 right-0 left-0 z-50 pt-4 pb-4 transition-all duration-500 md:pt-[18px] md:pb-[18px] lg:pt-[11px] lg:pb-[11px] 2xl:pt-[22px] 2xl:pb-[22px]"
+    >
+      <div class="flex items-center justify-between">
+        <a href="index.html">
+          <svg
+            width="191"
+            height="36"
+            viewBox="0 0 191 36"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            class="text-brand h-[30px] w-auto fill-current md:h-[32px] lg:h-[31px] 2xl:h-[39px]"
+          >
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M1.39516 15.5984C1.4599 15.5984 1.52333 15.6053 1.58586 15.6158V7.60834C1.58586 6.79675 2.25498 6.13658 3.07736 6.13658H22.8511C23.6734 6.13658 24.3426 6.79685 24.3426 7.60834V15.6158C24.9719 15.6218 25.5032 15.615 25.9287 15.6158V7.60834C25.9287 5.94406 24.5481 4.58984 22.8511 4.58984H3.07736C1.38041 4.58984 0 5.94396 0 7.60834V15.6132C0.413801 15.6126 0.880896 15.6077 1.39516 15.5984Z"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M25.7002 15.4887C25.6949 15.4887 25.69 15.4887 25.6848 15.4886C24.9997 15.479 24.5539 15.4741 24.3426 15.4737V28.3916C24.3426 29.2031 23.6734 29.8634 22.8511 29.8634H3.07736C2.25498 29.8634 1.58585 29.2031 1.58585 28.3916V15.4325C1.47465 15.4688 1.35732 15.4881 1.23769 15.486C0.919667 15.168 0.414002 15.474 0 15.4722V28.3916C0 30.0559 1.38041 31.4101 3.07736 31.4101H22.8511C24.5481 31.4101 25.9287 30.0559 25.9287 28.3916V15.4632C25.8549 15.4793 25.7786 15.4887 25.7002 15.4887Z"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M14.7559 8.22535C14.7559 8.57467 14.3333 8.85792 13.8121 8.85792H3.43345C2.91276 8.85792 2.49023 8.57467 2.49023 8.22535C2.49023 7.87603 2.91286 7.59277 3.43345 7.59277H13.8121C14.3333 7.59277 14.7559 7.87603 14.7559 8.22535Z"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M23.2853 8.2182C23.2853 8.92966 22.6941 9.50645 21.9643 9.50645C21.2347 9.50645 20.6436 8.92957 20.6436 8.2182C20.6436 7.50684 21.2348 6.93005 21.9643 6.93005C22.6942 6.93015 23.2853 7.50684 23.2853 8.2182Z"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M16.1891 16.5374L17.2506 15.6344C16.6507 14.9912 15.8911 14.4918 15.0337 14.1965L14.2402 15.3949C14.9997 15.5871 15.6728 15.9909 16.1891 16.5374Z"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M17.803 16.332L16.7249 17.2488C17.0605 17.8212 17.2538 18.4824 17.2538 19.1874C17.2538 21.3508 15.4489 23.111 13.2306 23.111C11.9656 23.111 10.8367 22.5387 10.0985 21.646L9.30566 22.8441C10.2954 23.854 11.6883 24.4853 13.2306 24.4853C16.2261 24.4853 18.6632 22.1088 18.6632 19.1874C18.6631 18.1362 18.3466 17.1565 17.803 16.332Z"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M13.2322 27.5376C8.50771 27.5376 4.66406 23.7892 4.66406 19.1816C4.66406 14.5744 8.50771 10.8259 13.2322 10.8259C17.9568 10.8259 21.8002 14.5744 21.8002 19.1816C21.8002 23.7892 17.9568 27.5376 13.2322 27.5376ZM13.2999 12.4506C9.74828 12.4506 6.65004 15.7185 6.65004 19.1816C6.65004 22.6453 9.68066 25.7503 13.2322 25.7503C16.7836 25.7503 19.9497 22.6453 19.9497 19.1815C19.9497 15.7184 16.8513 12.4506 13.2999 12.4506Z"
+            />
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M38.0317 24.516H44.3767V27H34.9537V8.235H38.0317V24.516ZM44.8448 19.494C44.8448 18 45.1508 16.677 45.7628 15.525C46.3928 14.373 47.2388 13.482 48.3008 12.852C49.3808 12.204 50.5688 11.88 51.8648 11.88C53.0348 11.88 54.0518 12.114 54.9158 12.582C55.7978 13.032 56.4998 13.599 57.0218 14.283V12.123H60.1268V27H57.0218V24.786C56.4998 25.488 55.7888 26.073 54.8888 26.541C53.9888 27.009 52.9628 27.243 51.8108 27.243C50.5328 27.243 49.3628 26.919 48.3008 26.271C47.2388 25.605 46.3928 24.687 45.7628 23.517C45.1508 22.329 44.8448 20.988 44.8448 19.494ZM57.0218 19.548C57.0218 18.522 56.8058 17.631 56.3738 16.875C55.9598 16.119 55.4108 15.543 54.7268 15.147C54.0428 14.751 53.3048 14.553 52.5128 14.553C51.7208 14.553 50.9828 14.751 50.2988 15.147C49.6148 15.525 49.0568 16.092 48.6248 16.848C48.2108 17.586 48.0038 18.468 48.0038 19.494C48.0038 20.52 48.2108 21.42 48.6248 22.194C49.0568 22.968 49.6148 23.562 50.2988 23.976C51.0008 24.372 51.7388 24.57 52.5128 24.57C53.3048 24.57 54.0428 24.372 54.7268 23.976C55.4108 23.58 55.9598 23.004 56.3738 22.248C56.8058 21.474 57.0218 20.574 57.0218 19.548ZM76.5626 12.123V27H73.4846V25.245C72.9986 25.857 72.3596 26.343 71.5676 26.703C70.7936 27.045 69.9656 27.216 69.0836 27.216C67.9136 27.216 66.8606 26.973 65.9246 26.487C65.0066 26.001 64.2776 25.281 63.7376 24.327C63.2156 23.373 62.9546 22.221 62.9546 20.871V12.123H66.0056V20.412C66.0056 21.744 66.3386 22.77 67.0046 23.49C67.6706 24.192 68.5796 24.543 69.7316 24.543C70.8836 24.543 71.7926 24.192 72.4586 23.49C73.1426 22.77 73.4846 21.744 73.4846 20.412V12.123H76.5626ZM87.0498 11.88C88.2198 11.88 89.2638 12.123 90.1818 12.609C91.1178 13.095 91.8468 13.815 92.3688 14.769C92.8908 15.723 93.1518 16.875 93.1518 18.225V27H90.1008V18.684C90.1008 17.352 89.7678 16.335 89.1018 15.633C88.4358 14.913 87.5268 14.553 86.3748 14.553C85.2228 14.553 84.3048 14.913 83.6208 15.633C82.9548 16.335 82.6218 17.352 82.6218 18.684V27H79.5438V12.123H82.6218V13.824C83.1258 13.212 83.7648 12.735 84.5388 12.393C85.3308 12.051 86.1678 11.88 87.0498 11.88ZM94.972 19.494C94.972 18 95.278 16.677 95.89 15.525C96.52 14.373 97.366 13.482 98.428 12.852C99.508 12.204 100.705 11.88 102.019 11.88C102.991 11.88 103.945 12.096 104.881 12.528C105.835 12.942 106.591 13.5 107.149 14.202V7.02H110.254V27H107.149V24.759C106.645 25.479 105.943 26.073 105.043 26.541C104.161 27.009 103.144 27.243 101.992 27.243C100.696 27.243 99.508 26.919 98.428 26.271C97.366 25.605 96.52 24.687 95.89 23.517C95.278 22.329 94.972 20.988 94.972 19.494ZM107.149 19.548C107.149 18.522 106.933 17.631 106.501 16.875C106.087 16.119 105.538 15.543 104.854 15.147C104.17 14.751 103.432 14.553 102.64 14.553C101.848 14.553 101.11 14.751 100.426 15.147C99.742 15.525 99.184 16.092 98.752 16.848C98.338 17.586 98.131 18.468 98.131 19.494C98.131 20.52 98.338 21.42 98.752 22.194C99.184 22.968 99.742 23.562 100.426 23.976C101.128 24.372 101.866 24.57 102.64 24.57C103.432 24.57 104.17 24.372 104.854 23.976C105.538 23.58 106.087 23.004 106.501 22.248C106.933 21.474 107.149 20.574 107.149 19.548ZM116.295 14.283C116.745 13.527 117.339 12.942 118.077 12.528C118.833 12.096 119.724 11.88 120.75 11.88V15.066H119.967C118.761 15.066 117.843 15.372 117.213 15.984C116.601 16.596 116.295 17.658 116.295 19.17V27H113.217V12.123H116.295V14.283ZM128.952 27.243C127.548 27.243 126.279 26.928 125.145 26.298C124.011 25.65 123.12 24.75 122.472 23.598C121.824 22.428 121.5 21.078 121.5 19.548C121.5 18.036 121.833 16.695 122.499 15.525C123.165 14.355 124.074 13.455 125.226 12.825C126.378 12.195 127.665 11.88 129.087 11.88C130.509 11.88 131.796 12.195 132.948 12.825C134.1 13.455 135.009 14.355 135.675 15.525C136.341 16.695 136.674 18.036 136.674 19.548C136.674 21.06 136.332 22.401 135.648 23.571C134.964 24.741 134.028 25.65 132.84 26.298C131.67 26.928 130.374 27.243 128.952 27.243ZM128.952 24.57C129.744 24.57 130.482 24.381 131.166 24.003C131.868 23.625 132.435 23.058 132.867 22.302C133.299 21.546 133.515 20.628 133.515 19.548C133.515 18.468 133.308 17.559 132.894 16.821C132.48 16.065 131.931 15.498 131.247 15.12C130.563 14.742 129.825 14.553 129.033 14.553C128.241 14.553 127.503 14.742 126.819 15.12C126.153 15.498 125.622 16.065 125.226 16.821C124.83 17.559 124.632 18.468 124.632 19.548C124.632 21.15 125.037 22.392 125.847 23.274C126.675 24.138 127.71 24.57 128.952 24.57ZM156.646 11.88C157.816 11.88 158.86 12.123 159.778 12.609C160.714 13.095 161.443 13.815 161.965 14.769C162.505 15.723 162.775 16.875 162.775 18.225V27H159.724V18.684C159.724 17.352 159.391 16.335 158.725 15.633C158.059 14.913 157.15 14.553 155.998 14.553C154.846 14.553 153.928 14.913 153.244 15.633C152.578 16.335 152.245 17.352 152.245 18.684V27H149.194V18.684C149.194 17.352 148.861 16.335 148.195 15.633C147.529 14.913 146.62 14.553 145.468 14.553C144.316 14.553 143.398 14.913 142.714 15.633C142.048 16.335 141.715 17.352 141.715 18.684V27H138.637V12.123H141.715V13.824C142.219 13.212 142.858 12.735 143.632 12.393C144.406 12.051 145.234 11.88 146.116 11.88C147.304 11.88 148.366 12.132 149.302 12.636C150.238 13.14 150.958 13.869 151.462 14.823C151.912 13.923 152.614 13.212 153.568 12.69C154.522 12.15 155.548 11.88 156.646 11.88ZM164.586 19.494C164.586 18 164.892 16.677 165.504 15.525C166.134 14.373 166.98 13.482 168.042 12.852C169.122 12.204 170.31 11.88 171.606 11.88C172.776 11.88 173.793 12.114 174.657 12.582C175.539 13.032 176.241 13.599 176.763 14.283V12.123H179.868V27H176.763V24.786C176.241 25.488 175.53 26.073 174.63 26.541C173.73 27.009 172.704 27.243 171.552 27.243C170.274 27.243 169.104 26.919 168.042 26.271C166.98 25.605 166.134 24.687 165.504 23.517C164.892 22.329 164.586 20.988 164.586 19.494ZM176.763 19.548C176.763 18.522 176.547 17.631 176.115 16.875C175.701 16.119 175.152 15.543 174.468 15.147C173.784 14.751 173.046 14.553 172.254 14.553C171.462 14.553 170.724 14.751 170.04 15.147C169.356 15.525 168.798 16.092 168.366 16.848C167.952 17.586 167.745 18.468 167.745 19.494C167.745 20.52 167.952 21.42 168.366 22.194C168.798 22.968 169.356 23.562 170.04 23.976C170.742 24.372 171.48 24.57 172.254 24.57C173.046 24.57 173.784 24.372 174.468 23.976C175.152 23.58 175.701 23.004 176.115 22.248C176.547 21.474 176.763 20.574 176.763 19.548ZM186.421 14.634V22.869C186.421 23.427 186.547 23.832 186.799 24.084C187.069 24.318 187.519 24.435 188.149 24.435H190.039V27H187.609C186.223 27 185.161 26.676 184.423 26.028C183.685 25.38 183.316 24.327 183.316 22.869V14.634H181.561V12.123H183.316V8.424H186.421V12.123H190.039V14.634H186.421Z"
+            />
+          </svg>
+        </a>
+        <nav class="hidden items-center gap-[40px] lg:flex xl:gap-[123px]">
+          <ul>
+            <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
+              <a class="group hover:text-brand flex items-center gap-[6px] transition-colors" href="location.html">
+                Η τοποθεσία μας
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 11 10"
+                  aria-hidden="true"
+                  class="h-[10px] w-[11px] transition-transform duration-300 group-hover:scale-125"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M5.127 10C2.3 10 0 7.757 0 5s2.3-5 5.127-5 5.127 2.243 5.127 5-2.3 5-5.127 5m0-8.759C3.002 1.241 1.273 2.928 1.273 5s1.729 3.758 3.854 3.758S8.981 7.073 8.981 5 7.252 1.24 5.127 1.24"
+                  ></path>
+                  <path
+                    fill="currentColor"
+                    d="m6.898 3.413.635-.54a3.3 3.3 0 0 0-1.326-.861l-.475.717c.454.115.857.357 1.166.684M7.864 3.292l-.645.548c.2.343.316.738.316 1.16 0 1.295-1.08 2.348-2.407 2.348a2.43 2.43 0 0 1-1.874-.877l-.475.717a3.28 3.28 0 0 0 2.349.982c1.792 0 3.25-1.422 3.25-3.17 0-.629-.189-1.215-.514-1.708"
+                  ></path>
+                </svg>
+              </a>
             </li>
           </ul>
-        </div>
 
-        <a class="text-text hidden text-sm leading-[132%] font-normal tracking-[-0.01em] lg:block 2xl:text-lg 2xl:font-medium"
-          href="tel:+88006001441">
-          8 800 600 14 41
-        </a>
+          <ul class="flex items-center gap-[16px] xl:gap-[28px]">
+            <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
+              <a class="hover:text-brand transition-colors" href="services.html">Υπηρεσίες</a>
+            </li>
+            <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
+              <a class="hover:text-brand transition-colors" href="instructions.html">Οδηγίες</a>
+            </li>
+            <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
+              <a class="hover:text-brand transition-colors" href="tips.html">Συμβουλές πλυντηρίου</a>
+            </li>
+            <li class="paragraph-body-xs hover:text-brand text-text transition-colors 2xl:text-lg">
+              <a class="hover:text-brand transition-colors" href="contact.html">Επικοινωνήστε μαζί μας</a>
+            </li>
+          </ul>
+        </nav>
 
-        <button id="mobile-menu-btn" class="text-text block lg:hidden" aria-label="Menu">
-          <svg class="h-9 w-[38px]" viewBox="0 0 38 36" fill="none">
-            <rect width="38" height="36" rx="10" fill-rule="evenodd" fill="currentColor"
-              style="fill: currentColor !important" fill-opacity="0.01" />
-            <rect x="0.5" y="0.5" width="37" height="35" rx="9.5" fill-rule="evenodd" stroke="currentColor"
-              style="stroke: currentColor !important" stroke-opacity="0.8" />
-            <rect x="12" y="14" width="14" height="1" rx="0.5" fill-rule="evenodd" fill="currentColor"
-              style="fill: currentColor !important" />
-            <rect x="12" y="21" width="14" height="1" rx="0.5" fill-rule="evenodd" fill="currentColor"
-              style="fill: currentColor !important" />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <div id="mobile-menu" class="invisible fixed inset-0 z-50" style="pointer-events: none">
-    <div id="mobile-menu-overlay" class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300"></div>
-
-    <div id="mobile-menu-content"
-      class="absolute inset-y-0 right-0 flex w-full translate-x-full flex-col overflow-hidden border-none bg-white p-0 shadow-lg transition-transform duration-500 ease-in-out">
-      <div class="relative h-[280px] w-full shrink-0 overflow-hidden">
-        <img alt="" aria-hidden="true"
-          class="absolute top-0 left-0 h-full w-full translate-x-[-140px] translate-y-[-40px] rotate-170 object-contain md:translate-x-[-250px]"
-          src="../assets/images/mobile-circle.png" />
-
-        <div class="absolute top-4 right-4 z-10 flex items-center gap-5">
-          <div class="relative" id="lang-switcher-mobile">
-            <button id="lang-button-mobile"
-              class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] text-text 2xl:text-lg"
-              type="button">
+        <div class="flex items-center gap-5 md:gap-[46px] lg:gap-[24px] xl:gap-[59px] 2xl:gap-[105px]">
+          <div class="hidden lg:relative lg:block" id="lang-switcher">
+            <button
+              id="lang-button"
+              class="text-text flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
+              type="button"
+            >
               <span class="leading-[132%] tracking-[-0.01em]">Gr</span>
               <span class="bg-brand/8 rounded-[6px] px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-                <svg class="h-[3px] w-[5px] text-text" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" stroke="currentColor" style="stroke: currentColor !important"
-                    stroke-linecap="round" d="M0.5 0.5L2.9901 2.63438L5.48021 0.5"></path>
+                <svg class="text-text h-[3px] w-[5px]" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M0.5 0.5L2.9901 2.63438L5.48021 0.5"
+                    fill-rule="evenodd"
+                    stroke="currentColor"
+                    style="stroke: currentColor !important"
+                    stroke-linecap="round"
+                  />
                 </svg>
               </span>
             </button>
 
-            <ul id="lang-dropdown-mobile"
-              class="absolute left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-black/10 bg-white text-center shadow-xl backdrop-blur">
+            <ul
+              id="lang-dropdown"
+              class="absolute left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white text-center shadow-xl backdrop-blur"
+            >
               <li>
                 <button
-                  class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
-                  type="button">
-                  En
+                  class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                  type="button"
+                >
+                  Gr
                 </button>
               </li>
               <li>
                 <button
-                  class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
-                  type="button">
-                  Gr
+                  class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                  type="button"
+                >
+                  En
                 </button>
               </li>
             </ul>
           </div>
 
-          <button id="mobile-menu-close" aria-label="Κλείσιμο μενού"
-            class="border-text/20 flex h-10 w-10 touch-manipulation items-center justify-center rounded-[10px] border transition-transform active:scale-95">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 11 11" aria-hidden="true"
-              class="text-text/60 h-[13px] w-[13px]">
-              <path fill-rule="evenodd" stroke="currentColor" style="stroke: currentColor !important"
-                stroke-linecap="round" d="m.5.5 9.486 9.486m-9.486 0L9.986.5"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <div class="flex flex-1 flex-col gap-6 overflow-y-auto px-4 pb-10">
-        <nav aria-label="Main navigation">
-          <p class="paragraph-body-xs text-text/50 mb-4">Μενού</p>
-          <ul class="space-y-2">
-            <li>
-              <a class="text-brand block touch-manipulation py-1 text-[24px] leading-[124%] font-normal tracking-[-0.04em] transition"
-                href="services.html">
-                Υπηρεσίες
-              </a>
-            </li>
-            <li>
-              <a class="text-brand block touch-manipulation py-1 text-[24px] leading-[124%] font-normal tracking-[-0.04em] transition"
-                href="instructions.html">
-                Οδηγίες
-              </a>
-            </li>
-            <li>
-              <a class="text-brand block touch-manipulation py-1 text-[24px] leading-[124%] font-normal tracking-[-0.04em] transition"
-                href="tips.html">
-                Συμβουλές πλυντηρίου
-              </a>
-            </li>
-            <li>
-              <a class="text-brand block touch-manipulation py-1 text-[24px] leading-[124%] font-normal tracking-[-0.04em] transition"
-                href="location.html">
-                Η τοποθεσία μας
-              </a>
-            </li>
-            <li>
-              <a class="text-brand block touch-manipulation py-1 text-[24px] leading-[124%] font-normal tracking-[-0.04em] transition"
-                href="contact.html">
-                Επικοινωνία
-              </a>
-            </li>
-          </ul>
-        </nav>
-
-        <div class="mt-auto">
-          <p class="text-text/50 text-sm leading-[132%] font-normal tracking-[-0.01em]">Επικοινωνία</p>
-          <div class="space-y-2">
-            <a class="text-brand! block touch-manipulation py-1 text-[18px] leading-[132%] font-normal tracking-[-0.01em] transition-opacity hover:opacity-70"
-              href="tel:+88006001441">
-              8 800 600 14 41
-            </a>
-            <a class="text-brand! block w-fit touch-manipulation py-1 text-[18px] leading-[132%] font-normal tracking-[-0.01em] underline transition-opacity hover:opacity-70"
-              href="mailto:info@Laundromat.gr">
-              info@Laundromat.gr
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <main class="min-h-screen">
-    <div class="mx-4 pt-[124px] md:mx-4 md:pt-[136px] xl:pt-[147px] 2xl:pt-[208px]">
-      <h1 id="location-title"
-        class="paragraph-heading-md text-text mb-[33px] max-w-[328px] translate-y-[100px] opacity-0 transition-transform duration-700 ease-out md:max-w-[576px] md:text-[45px] md:leading-[110%] xl:max-w-[463px] xl:text-[45px] 2xl:max-w-[501px] 2xl:text-[64px]">
-        Βρείτε το πλησιέστερο <span class="text-brand">Laundromat</span>
-      </h1>
-
-      <div class="flex flex-col gap-[6px] md:flex-row md:gap-6">
-        <!-- Google Map -->
-        <div id="map-container"
-          class="rounded-card relative h-[408px] w-full translate-y-[150px] overflow-hidden opacity-0 transition-all duration-700 ease-out md:order-2 md:h-[409px] md:flex-1 xl:h-[474px] 2xl:h-[786px]">
-          <!-- Map injected by JS -->
-          <div id="map" class="rounded-card h-full w-full"></div>
-        </div>
-
-        <!-- Desktop List -->
-        <div id="locations-desktop"
-          class="custom-scrollbar hidden h-[409px] w-full translate-y-[80px] scroll-m-3 overflow-y-auto opacity-0 transition-all duration-700 ease-out md:order-1 md:block md:h-[409px] md:w-[360px] md:shrink-0 md:pr-2 xl:h-[474px] xl:w-[425px] 2xl:h-[784px] 2xl:w-[605px] 2xl:pr-3">
-          <div id="location-list-container" class="flex flex-col gap-[6px]">
-            <!-- Items injected by JS -->
-          </div>
-        </div>
-
-        <!-- Mobile Slider -->
-        <div id="locations-mobile"
-          class="block translate-y-[80px] opacity-0 transition-all duration-700 ease-out md:hidden">
-          <div id="keen-slider-locations" class="keen-slider">
-            <!-- Slides injected by JS -->
-          </div>
-
-          <!-- Slider Dots/Arrows if needed (Design shows SliderButtons component) -->
-          <div class="flex-center mt-6 flex justify-center gap-2" id="slider-controls">
-            <!-- Controls injected by JS -->
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
-
-  <footer
-    class="xl:px-container-tablet xl:pb-container-tablet 2xl:px-container-desktop 2xl:pb-container-desktop relative bg-white px-[6px] pt-[120px] pb-[6px] md:pt-[164px] xl:pt-[200px] 2xl:pt-[256px]">
-    <div class="pointer-events-none absolute inset-0 bg-[#C7D8E3]/20"></div>
-
-    <div
-      class="bg-brand px-container-mobile pb-container-mobile xl:px-container-tablet relative overflow-hidden rounded-[20px] pt-9 xl:py-[34px]">
-      <div class="mb-8 flex items-start justify-between xl:mb-[83px] 2xl:mb-[180px]">
-        <!-- Contacts -->
-        <address class="flex flex-col items-start gap-[6px] not-italic xl:gap-2 2xl:gap-[10px]">
-          <a class="text-4xl leading-[136%] font-normal tracking-[-0.04em] text-white md:text-[45px] xl:text-[64px] xl:leading-[110%] 2xl:text-[64px]"
-            href="tel:+88006001441">
+          <a
+            class="text-text hidden text-sm leading-[132%] font-normal tracking-[-0.01em] lg:block 2xl:text-lg 2xl:font-medium"
+            href="tel:+88006001441"
+          >
             8 800 600 14 41
           </a>
-          <a class="text-[21px] leading-[136%] font-normal tracking-[-0.02em] text-white underline xl:text-2xl 2xl:text-4xl"
-            href="mailto:info@Laundromat.gr">
-            info@Laundromat.gr
-          </a>
-        </address>
 
-        <!-- Desktop Nav -->
-        <nav class="hidden xl:block">
-          <h3 class="paragraph-sm-default mb-3 text-white/50 xl:mb-5 2xl:mb-6 2xl:text-lg">Εταιρεία</h3>
-          <ul class="flex flex-col gap-[6px] 2xl:gap-[8px]">
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
-              <a href="location.html">Η τοποθεσία μας</a>
-            </li>
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
-              <a href="instructions.html">Οδηγίες</a>
-            </li>
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
-              <a href="tips.html">Συμβουλές πλυντηρίου</a>
-            </li>
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
-              <a href="contact.html">Επικοινωνήστε μαζί μας</a>
-            </li>
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
-              <a href="faq.html">FAQ</a>
-            </li>
-          </ul>
-        </nav>
+          <button id="mobile-menu-btn" class="text-text block lg:hidden" aria-label="Μενού">
+            <svg class="h-9 w-[38px]" viewBox="0 0 38 36" fill="none">
+              <rect
+                width="38"
+                height="36"
+                rx="10"
+                fill-rule="evenodd"
+                fill="currentColor"
+                style="fill: currentColor !important"
+                fill-opacity="0.01"
+              />
+              <rect
+                x="0.5"
+                y="0.5"
+                width="37"
+                height="35"
+                rx="9.5"
+                fill-rule="evenodd"
+                stroke="currentColor"
+                style="stroke: currentColor !important"
+                stroke-opacity="0.8"
+              />
+              <rect
+                x="12"
+                y="14"
+                width="14"
+                height="1"
+                rx="0.5"
+                fill-rule="evenodd"
+                fill="currentColor"
+                style="fill: currentColor !important"
+              />
+              <rect
+                x="12"
+                y="21"
+                width="14"
+                height="1"
+                rx="0.5"
+                fill-rule="evenodd"
+                fill="currentColor"
+                style="fill: currentColor !important"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
 
-        <nav class="hidden xl:block">
-          <h3 class="paragraph-sm-default mb-3 text-white/50 xl:mb-5 2xl:mb-6 2xl:text-lg">Υπηρεσίες</h3>
-          <ul class="flex flex-col gap-[6px] 2xl:gap-[8px]">
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
-              <a href="services.html#laundry">Πλυντήριο</a>
-            </li>
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
-              <a href="services.html#drying">Στέγνωμα</a>
-            </li>
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
-              <a href="services.html#special-cleaning">Ειδικός καθαρισμός</a>
-            </li>
-          </ul>
-        </nav>
+    <div id="mobile-menu" class="invisible fixed inset-0 z-50" style="pointer-events: none">
+      <div id="mobile-menu-overlay" class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300"></div>
 
-        <!-- Desktop Lang Switcher -->
-        <div class="hidden md:block">
-          <div class="relative" id="lang-switcher-footer">
-            <button id="lang-button-footer"
-              class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
-              type="button">
+      <div
+        id="mobile-menu-content"
+        class="absolute inset-y-0 right-0 flex w-full translate-x-full flex-col overflow-hidden border-none bg-white p-0 shadow-lg transition-transform duration-500 ease-in-out"
+      >
+        <div class="relative h-[280px] w-full shrink-0 overflow-hidden">
+          <img
+            alt=""
+            aria-hidden="true"
+            class="absolute top-0 left-0 h-full w-full translate-x-[-140px] translate-y-[-40px] rotate-170 object-contain md:translate-x-[-250px]"
+            src="../assets/images/mobile-circle.png"
+          />
+
+          <div class="absolute top-4 right-4 z-10 flex items-center gap-5">
+            <div class="relative" id="lang-switcher-mobile">
+              <button
+                id="lang-button-mobile"
+                class="text-text flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
+                type="button"
+              >
+                <span class="leading-[132%] tracking-[-0.01em]">Gr</span>
+                <span class="bg-brand/8 rounded-[6px] px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
+                  <svg class="text-text h-[3px] w-[5px]" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      fill-rule="evenodd"
+                      stroke="currentColor"
+                      style="stroke: currentColor !important"
+                      stroke-linecap="round"
+                      d="M0.5 0.5L2.9901 2.63438L5.48021 0.5"
+                    ></path>
+                  </svg>
+                </span>
+              </button>
+
+              <ul
+                id="lang-dropdown-mobile"
+                class="absolute left-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-black/10 bg-white text-center shadow-xl backdrop-blur"
+              >
+                <li>
+                  <button
+                    class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                    type="button"
+                  >
+                    En
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                    type="button"
+                  >
+                    Gr
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <button
+              id="mobile-menu-close"
+              aria-label="Κλείσιμο μενού"
+              class="border-text/20 flex h-10 w-10 touch-manipulation items-center justify-center rounded-[10px] border transition-transform active:scale-95"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 11 11"
+                aria-hidden="true"
+                class="text-text/60 h-[13px] w-[13px]"
+              >
+                <path
+                  fill-rule="evenodd"
+                  stroke="currentColor"
+                  style="stroke: currentColor !important"
+                  stroke-linecap="round"
+                  d="m.5.5 9.486 9.486m-9.486 0L9.986.5"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-1 flex-col gap-6 overflow-y-auto px-4 pb-10">
+          <nav aria-label="Κύρια πλοήγηση">
+            <p class="paragraph-body-xs text-text/50 mb-4">Μενού</p>
+            <ul class="space-y-2">
+              <li>
+                <a
+                  class="text-brand block touch-manipulation py-1 text-[24px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="services.html"
+                >
+                  Υπηρεσίες
+                </a>
+              </li>
+              <li>
+                <a
+                  class="text-brand block touch-manipulation py-1 text-[24px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="instructions.html"
+                >
+                  Οδηγίες
+                </a>
+              </li>
+              <li>
+                <a
+                  class="text-brand block touch-manipulation py-1 text-[24px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="tips.html"
+                >
+                  Συμβουλές πλυντηρίου
+                </a>
+              </li>
+              <li>
+                <a
+                  class="text-brand block touch-manipulation py-1 text-[24px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="location.html"
+                >
+                  Η τοποθεσία μας
+                </a>
+              </li>
+              <li>
+                <a
+                  class="text-brand block touch-manipulation py-1 text-[24px] leading-[124%] font-normal tracking-[-0.04em] transition"
+                  href="contact.html"
+                >
+                  Επικοινωνία
+                </a>
+              </li>
+            </ul>
+          </nav>
+
+          <div class="mt-auto">
+            <p class="text-text/50 text-sm leading-[132%] font-normal tracking-[-0.01em]">Επικοινωνία</p>
+            <div class="space-y-2">
+              <a
+                class="text-brand! block touch-manipulation py-1 text-[18px] leading-[132%] font-normal tracking-[-0.01em] transition-opacity hover:opacity-70"
+                href="tel:+88006001441"
+              >
+                8 800 600 14 41
+              </a>
+              <a
+                class="text-brand! block w-fit touch-manipulation py-1 text-[18px] leading-[132%] font-normal tracking-[-0.01em] underline transition-opacity hover:opacity-70"
+                href="mailto:info@Laundromat.gr"
+              >
+                info@Laundromat.gr
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <main class="min-h-screen">
+      <div class="mx-4 pt-[124px] md:mx-4 md:pt-[136px] xl:pt-[147px] 2xl:pt-[208px]">
+        <h1
+          id="location-title"
+          class="paragraph-heading-md text-text mb-[33px] max-w-[328px] translate-y-[100px] opacity-0 transition-transform duration-700 ease-out md:max-w-[576px] md:text-[45px] md:leading-[110%] xl:max-w-[463px] xl:text-[45px] 2xl:max-w-[501px] 2xl:text-[64px]"
+        >
+          Βρείτε το πλησιέστερο <span class="text-brand">Laundromat</span>
+        </h1>
+
+        <div class="flex flex-col gap-[6px] md:flex-row md:gap-6">
+          <!-- Google Map -->
+          <div
+            id="map-container"
+            class="rounded-card relative h-[408px] w-full translate-y-[150px] overflow-hidden opacity-0 transition-all duration-700 ease-out md:order-2 md:h-[409px] md:flex-1 xl:h-[474px] 2xl:h-[786px]"
+          >
+            <!-- Map injected by JS -->
+            <div id="map" class="rounded-card h-full w-full"></div>
+          </div>
+
+          <!-- Desktop List -->
+          <div
+            id="locations-desktop"
+            class="custom-scrollbar hidden h-[409px] w-full translate-y-[80px] scroll-m-3 overflow-y-auto opacity-0 transition-all duration-700 ease-out md:order-1 md:block md:h-[409px] md:w-[360px] md:shrink-0 md:pr-2 xl:h-[474px] xl:w-[425px] 2xl:h-[784px] 2xl:w-[605px] 2xl:pr-3"
+          >
+            <div id="location-list-container" class="flex flex-col gap-[6px]">
+              <!-- Items injected by JS -->
+            </div>
+          </div>
+
+          <!-- Mobile Slider -->
+          <div
+            id="locations-mobile"
+            class="block translate-y-[80px] opacity-0 transition-all duration-700 ease-out md:hidden"
+          >
+            <div id="keen-slider-locations" class="keen-slider">
+              <!-- Slides injected by JS -->
+            </div>
+
+            <!-- Slider Dots/Arrows if needed (Design shows SliderButtons component) -->
+            <div class="flex-center mt-6 flex justify-center gap-2" id="slider-controls">
+              <!-- Controls injected by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer
+      class="xl:px-container-tablet xl:pb-container-tablet 2xl:px-container-desktop 2xl:pb-container-desktop relative bg-white px-[6px] pt-[120px] pb-[6px] md:pt-[164px] xl:pt-[200px] 2xl:pt-[256px]"
+    >
+      <div class="pointer-events-none absolute inset-0 bg-[#C7D8E3]/20"></div>
+
+      <div
+        class="bg-brand px-container-mobile pb-container-mobile xl:px-container-tablet relative overflow-hidden rounded-[20px] pt-9 xl:py-[34px]"
+      >
+        <div class="mb-8 flex items-start justify-between xl:mb-[83px] 2xl:mb-[180px]">
+          <!-- Contacts -->
+          <address class="flex flex-col items-start gap-[6px] not-italic xl:gap-2 2xl:gap-[10px]">
+            <a
+              class="text-4xl leading-[136%] font-normal tracking-[-0.04em] text-white md:text-[45px] xl:text-[64px] xl:leading-[110%] 2xl:text-[64px]"
+              href="tel:+88006001441"
+            >
+              8 800 600 14 41
+            </a>
+            <a
+              class="text-[21px] leading-[136%] font-normal tracking-[-0.02em] text-white underline xl:text-2xl 2xl:text-4xl"
+              href="mailto:info@Laundromat.gr"
+            >
+              info@Laundromat.gr
+            </a>
+          </address>
+
+          <!-- Desktop Nav -->
+          <nav class="hidden xl:block">
+            <h3 class="paragraph-sm-default mb-3 text-white/50 xl:mb-5 2xl:mb-6 2xl:text-lg">Εταιρεία</h3>
+            <ul class="flex flex-col gap-[6px] 2xl:gap-[8px]">
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
+                <a href="location.html">Η τοποθεσία μας</a>
+              </li>
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
+                <a href="instructions.html">Οδηγίες</a>
+              </li>
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
+                <a href="tips.html">Συμβουλές πλυντηρίου</a>
+              </li>
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
+                <a href="contact.html">Επικοινωνήστε μαζί μας</a>
+              </li>
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
+                <a href="faq.html">FAQ</a>
+              </li>
+            </ul>
+          </nav>
+
+          <nav class="hidden xl:block">
+            <h3 class="paragraph-sm-default mb-3 text-white/50 xl:mb-5 2xl:mb-6 2xl:text-lg">Υπηρεσίες</h3>
+            <ul class="flex flex-col gap-[6px] 2xl:gap-[8px]">
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
+                <a href="services.html#laundry">Πλυντήριο</a>
+              </li>
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
+                <a href="services.html#drying">Στέγνωμα</a>
+              </li>
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white 2xl:text-[21px]">
+                <a href="services.html#special-cleaning">Ειδικός καθαρισμός</a>
+              </li>
+            </ul>
+          </nav>
+
+          <!-- Desktop Lang Switcher -->
+          <div class="hidden md:block">
+            <div class="relative" id="lang-switcher-footer">
+              <button
+                id="lang-button-footer"
+                class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em] 2xl:text-lg"
+                type="button"
+              >
+                <span class="leading-[132%] tracking-[-0.01em] text-white">Gr</span>
+                <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
+                  <svg class="text-text h-[3px] w-[5px]" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M0.5 0.5L2.9901 2.63438L5.48021 0.5"
+                      fill-rule="evenodd"
+                      stroke="currentColor"
+                      style="stroke: currentColor !important"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                </span>
+              </button>
+
+              <ul
+                id="lang-dropdown-footer"
+                class="absolute top-full right-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white text-center shadow-xl backdrop-blur"
+              >
+                <li>
+                  <button
+                    class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                    type="button"
+                  >
+                    En
+                  </button>
+                </li>
+                <li>
+                  <button
+                    class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
+                    type="button"
+                  >
+                    Gr
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mobile Nav -->
+        <div class="mb-[70px] md:flex md:items-start md:gap-[198px] xl:hidden">
+          <nav class="mb-[32px] not-last:mb-[32px]">
+            <h3 class="paragraph-sm-default mb-3 text-white/50 md:text-base xl:text-lg">Εταιρεία</h3>
+            <ul class="flex flex-col gap-[6px]">
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
+                <a href="location.html">Η τοποθεσία μας</a>
+              </li>
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
+                <a href="instructions.html">Οδηγίες</a>
+              </li>
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
+                <a href="tips.html">Συμβουλές πλυντηρίου</a>
+              </li>
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
+                <a href="contact.html">Επικοινωνήστε μαζί μας</a>
+              </li>
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
+                <a href="faq.html">FAQ</a>
+              </li>
+            </ul>
+          </nav>
+          <nav class="not-last:mb-[32px]">
+            <h3 class="paragraph-sm-default mb-3 text-white/50 md:text-base xl:text-lg">Υπηρεσίες</h3>
+            <ul class="flex flex-col gap-[6px]">
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
+                <a href="services.html#laundry">Πλυντήριο</a>
+              </li>
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
+                <a href="services.html#drying">Στέγνωμα</a>
+              </li>
+              <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
+                <a href="services.html#special-cleaning">Ειδικός καθαρισμός</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+
+        <!-- Mobile Lang Switcher -->
+        <div class="mb-[29px] block md:hidden">
+          <div class="relative" id="lang-switcher-footer-mobile">
+            <button
+              id="lang-button-footer-mobile"
+              class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em]"
+              type="button"
+            >
               <span class="leading-[132%] tracking-[-0.01em] text-white">Gr</span>
               <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-                <svg class="h-[3px] w-[5px] text-text" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M0.5 0.5L2.9901 2.63438L5.48021 0.5" fill-rule="evenodd" stroke="currentColor"
-                    style="stroke: currentColor !important" stroke-linecap="round" />
+                <svg class="text-text h-[3px] w-[5px]" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M0.5 0.5L2.9901 2.63438L5.48021 0.5"
+                    fill-rule="evenodd"
+                    stroke="currentColor"
+                    style="stroke: currentColor !important"
+                    stroke-linecap="round"
+                  />
                 </svg>
               </span>
             </button>
 
-            <ul id="lang-dropdown-footer"
-              class="absolute top-full right-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white text-center shadow-xl backdrop-blur">
+            <ul
+              id="lang-dropdown-footer-mobile"
+              class="absolute top-full right-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white text-center shadow-xl backdrop-blur"
+            >
               <li>
                 <button
                   class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
-                  type="button">
+                  type="button"
+                >
                   En
                 </button>
               </li>
               <li>
                 <button
                   class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
-                  type="button">
+                  type="button"
+                >
                   Gr
                 </button>
               </li>
             </ul>
           </div>
         </div>
-      </div>
 
-      <!-- Mobile Nav -->
-      <div class="mb-[70px] md:flex md:items-start md:gap-[198px] xl:hidden">
-        <nav class="mb-[32px] not-last:mb-[32px]">
-          <h3 class="paragraph-sm-default mb-3 text-white/50 md:text-base xl:text-lg">Εταιρεία</h3>
-          <ul class="flex flex-col gap-[6px]">
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
-              <a href="location.html">Η τοποθεσία μας</a>
-            </li>
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
-              <a href="instructions.html">Οδηγίες</a>
-            </li>
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
-              <a href="tips.html">Συμβουλές πλυντηρίου</a>
-            </li>
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
-              <a href="contact.html">Επικοινωνήστε μαζί μας</a>
-            </li>
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
-              <a href="faq.html">FAQ</a>
-            </li>
-          </ul>
-        </nav>
-        <nav class="not-last:mb-[32px]">
-          <h3 class="paragraph-sm-default mb-3 text-white/50 md:text-base xl:text-lg">Υπηρεσίες</h3>
-          <ul class="flex flex-col gap-[6px]">
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
-              <a href="services.html#laundry">Πλυντήριο</a>
-            </li>
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
-              <a href="services.html#drying">Στέγνωμα</a>
-            </li>
-            <li class="text-base leading-[132%] font-normal tracking-[-0.01em] text-white md:text-lg 2xl:text-[21px]">
-              <a href="services.html#special-cleaning">Ειδικός καθαρισμός</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
-
-      <!-- Mobile Lang Switcher -->
-      <div class="mb-[29px] block md:hidden">
-        <div class="relative" id="lang-switcher-footer-mobile">
-          <button id="lang-button-footer-mobile"
-            class="flex cursor-pointer items-center gap-[6px] rounded-[8px] px-2 py-1 text-sm leading-[132%] font-normal tracking-[-0.01em]"
-            type="button">
-            <span class="leading-[132%] tracking-[-0.01em] text-white">Gr</span>
-            <span class="rounded-[6px] bg-white/6 px-[7px] pt-[5px] pb-[4px] transition-transform duration-150">
-              <svg class="h-[3px] w-[5px] text-text" viewBox="0 0 6 4" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M0.5 0.5L2.9901 2.63438L5.48021 0.5" fill-rule="evenodd" stroke="currentColor"
-                  style="stroke: currentColor !important" stroke-linecap="round" />
+        <!-- Newsletter Form -->
+        <div class="md:w-[316px] xl:w-[332px] 2xl:w-[467px]" id="footer-form-container">
+          <form
+            class="rounded-card flex items-center justify-between border border-white/20 py-[10px] pr-[10px] pl-[21px] 2xl:py-[14px] 2xl:pr-[14px] 2xl:pl-[26px]"
+            role="search"
+            id="newsletter-form"
+          >
+            <label class="sr-only" for="newsletter-email"> Εγγραφείτε στο newsletter </label>
+            <input
+              class="paragraph-sm-default w-full bg-transparent text-white outline-none placeholder:text-white/50 xl:text-base 2xl:text-lg"
+              id="newsletter-email"
+              placeholder="Εγγραφείτε στο newsletter"
+              type="email"
+            />
+            <button
+              class="flex-center rounded-badge focus-brand size-[34px] shrink-0 cursor-pointer bg-white transition-transform hover:scale-105 2xl:size-12"
+              type="submit"
+            >
+              <svg aria-hidden="true" class="text-brand size-[7px]" viewBox="0 0 9 9" fill="none">
+                <path
+                  d="M0.5 3.98242L7.56066 4.02154M7.56066 4.02154L4.25395 0.5M7.56066 4.02154L4.25395 7.54308"
+                  fill-rule="evenodd"
+                  stroke="currentColor"
+                  style="stroke: currentColor !important"
+                  stroke-linecap="round"
+                />
               </svg>
-            </span>
-          </button>
-
-          <ul id="lang-dropdown-footer-mobile"
-            class="absolute top-full right-0 z-10 mt-2 hidden w-full min-w-[96px] overflow-hidden rounded-[10px] border border-white/20 bg-white text-center shadow-xl backdrop-blur">
-            <li>
-              <button
-                class="paragraph-body-sm bg-brand/10 text-brand flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
-                type="button">
-                En
-              </button>
-            </li>
-            <li>
-              <button
-                class="paragraph-body-sm text-text hover:bg-brand/5 flex w-full cursor-pointer items-center justify-center px-3 py-2 transition"
-                type="button">
-                Gr
-              </button>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Newsletter Form -->
-      <div class="md:w-[316px] xl:w-[332px] 2xl:w-[467px]" id="footer-form-container">
-        <form
-          class="rounded-card flex items-center justify-between border border-white/20 py-[10px] pr-[10px] pl-[21px] 2xl:py-[14px] 2xl:pr-[14px] 2xl:pl-[26px]"
-          role="search" id="newsletter-form">
-          <label class="sr-only" for="newsletter-email"> Εγγραφείτε στο newsletter </label>
-          <input
-            class="paragraph-sm-default w-full bg-transparent text-white outline-none placeholder:text-white/50 xl:text-base 2xl:text-lg"
-            id="newsletter-email" placeholder="Εγγραφείτε στο newsletter" type="email" />
-          <button
-            class="flex-center rounded-badge focus-brand size-[34px] shrink-0 cursor-pointer bg-white transition-transform hover:scale-105 2xl:size-12"
-            type="submit">
-            <svg aria-hidden="true" class="text-brand size-[7px]" viewBox="0 0 9 9" fill="none">
-              <path d="M0.5 3.98242L7.56066 4.02154M7.56066 4.02154L4.25395 0.5M7.56066 4.02154L4.25395 7.54308"
-                fill-rule="evenodd" stroke="currentColor" style="stroke: currentColor !important"
-                stroke-linecap="round" />
-            </svg>
-          </button>
-        </form>
-        <!-- Consent Checkbox -->
-        <div class="mt-4">
-          <label class="flex cursor-pointer items-start gap-[9px]" for="footer-consent">
-            <div class="relative flex size-[18px] shrink-0 items-center justify-center">
-              <input class="peer sr-only" id="footer-consent" name="consent" type="checkbox" required />
-              <div class="absolute inset-0 rounded-[4px] border border-white/20 bg-white/5 transition-colors"></div>
-              <div
-                class="relative size-[10px] scale-0 rounded-[2px] bg-white transition-transform peer-checked:scale-100">
+            </button>
+          </form>
+          <!-- Consent Checkbox -->
+          <div class="mt-4">
+            <label class="flex cursor-pointer items-start gap-[9px]" for="footer-consent">
+              <div class="relative flex size-[18px] shrink-0 items-center justify-center">
+                <input class="peer sr-only" id="footer-consent" name="consent" type="checkbox" required />
+                <div class="absolute inset-0 rounded-[4px] border border-white/20 bg-white/5 transition-colors"></div>
+                <div
+                  class="relative size-[10px] scale-0 rounded-[2px] bg-white transition-transform peer-checked:scale-100"
+                ></div>
               </div>
-            </div>
-            <div
-              class="max-w-[260px] text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/40 2xl:max-w-[400px] 2xl:text-sm">
-              Συμφωνώ με την
-              <a href="privacy-policy.html" target="_blank" rel="noopener noreferrer"
-                class="text-white/60 underline transition-colors hover:text-white">Πολιτική Απορρήτου</a>
-            </div>
-          </label>
+              <div
+                class="max-w-[260px] text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/40 2xl:max-w-[400px] 2xl:text-sm"
+              >
+                Συμφωνώ με την
+                <a
+                  href="privacy-policy.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-white/60 underline transition-colors hover:text-white"
+                  >Πολιτική Απορρήτου</a
+                >
+              </div>
+            </label>
+          </div>
         </div>
-      </div>
 
-      <!-- FooterBg -->
-      <div class="footer-circle-first flex items-center justify-center">
-        <svg width="514" height="579" viewBox="0 0 514 579" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M0.375977 478.04C49.3618 533.932 117.7 569.104 191.576 576.446C265.451 583.787 339.353 562.751 398.342 517.589C457.331 472.426 497.006 406.508 509.347 333.158C521.688 259.809 505.774 184.501 464.822 122.457M434.274 83.7059C396.563 43.3707 348.253 14.5233 294.903 0.483398"
-            stroke="url(#paint0_linear_4056_1454)" />
-          <defs>
-            <linearGradient id="paint0_linear_4056_1454" x1="517.968" y1="440.234" x2="118.497" y2="35.3274"
-              gradientUnits="userSpaceOnUse">
-              <stop stop-color="white" stop-opacity="0.2" />
-              <stop offset="1" stop-color="white" stop-opacity="0" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
-      <div class="footer-circle-last flex items-center justify-center">
-        <svg width="514" height="579" viewBox="0 0 514 579" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M0.375977 478.04C49.3618 533.932 117.7 569.104 191.576 576.446C265.451 583.787 339.353 562.751 398.342 517.589C457.331 472.426 497.006 406.508 509.347 333.158C521.688 259.809 505.774 184.501 464.822 122.457M434.274 83.7059C396.563 43.3707 348.253 14.5233 294.903 0.483398"
-            stroke="url(#paint0_linear_4056_1456)" />
-          <defs>
-            <linearGradient id="paint0_linear_4056_1456" x1="608.02" y1="457.034" x2="-31.2888" y2="93.3203"
-              gradientUnits="userSpaceOnUse">
-              <stop offset="0.16263" stop-color="white" stop-opacity="0.3" />
-              <stop offset="1" stop-color="white" stop-opacity="0" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </div>
-      <!-- <span aria-hidden="true" class="footer-circle-1"></span>
+        <!-- FooterBg -->
+        <div class="footer-circle-first flex items-center justify-center">
+          <svg width="514" height="579" viewBox="0 0 514 579" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M0.375977 478.04C49.3618 533.932 117.7 569.104 191.576 576.446C265.451 583.787 339.353 562.751 398.342 517.589C457.331 472.426 497.006 406.508 509.347 333.158C521.688 259.809 505.774 184.501 464.822 122.457M434.274 83.7059C396.563 43.3707 348.253 14.5233 294.903 0.483398"
+              stroke="url(#paint0_linear_4056_1454)"
+            />
+            <defs>
+              <linearGradient
+                id="paint0_linear_4056_1454"
+                x1="517.968"
+                y1="440.234"
+                x2="118.497"
+                y2="35.3274"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop stop-color="white" stop-opacity="0.2" />
+                <stop offset="1" stop-color="white" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <div class="footer-circle-last flex items-center justify-center">
+          <svg width="514" height="579" viewBox="0 0 514 579" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M0.375977 478.04C49.3618 533.932 117.7 569.104 191.576 576.446C265.451 583.787 339.353 562.751 398.342 517.589C457.331 472.426 497.006 406.508 509.347 333.158C521.688 259.809 505.774 184.501 464.822 122.457M434.274 83.7059C396.563 43.3707 348.253 14.5233 294.903 0.483398"
+              stroke="url(#paint0_linear_4056_1456)"
+            />
+            <defs>
+              <linearGradient
+                id="paint0_linear_4056_1456"
+                x1="608.02"
+                y1="457.034"
+                x2="-31.2888"
+                y2="93.3203"
+                gradientUnits="userSpaceOnUse"
+              >
+                <stop offset="0.16263" stop-color="white" stop-opacity="0.3" />
+                <stop offset="1" stop-color="white" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <!-- <span aria-hidden="true" class="footer-circle-1"></span>
                 <span aria-hidden="true" class="footer-circle-2"></span> -->
-    </div>
+      </div>
 
-    <!-- Copyright Bar -->
-    <div
-      class="mx-container-mobile xl:px-container-tablet origin-top rounded-b-[16px] bg-[#b0d4eb] px-4 pt-6 pb-5 xl:pt-[60px] xl:pb-5 2xl:mx-10"
-      id="footer-bottom-bar">
-      <a class="mb-5 inline-block text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/60 hover:text-white md:hidden"
-        href="privacy-policy.html">
-        Πολιτική Απορρήτου
-      </a>
-      <div class="flex items-center justify-between">
-        <p
-          class="max-w-[120px] text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/60 md:max-w-full 2xl:text-lg">
-          © 2026 Laundromat
-        </p>
-
-        <a class="hidden text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/60 hover:text-white md:inline-block 2xl:text-lg"
-          href="privacy-policy.html">
+      <!-- Copyright Bar -->
+      <div
+        class="mx-container-mobile xl:px-container-tablet origin-top rounded-b-[16px] bg-[#b0d4eb] px-4 pt-6 pb-5 xl:pt-[60px] xl:pb-5 2xl:mx-10"
+        id="footer-bottom-bar"
+      >
+        <a
+          class="mb-5 inline-block text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/60 hover:text-white md:hidden"
+          href="privacy-policy.html"
+        >
           Πολιτική Απορρήτου
         </a>
+        <div class="flex items-center justify-between">
+          <p
+            class="max-w-[120px] text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/60 md:max-w-full 2xl:text-lg"
+          >
+            © 2026 Laundromat
+          </p>
 
-        <p class="w-[77px] text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/60 md:w-fit 2xl:text-lg">
-          Website by <span class="font-medium text-white">AVA Digital</span>
-        </p>
+          <a
+            class="hidden text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/60 hover:text-white md:inline-block 2xl:text-lg"
+            href="privacy-policy.html"
+          >
+            Πολιτική Απορρήτου
+          </a>
+
+          <p class="w-[77px] text-xs leading-[132%] font-normal tracking-[-0.01em] text-white/60 md:w-fit 2xl:text-lg">
+            Ιστοσελίδα από <span class="font-medium text-white">AVA Digital</span>
+          </p>
+        </div>
       </div>
-    </div>
-  </footer>
+    </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.js"></script>
-  <script src="../assets/js/api.js"></script>
-  <script src="../assets/js/header.js"></script>
-  <script src="../assets/js/lang-switcher.js"></script>
-  <script src="../assets/js/mobile-menu.js"></script>
-  <script src="../assets/js/location-page.js"></script>
-  <script src="../assets/js/footer-data.js"></script>
-  <script src="../assets/js/footer.js"></script>
-</body>
-
+    <script src="https://cdn.jsdelivr.net/npm/keen-slider@6.8.6/keen-slider.min.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/header.js"></script>
+    <script src="../assets/js/lang-switcher.js"></script>
+    <script src="../assets/js/mobile-menu.js"></script>
+    <script src="../assets/js/location-page.js"></script>
+    <script src="../assets/js/footer-data.js"></script>
+    <script src="../assets/js/footer.js"></script>
+  </body>
 </html>
