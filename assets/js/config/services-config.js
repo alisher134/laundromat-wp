@@ -7,6 +7,6 @@ const CARD_SIZES = {
   large: {
     lg: { height: 470, width: 700 },
     xl: { height: 545, width: 884 },
-    '2xl': { height: 735, width: 1090 },
+    '2xl': { height: 680, width: 1090 },
   },
 };
