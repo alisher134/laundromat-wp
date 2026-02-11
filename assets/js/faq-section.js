@@ -37,9 +37,8 @@
     const container = document.getElementById('faq-accordion');
     if (!container) return;
 
-    // Limit to 5 FAQs for the home page section
-    // Removed limit as per user request
-    const faqsToRender = faqs;
+    // Limit to 5 FAQs per design
+    const faqsToRender = faqs.slice(0, 5);
 
     console.log('[FAQ Section] Rendering items:', faqsToRender);
     container.innerHTML = ''; // Force clear static content
