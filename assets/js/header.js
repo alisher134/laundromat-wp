@@ -179,7 +179,10 @@
       if (!hasMatchingOrigin) {
         console.log('[Header] API URLs do not match current origin - using static HTML language switcher');
         console.log('[Header] Current origin:', currentOrigin);
-        console.log('[Header] API URLs:', languages.map((l) => l.url));
+        console.log(
+          '[Header] API URLs:',
+          languages.map((l) => l.url),
+        );
         return;
       }
 

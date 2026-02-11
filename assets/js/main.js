@@ -94,26 +94,37 @@
     }
   }
 
-  // Set viewport height for hero section
-  function setViewportHeight() {
-    if (heroSection) {
-      const viewportHeight = window.innerHeight;
-      heroSection.style.height = `${viewportHeight}px`;
+  // Hero height: на iOS не обновлять при resize от скрытия адресной строки — только при смене ориентации
+  const heroSpacer = document.getElementById('hero-spacer');
+  const isTouchDevice = 'ontouchstart' in window;
+
+  function setHeroHeight() {
+    const h = window.innerHeight;
+    if (heroSection) heroSection.style.height = h + 'px';
+    if (heroSpacer) heroSpacer.style.height = h + 'px';
+  }
+
+  let lastWidth = window.outerWidth;
+  function handleResize() {
+    if (isTouchDevice) {
+      // На iOS resize срабатывает при скрытии адресной строки — обновляем только при смене ориентации
+      if (window.outerWidth !== lastWidth) {
+        lastWidth = window.outerWidth;
+        setHeroHeight();
+      }
+    } else {
+      setHeroHeight();
     }
   }
 
-  // Initialize viewport height immediately
-  setViewportHeight();
-  window.addEventListener('resize', setViewportHeight);
+  setHeroHeight();
+  window.addEventListener('resize', handleResize);
 
   // Hide hero section when scrolling down to prevent it from showing in footer
   function handleHeroVisibility() {
     if (heroSection) {
-      if (window.scrollY > window.innerHeight) {
-        heroSection.style.visibility = 'hidden';
-      } else {
-        heroSection.style.visibility = 'visible';
-      }
+      const heroHeight = heroSection.offsetHeight;
+      heroSection.style.visibility = window.scrollY > heroHeight ? 'hidden' : 'visible';
     }
   }
 
