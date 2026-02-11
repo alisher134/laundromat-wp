@@ -162,6 +162,56 @@ function laundromat_simplify_admin_menu()
 }
 
 /**
+ * Polylang: Show taxonomy terms in the post's language (not admin UI language)
+ * When editing a Tips/Instructions post, the Categories metabox should show
+ * categories in the same language as the post (e.g. English categories for English posts).
+ */
+add_filter('get_terms_args', 'laundromat_filter_terms_by_post_language', 999, 2);
+
+function laundromat_filter_terms_by_post_language($args, $taxonomies)
+{
+    if (!function_exists('pll_get_post_language')) {
+        return $args;
+    }
+
+    $our_taxonomies = ['content_category', 'instruction_category', 'faq_category', 'service_category'];
+    $taxonomies = (array) $taxonomies;
+    if (empty(array_intersect($taxonomies, $our_taxonomies))) {
+        return $args;
+    }
+
+    $post_id = null;
+    if (isset($GLOBALS['post']) && $GLOBALS['post'] instanceof WP_Post) {
+        $post_id = $GLOBALS['post']->ID;
+    } elseif (isset($_GET['post'])) {
+        $post_id = (int) $_GET['post'];
+    } elseif (isset($_POST['post_ID'])) {
+        $post_id = (int) $_POST['post_ID'];
+    }
+
+    if (!$post_id) {
+        return $args;
+    }
+
+    $screen = get_current_screen();
+    if (!$screen || $screen->base !== 'post') {
+        return $args;
+    }
+
+    $post = get_post($post_id);
+    if (!$post || !in_array($post->post_type, ['tips', 'instructions', 'faqs', 'services'])) {
+        return $args;
+    }
+
+    $post_lang = pll_get_post_language($post_id, 'slug');
+    if ($post_lang) {
+        $args['lang'] = $post_lang;
+    }
+
+    return $args;
+}
+
+/**
  * Simplify Categories Admin Screen
  */
 add_action('admin_head', 'laundromat_simplify_category_screen');

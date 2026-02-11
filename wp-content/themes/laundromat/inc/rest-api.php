@@ -1114,14 +1114,22 @@ function laundromat_handle_newsletter_form($request)
 }
 
 /**
- * Get Categories for Tips/Instructions
+ * Get Categories for Tips
  */
-function laundromat_get_categories()
+function laundromat_get_categories($request)
 {
-    $terms = get_terms([
+    $lang = $request->get_param('lang');
+
+    $args = [
         'taxonomy' => 'content_category',
         'hide_empty' => false,
-    ]);
+    ];
+
+    if ($lang && function_exists('pll_current_language')) {
+        $args['lang'] = sanitize_text_field($lang);
+    }
+
+    $terms = get_terms($args);
 
     if (is_wp_error($terms)) {
         return [];
@@ -1146,10 +1154,18 @@ function laundromat_get_categories()
  */
 function laundromat_get_instruction_categories($request)
 {
-    $terms = get_terms([
+    $lang = $request->get_param('lang');
+
+    $args = [
         'taxonomy' => 'instruction_category',
         'hide_empty' => false,
-    ]);
+    ];
+
+    if ($lang && function_exists('pll_current_language')) {
+        $args['lang'] = sanitize_text_field($lang);
+    }
+
+    $terms = get_terms($args);
 
     if (is_wp_error($terms)) {
         return [];

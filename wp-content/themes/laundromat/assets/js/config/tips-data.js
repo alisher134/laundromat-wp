@@ -69,14 +69,30 @@ async function loadDataFromAPI() {
   try {
     console.log('[Tips Data] Loading data from WordPress API...');
 
+    // Detect if we are on instructions page
+    const isInstructionsPage =
+      window.location.pathname.includes('instructions') ||
+      window.location.href.includes('instructions') ||
+      (document.querySelector('h1') && document.querySelector('h1').textContent.trim() === 'Instructions') ||
+      (document.querySelector('h1') && document.querySelector('h1').textContent.trim() === 'Οδηγίες');
+
+    const categoriesPromise =
+      isInstructionsPage && LaundroAPI.getInstructionCategories
+        ? LaundroAPI.getInstructionCategories()
+        : LaundroAPI.getCategories();
+
     // Load categories, tips, and instructions in parallel
     const [categories, tips, instructions] = await Promise.all([
-      LaundroAPI.getCategories(),
+      categoriesPromise,
       LaundroAPI.getTips(),
       LaundroAPI.getInstructions(),
     ]);
 
     if (categories && categories.length > 0) {
+      const allCategory = categories.find((c) => c.key === 'all');
+      if (allCategory) {
+        allCategory.label = t.all_articles;
+      }
       CATEGORIES = categories;
       categoriesLoadedFromAPI = true;
       console.log('[Tips Data] Loaded', categories.length, 'categories from API');
