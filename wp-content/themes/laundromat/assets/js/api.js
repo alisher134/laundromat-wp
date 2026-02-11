@@ -361,12 +361,46 @@ const LaundroAPI = (function () {
       const data = await fetchJSON(`${CONFIG.CUSTOM_API}/faqs${buildQuery(params)}`);
       if (!data) return null;
 
-      return data.map((item, index) => ({
+      const items = Array.isArray(data) ? data : Object.values(data || {});
+      return items.map((item, index) => ({
         id: item.id,
         number: String(index + 1).padStart(2, '0'),
-        question: item.title.rendered,
+        question: item.title?.rendered || item.question || '',
         answer: item.answer || item.content?.rendered?.replace(/<[^>]*>/g, '') || '',
       }));
+    },
+
+    /**
+     * Fetch FAQs with pagination support
+     * @param {number} page - Page number (1-indexed)
+     * @param {number} perPage - Items per page
+     * @param {Object} params - Additional params (e.g. { faq_category: 'slug' })
+     * @returns {Promise<Object>} { items: Array, totalItems: number, totalPages: number }
+     */
+    async getFAQsWithPagination(page = 1, perPage = 8, params = {}) {
+      const result = await fetchJSON(
+        `${CONFIG.CUSTOM_API}/faqs${buildQuery({ page, per_page: perPage, ...params }, false)}`,
+        {},
+        true,
+      );
+
+      if (!result.data) {
+        return { items: [], totalItems: 0, totalPages: 0 };
+      }
+
+      const items = Array.isArray(result.data) ? result.data : Object.values(result.data || {});
+      const mappedItems = items.map((item, index) => ({
+        id: item.id,
+        number: String(index + 1).padStart(2, '0'),
+        question: item.title?.rendered || item.question || '',
+        answer: item.answer || item.content?.rendered?.replace(/<[^>]*>/g, '') || '',
+      }));
+
+      return {
+        items: mappedItems,
+        totalItems: result.totalItems,
+        totalPages: result.totalPages,
+      };
     },
 
     /**

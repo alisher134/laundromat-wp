@@ -791,10 +791,11 @@ function laundromat_get_filtered_instructions($request)
 }
 
 /**
- * Get filtered FAQs
+ * Get filtered FAQs with pagination
  */
 function laundromat_get_filtered_faqs($request)
 {
+    $page = absint($request->get_param('page')) ?: 1;
     $per_page = absint($request->get_param('per_page')) ?: 100;
     $lang = $request->get_param('lang');
     $category_slug = $request->get_param('faq_category');
@@ -802,6 +803,7 @@ function laundromat_get_filtered_faqs($request)
     $args = [
         'post_type' => 'faqs',
         'posts_per_page' => $per_page,
+        'paged' => $page,
         'post_status' => 'publish',
         'orderby' => 'menu_order',
         'order' => 'ASC',
@@ -845,7 +847,11 @@ function laundromat_get_filtered_faqs($request)
         ];
     }
 
-    return $faqs;
+    $response = new WP_REST_Response($faqs);
+    $response->header('X-WP-Total', $query->found_posts);
+    $response->header('X-WP-TotalPages', $query->max_num_pages);
+
+    return $response;
 }
 
 /**

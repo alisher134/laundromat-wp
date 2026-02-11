@@ -1,9 +1,16 @@
 (function () {
-  // FAQ data
-  let faqs = [];
+  const DEFAULT_ITEMS_PER_PAGE = 8;
+
   let categories = [];
   let activeCategory = 'all';
   let mobileSlider = null;
+
+  let totalItems = 0;
+  let totalPages = 0;
+  let currentPage = 1;
+  let currentPerPage = DEFAULT_ITEMS_PER_PAGE;
+  let isLoading = false;
+  let mobileAccumulatedData = [];
 
   let sectionSpring = null;
   let lastTime = performance.now();
@@ -11,16 +18,15 @@
   let isAnimating = false;
   let faqPageScrollListenersAdded = false;
 
-  // Init
+  const accordionContainer = document.getElementById('faq-accordion');
+  const pagination = document.getElementById('faq-pagination');
+
   function init() {
     initSectionAnimation();
     loadData();
-
-    // Trigger entrance animations after a short delay
     setTimeout(triggerEntranceAnimations, 100);
   }
 
-  // Load Categories and FAQs
   async function loadData() {
     if (typeof LaundroAPI === 'undefined') {
       console.error('[FAQ] LaundroAPI not available');
@@ -29,28 +35,29 @@
     }
 
     try {
-      // Parallel fetch
-      const [apiCategories, apiFaqs] = await Promise.all([LaundroAPI.getFAQCategories(), LaundroAPI.getFAQs()]);
+      const [apiCategories] = await Promise.all([LaundroAPI.getFAQCategories()]);
 
-      // Process Categories
       if (apiCategories && Array.isArray(apiCategories)) {
         categories = apiCategories;
-        // Ensure "All" exists or is added if not coming from backend (backend usually sends it or we add it)
-        //Backend "laundromat_get_faq_categories" adds "All" with key='all'
       } else {
         categories = [{ key: 'all', label: 'All', id: 0 }];
       }
 
+      const urlState = getStateFromURL();
+      currentPage = urlState.page;
+      currentPerPage = urlState.perPage;
+      if (urlState.category && urlState.category !== 'all') {
+        activeCategory = urlState.category;
+      }
+
       renderCategories();
 
-      // Process FAQs
-      if (apiFaqs && apiFaqs.length > 0) {
-        faqs = apiFaqs;
-        renderFAQs(faqs);
-        // initAccordion called inside renderFAQs
-        // triggerEntranceAnimations called in init
+      if (isMobile() && currentPage > 1) {
+        for (let p = 1; p <= currentPage; p++) {
+          await loadPageData(p, p === 1);
+        }
       } else {
-        showEmptyState();
+        await loadPageData(currentPage, true);
       }
     } catch (error) {
       console.error('[FAQ] Failed to load data:', error);
@@ -58,7 +65,96 @@
     }
   }
 
-  // Render Categories
+  function getStateFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+      page: parseInt(params.get('page')) || 1,
+      category: params.get('category') || 'all',
+      perPage: parseInt(params.get('perPage')) || DEFAULT_ITEMS_PER_PAGE,
+    };
+  }
+
+  function updateURL(page, category, perPage) {
+    const params = new URLSearchParams(window.location.search);
+
+    if (page > 1) {
+      params.set('page', page);
+    } else {
+      params.delete('page');
+    }
+
+    if (category && category !== 'all') {
+      params.set('category', category);
+    } else {
+      params.delete('category');
+    }
+
+    if (perPage && perPage !== DEFAULT_ITEMS_PER_PAGE) {
+      params.set('perPage', perPage);
+    } else {
+      params.delete('perPage');
+    }
+
+    const newURL = params.toString() ? `${window.location.pathname}?${params.toString()}` : window.location.pathname;
+    window.history.replaceState({}, '', newURL);
+  }
+
+  async function loadPageData(page, resetAccumulated = false, showFullLoader = true) {
+    if (isLoading || typeof LaundroAPI === 'undefined') return;
+
+    isLoading = true;
+
+    const loadMoreBtn = document.getElementById('faq-load-more-btn');
+    if (loadMoreBtn && !resetAccumulated && isMobile()) {
+      loadMoreBtn.disabled = true;
+      loadMoreBtn.textContent = 'Loading...';
+    }
+
+    if (accordionContainer && showFullLoader && (resetAccumulated || !isMobile())) {
+      accordionContainer.style.opacity = '0.5';
+    }
+
+    try {
+      const params = activeCategory && activeCategory !== 'all' ? { faq_category: activeCategory } : {};
+      const result = await LaundroAPI.getFAQsWithPagination(page, currentPerPage, params);
+
+      const newItems = result.items || [];
+      totalItems = result.totalItems;
+      totalPages = result.totalPages;
+      currentPage = page;
+
+      if (resetAccumulated) {
+        mobileAccumulatedData = [...newItems];
+      } else {
+        mobileAccumulatedData = [...mobileAccumulatedData, ...newItems];
+      }
+
+      if (newItems.length === 0 && resetAccumulated) {
+        showEmptyState();
+      } else {
+        const shouldAppend = !resetAccumulated && isMobile();
+        renderFAQs(shouldAppend, newItems);
+      }
+
+      updateURL(currentPage, activeCategory, currentPerPage);
+
+      isLoading = false;
+      renderPagination();
+    } catch (error) {
+      console.error('[FAQ] Error loading data:', error);
+      showEmptyState();
+      isLoading = false;
+    } finally {
+      if (accordionContainer) {
+        accordionContainer.style.opacity = '1';
+      }
+    }
+  }
+
+  function isMobile() {
+    return window.innerWidth < 768;
+  }
+
   function renderCategories() {
     const desktopContainer = document.getElementById('desktop-categories');
     const mobileContainer = document.getElementById('mobile-categories-slider');
@@ -116,139 +212,216 @@
         if (key === activeCategory) return;
 
         activeCategory = key;
-
-        // Update UI
-        renderCategories(); // Re-renders to update active classes
-
-        // Fetch new data
-        await fetchFAQsByCategory(key);
+        currentPage = 1;
+        renderCategories();
+        await loadPageData(1, true);
       });
     });
   }
 
-  async function fetchFAQsByCategory(categoryKey) {
-    const container = document.getElementById('faq-accordion');
-    if (container) {
-      container.style.opacity = '0.5'; // Loading indication
+  function renderFAQs(isAppend = false, newItems = []) {
+    if (!accordionContainer) return;
+
+    let dataToRender;
+
+    if (isMobile()) {
+      dataToRender = [...mobileAccumulatedData];
+    } else {
+      dataToRender = newItems.length > 0 ? newItems : [];
     }
 
-    try {
-      const params = categoryKey === 'all' ? {} : { faq_category: categoryKey };
-      const newFaqs = await LaundroAPI.getFAQs(params);
-
-      if (newFaqs && newFaqs.length > 0) {
-        renderFAQs(newFaqs);
-      } else {
-        renderFAQs([]); // Show empty
+    if (isAppend && newItems.length > 0) {
+      const newHtml = newItems
+        .map((faq, idx) => createFAQItemHtml(faq, mobileAccumulatedData.length - newItems.length + idx))
+        .join('');
+      accordionContainer.insertAdjacentHTML('beforeend', newHtml);
+    } else {
+      if (dataToRender.length === 0) {
+        showEmptyState();
+        accordionContainer.innerHTML = '';
+        return;
       }
-    } catch (error) {
-      console.error('Error fetching filtered FAQs:', error);
-    } finally {
-      if (container) {
-        container.style.opacity = '1';
-      }
-    }
-  }
-
-  // Render FAQs into the accordion container
-  function renderFAQs(faqsToRender) {
-    const container = document.getElementById('faq-accordion');
-    if (!container) return;
-
-    if (!faqsToRender || faqsToRender.length === 0) {
-      showEmptyState();
-      container.innerHTML = '';
-      return;
+      hideEmptyState();
+      const html = dataToRender.map((faq, index) => createFAQItemHtml(faq, index)).join('');
+      accordionContainer.innerHTML = html;
     }
 
-    hideEmptyState();
-
-    const html = faqsToRender
-      .map((faq, index) => {
-        const number = String(index + 1).padStart(2, '0');
-        // NOTE: We rely on the existing CSS classes and structure
-        return `
-        <div
-          class="faq-item group overflow-hidden rounded-[11px] border border-transparent bg-white backdrop-blur-[30px] md:rounded-[16px] xl:rounded-[11px] 2xl:rounded-[16px]"
-          data-state="closed"
-        >
-          <div
-            class="accordion-trigger flex cursor-pointer items-center justify-between pt-4 pr-3 pb-[17px] pl-4 text-left md:pt-[33px] md:pr-9 md:pb-9 md:pl-6 xl:pt-6 xl:pr-6 xl:pb-[25px] xl:pl-[22px] 2xl:pt-[33px] 2xl:pr-9 2xl:pb-9 2xl:pl-8"
-          >
-            <div class="flex w-full items-center justify-between">
-              <div class="flex items-center md:gap-[54px] xl:gap-[104px] 2xl:gap-[143px] transition-transform duration-300 group-hover:scale-[1.02] origin-left">
-                <span
-                  class="text-brand/70 hidden font-normal leading-[132%] tracking-[-0.01em] md:inline-block md:text-[21px] xl:text-base 2xl:text-[21px]"
-                >
-                  ( ${number} )
-                </span>
-                <span
-                  class="text-text max-w-[230px] text-base leading-[132%] font-normal tracking-[-0.02em] md:max-w-[448px] md:text-[21px] xl:text-base 2xl:max-w-[545px] 2xl:text-[21px]"
-                >
-                  ${faq.question}
-                </span>
-              </div>
-              <span
-                class="icon-box bg-brand/10 text-brand group-data-[state=open]:bg-brand/20 flex h-[40px] w-[40px] items-center justify-center rounded-[9px] transition-all duration-300 md:size-[55px] md:rounded-[12px] xl:size-[40px] 2xl:size-[55px] 2xl:rounded-[12px]"
-              >
-                <div
-                  class="flex items-center justify-center transition-transform duration-300 group-data-[state=open]:rotate-45"
-                >
-                  <svg
-                    width="12"
-                    height="12"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-[10px] w-[10px] transition-transform duration-300 md:h-[12px] md:w-[12px] xl:h-[10px] xl:w-[10px] 2xl:h-[12px] 2xl:w-[12px]"
-                  >
-                    <path
-                      d="M6 1V11"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                    <path
-                      d="M1 6H11"
-                      stroke="currentColor"
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </div>
-              </span>
-            </div>
-          </div>
-          <div
-            class="accordion-content h-0 overflow-hidden bg-transparent opacity-0 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
-          >
-            <div class="flex items-start pl-4 pr-5 pt-0 pb-5 md:gap-[54px] md:pl-6 md:pr-6 md:pb-6 xl:gap-[104px] xl:pl-[22px] xl:pr-[22px] xl:pb-[25px] 2xl:gap-[143px] 2xl:pl-8 2xl:pr-8 2xl:pb-9">
-              <span
-                class="pointer-events-none hidden font-normal opacity-0 md:block md:text-lg xl:text-sm 2xl:text-lg"
-                aria-hidden="true"
-              >
-                ( 00 )
-              </span>
-              <div class="text-text max-w-full text-base leading-[150%] font-normal tracking-[-0.01em] md:max-w-[448px] md:text-lg xl:max-w-[500px] xl:text-base 2xl:max-w-[680px] 2xl:text-lg">
-                ${faq.answer || ''}
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-      })
-      .join('');
-
-    container.innerHTML = html;
     initAccordion();
   }
 
-  // Show empty state
+  function createFAQItemHtml(faq, index) {
+    const number = String(index + 1).padStart(2, '0');
+    return `
+      <div
+        class="faq-item group overflow-hidden rounded-[11px] border border-transparent bg-white backdrop-blur-[30px] md:rounded-[16px] xl:rounded-[11px] 2xl:rounded-[16px]"
+        data-state="closed"
+      >
+        <div
+          class="accordion-trigger flex cursor-pointer items-center justify-between pt-4 pr-3 pb-[17px] pl-4 text-left md:pt-[33px] md:pr-9 md:pb-9 md:pl-6 xl:pt-6 xl:pr-6 xl:pb-[25px] xl:pl-[22px] 2xl:pt-[33px] 2xl:pr-9 2xl:pb-9 2xl:pl-8"
+        >
+          <div class="flex w-full items-center justify-between">
+            <div class="flex items-center md:gap-[54px] xl:gap-[104px] 2xl:gap-[143px] transition-transform duration-300 group-hover:scale-[1.02] origin-left">
+              <span
+                class="text-brand/70 hidden font-normal leading-[132%] tracking-[-0.01em] md:inline-block md:text-[21px] xl:text-base 2xl:text-[21px]"
+              >
+                ( ${number} )
+              </span>
+              <span
+                class="text-text max-w-[230px] text-base leading-[132%] font-normal tracking-[-0.02em] md:max-w-[448px] md:text-[21px] xl:text-base 2xl:max-w-[545px] 2xl:text-[21px]"
+              >
+                ${faq.question}
+              </span>
+            </div>
+            <span
+              class="icon-box bg-brand/10 text-brand group-data-[state=open]:bg-brand/20 flex h-[40px] w-[40px] items-center justify-center rounded-[9px] transition-all duration-300 md:size-[55px] md:rounded-[12px] xl:size-[40px] 2xl:size-[55px] 2xl:rounded-[12px]"
+            >
+              <div
+                class="flex items-center justify-center transition-transform duration-300 group-data-[state=open]:rotate-45"
+              >
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-[10px] w-[10px] transition-transform duration-300 md:h-[12px] md:w-[12px] xl:h-[10px] xl:w-[10px] 2xl:h-[12px] 2xl:w-[12px]"
+                >
+                  <path
+                    d="M6 1V11"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M1 6H11"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </div>
+            </span>
+          </div>
+        </div>
+        <div
+          class="accordion-content h-0 overflow-hidden bg-transparent opacity-0 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+        >
+          <div class="flex items-start pl-4 pr-5 pt-0 pb-5 md:gap-[54px] md:pl-6 md:pr-6 md:pb-6 xl:gap-[104px] xl:pl-[22px] xl:pr-[22px] xl:pb-[25px] 2xl:gap-[143px] 2xl:pl-8 2xl:pr-8 2xl:pb-9">
+            <span
+              class="text-brand/70 pointer-events-none hidden leading-[132%] font-normal tracking-[-0.01em] opacity-0 md:block md:text-[21px] xl:text-base 2xl:text-[21px]"
+              aria-hidden="true"
+            >
+              ( ${number} )
+            </span>
+            <div class="text-text max-w-full text-base leading-[150%] font-normal tracking-[-0.01em] md:max-w-[448px] md:text-lg xl:max-w-[500px] xl:text-base 2xl:max-w-[680px] 2xl:text-lg">
+              ${faq.answer || ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderPagination() {
+    if (!pagination) return;
+
+    const desktopPaginationContainer = pagination.querySelector('.hidden.items-center.gap-1.md\\:flex');
+    const loadMoreBtn = document.getElementById('faq-load-more-btn');
+
+    if (desktopPaginationContainer) {
+      if (totalPages <= 1) {
+        const baseClasses =
+          'flex cursor-pointer items-center justify-center border md:rounded-card 2xl:rounded-[6px] md:text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors';
+        const activeClasses = 'border-[#414242]/25 text-[#414242] md:size-[52px] 2xl:h-[54px] 2xl:w-[56px]';
+        desktopPaginationContainer.innerHTML = `<button class="${baseClasses} ${activeClasses}" data-page="1">1</button>`;
+      } else {
+        const siblingCount = 1;
+        const pageItems = [];
+        const leftSibling = Math.max(currentPage - siblingCount, 1);
+        const rightSibling = Math.min(currentPage + siblingCount, totalPages);
+
+        pageItems.push(1);
+
+        if (leftSibling > 2) {
+          pageItems.push('ellipsis-left');
+        }
+
+        for (let i = leftSibling; i <= rightSibling; i++) {
+          if (i !== 1 && i !== totalPages) {
+            pageItems.push(i);
+          }
+        }
+
+        if (rightSibling < totalPages - 1) {
+          pageItems.push('ellipsis-right');
+        }
+
+        if (totalPages > 1) {
+          pageItems.push(totalPages);
+        }
+
+        const baseClasses =
+          'flex cursor-pointer items-center justify-center border md:rounded-card 2xl:rounded-[6px] md:text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors';
+        const activeClasses = 'border-[#414242]/25 text-[#414242] md:size-[52px] 2xl:h-[54px] 2xl:w-[56px]';
+        const inactiveClasses =
+          'border-transparent text-[#414242]/40 hover:text-[#414242]/60 2xl:w-[47px] 2xl:h-[56px] md:h-[42px] md:w-[35px]';
+
+        const paginationHtml = pageItems
+          .map((item) => {
+            if (typeof item === 'string' && item.startsWith('ellipsis')) {
+              return `<span class="${baseClasses} ${inactiveClasses}">…</span>`;
+            }
+            const isActive = item === currentPage;
+            return `<button class="${baseClasses} ${isActive ? activeClasses : inactiveClasses}" data-page="${item}">${item}</button>`;
+          })
+          .join('');
+
+        desktopPaginationContainer.innerHTML = paginationHtml;
+
+        desktopPaginationContainer.querySelectorAll('button[data-page]').forEach((btn) => {
+          btn.addEventListener('click', async (e) => {
+            const page = parseInt(e.currentTarget.dataset.page);
+            if (page !== currentPage && !isLoading) {
+              await loadPageData(page, true);
+              const categoriesWrapper = document.getElementById('categories-wrapper');
+              if (categoriesWrapper) {
+                categoriesWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }
+            }
+          });
+        });
+      }
+    }
+
+    if (loadMoreBtn) {
+      const allLoaded = totalPages <= 1;
+
+      if (allLoaded) {
+        loadMoreBtn.style.display = 'none';
+      } else {
+        loadMoreBtn.style.display = 'flex';
+        loadMoreBtn.textContent = 'Load more';
+        loadMoreBtn.disabled = false;
+
+        const newBtn = loadMoreBtn.cloneNode(true);
+        loadMoreBtn.parentNode.replaceChild(newBtn, loadMoreBtn);
+
+        newBtn.addEventListener('click', async () => {
+          if (!isLoading) {
+            newBtn.textContent = 'Loading...';
+            newBtn.disabled = true;
+            currentPerPage += DEFAULT_ITEMS_PER_PAGE;
+            await loadPageData(1, true, false);
+          }
+        });
+      }
+    }
+  }
+
   function showEmptyState() {
     const emptyMessage = document.getElementById('empty-message');
-    const accordionWrapper = document.getElementById('accordion-container-wrapper');
 
     if (emptyMessage) {
       emptyMessage.classList.remove('hidden');
@@ -256,42 +429,34 @@
         emptyMessage.classList.remove('opacity-0', 'translate-y-[100px]');
       }, 10);
     }
-    if (accordionWrapper) {
-      // Don't fully hide it, just clear content or let renderFAQs handle it
-      // but if we want to hide the whole wrapper:
-      // accordionWrapper.classList.add('hidden');
+    if (pagination) {
+      pagination.style.display = 'none';
     }
   }
 
-  // Hide empty state
   function hideEmptyState() {
     const emptyMessage = document.getElementById('empty-message');
-    const accordionWrapper = document.getElementById('accordion-container-wrapper');
 
     if (emptyMessage) {
       emptyMessage.classList.add('hidden');
-      emptyMessage.classList.add('opacity-0', 'translate-y-[100px]'); // reset generic anim setup
+      emptyMessage.classList.add('opacity-0', 'translate-y-[100px]');
     }
-    if (accordionWrapper) {
-      accordionWrapper.classList.remove('hidden');
+    if (pagination) {
+      pagination.style.display = 'flex';
     }
   }
 
-  // Trigger entrance animations
   function triggerEntranceAnimations() {
-    // Title animation
     const title = document.getElementById('faq-title');
     if (title) {
       title.classList.remove('opacity-0', 'translate-y-[100px]');
     }
 
-    // Categories animation
     const categoriesWrapper = document.getElementById('categories-wrapper');
     if (categoriesWrapper) {
       categoriesWrapper.classList.remove('opacity-0', 'translate-y-[80px]');
     }
 
-    // Accordion animation
     const accordionWrapper = document.getElementById('accordion-container-wrapper');
     if (accordionWrapper) {
       accordionWrapper.classList.remove('opacity-0', 'translate-y-[150px]');
@@ -299,15 +464,9 @@
   }
 
   function initSectionAnimation() {
-    const section = document.getElementById('faqs-section'); // Note: ID might need verification globally but it's not in faq.html main tag?
-    // In faq.html main doesn't have ID 'faqs-section'.
-    // It seems 'faqs-section' might be from home page or other references.
-    // The previous code had it, but unique to faq.html page, maybe not needed or should target 'main'.
-    // Let's target main or just return if not found to avoid errors
+    const section = document.getElementById('faqs-section');
     if (!section) return;
 
-    // ... (Keep existing Spring logic if section exists, or remove if unused in standalone page)
-    // For now, keeping it safe
     sectionSpring = new Spring(SPRING_CONFIGS.FAQ);
 
     section.style.willChange = 'transform, opacity';
@@ -377,16 +536,13 @@
 
       if (!trigger || !content) return;
 
-      // Initial state
       content.style.height = '0';
       content.style.opacity = '0';
       item.setAttribute('data-state', 'closed');
 
       trigger.onclick = () => {
-        // Using onclick to replace previous listeners clearly
         const isOpen = item.getAttribute('data-state') === 'open';
 
-        // Close others
         items.forEach((otherItem) => {
           if (otherItem !== item && otherItem.getAttribute('data-state') === 'open') {
             const otherContent = otherItem.querySelector('.accordion-content');
@@ -406,7 +562,6 @@
           }
         });
 
-        // Toggle current
         if (isOpen) {
           item.setAttribute('data-state', 'closed');
           content.style.height = '0';

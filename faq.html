@@ -408,6 +408,25 @@
           </div>
         </div>
 
+        <!-- Pagination -->
+        <div id="faq-pagination" class="flex flex-col items-center gap-6">
+          <!-- Desktop Pagination -->
+          <div class="hidden items-center gap-1 md:flex">
+            <button
+              class="flex cursor-pointer items-center justify-center border border-[#414242]/25 leading-[132%] font-normal tracking-[-0.01em] text-[#414242] transition-colors md:size-[52px] md:rounded-[8px] md:text-sm 2xl:h-[54px] 2xl:w-[56px] 2xl:rounded-[6px]"
+              data-page="1"
+            >
+              1
+            </button>
+          </div>
+          <button
+            id="faq-load-more-btn"
+            class="action-tile border-text/20 text-text hover:bg-brand/5 flex h-[70px] w-[220px] cursor-pointer items-center justify-center rounded-[8px] border text-sm leading-[132%] font-normal tracking-[-0.01em] transition-colors 2xl:h-[83px] 2xl:w-[278px]"
+          >
+            Load more
+          </button>
+        </div>
+
         <!-- Empty State -->
         <p
           id="empty-message"
