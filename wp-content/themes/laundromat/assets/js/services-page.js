@@ -1,17 +1,15 @@
 (function () {
   /**
-   * Create a price row element matching the frontend HTML structure
-   * @param {Object} row - { feature, time, timeUnit, price }
-   * @returns {HTMLElement}
+   * Create a price row for Laundry (simple structure) or desktop section of Drying/Special cleaning.
+   * Matches static HTML exactly.
    */
-  function createPriceRowElement(row) {
-    const div = document.createElement('div');
-    div.className =
-      'border-text/12 flex items-center justify-between border-t py-[10px] last:border-b md:py-[12px] xl:py-4 2xl:py-4';
-
+  function createPriceRowDesktop(row) {
     const timeDisplay = row.time ? `${row.time} ${row.timeUnit}` : '';
     const priceDisplay = row.price ? `${row.price} $` : '';
 
+    const div = document.createElement('div');
+    div.className =
+      'border-text/12 flex items-center justify-between border-t py-[10px] last:border-b md:py-[12px] xl:py-4 2xl:py-4';
     div.innerHTML = `
       <p class="text-text text-base leading-[132%] font-normal tracking-[-0.01em] md:text-lg xl:text-lg 2xl:text-[21px]">
         ${row.feature}
@@ -26,8 +24,75 @@
         </p>
       </div>
     `;
-
     return div;
+  }
+
+  /**
+   * Create a price row for mobile section (block md:hidden) of Drying/Special cleaning.
+   * Matches static HTML exactly.
+   */
+  function createPriceRowMobile(row) {
+    const timeDisplay = row.time ? `${row.time} ${row.timeUnit}` : '';
+    const priceDisplay = row.price ? `${row.price} $` : '';
+
+    const div = document.createElement('div');
+    div.className =
+      'border-text/12 flex items-center justify-between border-t py-[10px] last:border-b md:py-[12px]';
+    div.innerHTML = `
+      <p class="text-text col-span-2 text-base leading-[132%] font-normal tracking-[-0.01em] md:text-lg">
+        ${row.feature}
+      </p>
+      <div class="flex items-center justify-end gap-3">
+        <p class="text-text text-lg leading-[132%] font-normal tracking-[-0.01em] md:text-[21px] md:leading-[136%] md:tracking-[-0.02em]">
+          ${timeDisplay}
+        </p>
+        <div class="bg-text/12 h-[42px] w-[0.5px]"></div>
+        <p class="text-text text-lg leading-[132%] font-normal tracking-[-0.01em] md:text-[21px] md:leading-[136%] md:tracking-[-0.02em]">
+          ${priceDisplay}
+        </p>
+      </div>
+    `;
+    return div;
+  }
+
+  /**
+   * Render price rows into container. Uses structure matching static HTML:
+   * - isLaundryStructure (section 0): simple direct rows
+   * - else (sections 1,2): block md:hidden (mobile) + hidden md:block (desktop)
+   */
+  function renderPriceRows(priceContainer, priceRows, isLaundryStructure) {
+    const header = priceContainer.querySelector('.text-brand');
+    Array.from(priceContainer.children).forEach((child) => {
+      if (child !== header) child.remove();
+    });
+
+    if (!priceRows || priceRows.length === 0) {
+      const placeholder = document.createElement('p');
+      placeholder.className = 'text-text/60 text-base py-4';
+      placeholder.textContent = 'Pricing information coming soon';
+      priceContainer.appendChild(placeholder);
+      return;
+    }
+
+    if (isLaundryStructure) {
+      priceRows.forEach((row) => {
+        priceContainer.appendChild(createPriceRowDesktop(row));
+      });
+    } else {
+      const mobileWrapper = document.createElement('div');
+      mobileWrapper.className = 'block md:hidden';
+      priceRows.forEach((row) => {
+        mobileWrapper.appendChild(createPriceRowMobile(row));
+      });
+      priceContainer.appendChild(mobileWrapper);
+
+      const desktopWrapper = document.createElement('div');
+      desktopWrapper.className = 'hidden md:block';
+      priceRows.forEach((row) => {
+        desktopWrapper.appendChild(createPriceRowDesktop(row));
+      });
+      priceContainer.appendChild(desktopWrapper);
+    }
   }
 
   /**
@@ -118,24 +183,12 @@
           imageEl.alt = serviceData.title || 'Service';
         }
 
-        // Update price rows
+        // Update price rows (structure matches static HTML: laundry=simple, drying/specialCleaning=mobile+desktop split)
         const priceContainer = section.querySelector('[data-price-rows]');
-        if (priceContainer && serviceData.priceRows) {
-          const header = priceContainer.querySelector('.text-brand');
-          Array.from(priceContainer.children).forEach((child) => {
-            if (child !== header) child.remove();
-          });
-
-          if (serviceData.priceRows.length > 0) {
-            serviceData.priceRows.forEach((row) => {
-              priceContainer.appendChild(createPriceRowElement(row));
-            });
-          } else {
-            const placeholder = document.createElement('p');
-            placeholder.className = 'text-text/60 text-base py-4';
-            placeholder.textContent = 'Pricing information coming soon';
-            priceContainer.appendChild(placeholder);
-          }
+        if (priceContainer && serviceData.priceRows !== undefined) {
+          const category = section.getAttribute('data-service') || serviceData.category || '';
+          const isLaundryStructure = category === 'laundry';
+          renderPriceRows(priceContainer, serviceData.priceRows, isLaundryStructure);
         }
 
         // Update action link
