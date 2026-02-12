@@ -174,6 +174,11 @@ function laundromat_filter_terms_by_post_language($args, $taxonomies)
         return $args;
     }
 
+    // Only run this in admin context
+    if (!is_admin() || !function_exists('get_current_screen')) {
+        return $args;
+    }
+
     $our_taxonomies = ['content_category', 'instruction_category', 'faq_category', 'service_category'];
     $taxonomies = (array) $taxonomies;
     if (empty(array_intersect($taxonomies, $our_taxonomies))) {
