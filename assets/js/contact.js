@@ -75,6 +75,21 @@ function updateContactCards(settings) {
   console.log('[Contact Page] Contact cards updated successfully');
 }
 
+/** Contact form validation constants */
+const CONTACT_NAME_MAX_LENGTH = 200;
+const CONTACT_MESSAGE_MAX_LENGTH = 5000;
+const CONTACT_PHONE_MIN_DIGITS = 7;
+const CONTACT_PHONE_MAX_LENGTH = 25;
+
+/** Validate phone format (international: digits, +, spaces, hyphens, parentheses) */
+function validatePhone(phone) {
+  const trimmed = phone.trim();
+  if (trimmed.length > CONTACT_PHONE_MAX_LENGTH) return false;
+  if (!/^[\+\d\s\-\(\)]+$/.test(trimmed)) return false;
+  const digits = trimmed.replace(/\D/g, '');
+  return digits.length >= CONTACT_PHONE_MIN_DIGITS;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   // Load contact data from WordPress API
   await loadContactData();
@@ -123,11 +138,30 @@ document.addEventListener('DOMContentLoaded', async () => {
       // Collect form data
       const firstName = form.querySelector('input[name="firstName"]')?.value || '';
       const lastName = form.querySelector('input[name="lastName"]')?.value || '';
+      const name = `${firstName} ${lastName}`.trim();
+      const phone = form.querySelector('input[name="phone"]')?.value || '';
+      const message = form.querySelector('textarea[name="message"]')?.value || '';
+
+      // Frontend validation
+      if (name.length > CONTACT_NAME_MAX_LENGTH) {
+        alert(`Name must not exceed ${CONTACT_NAME_MAX_LENGTH} characters.`);
+        return;
+      }
+      if (!validatePhone(phone)) {
+        alert('Please enter a valid phone number (at least 7 digits).');
+        return;
+      }
+      if (message.length > CONTACT_MESSAGE_MAX_LENGTH) {
+        alert(`Message must not exceed ${CONTACT_MESSAGE_MAX_LENGTH} characters.`);
+        return;
+      }
+
       const formData = {
-        name: `${firstName} ${lastName}`.trim(),
-        phone: form.querySelector('input[name="phone"]')?.value || '',
+        name,
+        phone,
         email: form.querySelector('input[name="email"]')?.value || '',
-        message: form.querySelector('textarea[name="message"]')?.value || '',
+        message,
+        consent: checkbox.checked,
       };
 
       // Get submit button for loading state
@@ -190,10 +224,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!submitBtn || !consentCheckbox) return;
 
     const isFirstNameFilled = firstNameInput?.value.trim().length > 0;
-    const isPhoneFilled = phoneInput?.value.trim().length > 0;
+    const isPhoneValid = validatePhone(phoneInput?.value || '');
     const isConsentChecked = consentCheckbox.checked;
 
-    submitBtn.disabled = !(isFirstNameFilled && isPhoneFilled && isConsentChecked);
+    submitBtn.disabled = !(isFirstNameFilled && isPhoneValid && isConsentChecked);
   }
 
   // Event Listeners for Real-time Validation

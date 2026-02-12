@@ -962,12 +962,47 @@ function laundromat_get_settings($request)
 }
 
 /**
+ * Contact form validation constants
+ */
+if (!defined('LAUNDROMAT_CONTACT_NAME_MAX_LENGTH')) {
+    define('LAUNDROMAT_CONTACT_NAME_MAX_LENGTH', 200);
+    define('LAUNDROMAT_CONTACT_MESSAGE_MAX_LENGTH', 5000);
+    define('LAUNDROMAT_CONTACT_PHONE_MIN_DIGITS', 7);
+    define('LAUNDROMAT_CONTACT_PHONE_MAX_LENGTH', 25);
+}
+
+/**
+ * Validate phone format (international: digits, +, spaces, hyphens, parentheses)
+ */
+function laundromat_validate_phone($phone)
+{
+    if (strlen($phone) > LAUNDROMAT_CONTACT_PHONE_MAX_LENGTH) {
+        return false;
+    }
+    if (!preg_match('/^[\+\d\s\-\(\)]+$/', $phone)) {
+        return false;
+    }
+    $digits = preg_replace('/\D/', '', $phone);
+    return strlen($digits) >= LAUNDROMAT_CONTACT_PHONE_MIN_DIGITS;
+}
+
+/**
  * Handle Contact Form Submission
  * Saves message as a private post and optionally sends email
  */
 function laundromat_handle_contact_form($request)
 {
     $params = $request->get_json_params();
+
+    // Validate consent (required for GDPR)
+    $consent = !empty($params['consent']);
+    if (!$consent) {
+        return new WP_Error(
+            'consent_required',
+            __('You must agree to the processing of personal data', 'laundromat'),
+            ['status' => 400]
+        );
+    }
 
     // Validate required fields (Name and Phone as requested)
     $name = sanitize_text_field($params['name'] ?? '');
@@ -979,6 +1014,33 @@ function laundromat_handle_contact_form($request)
         return new WP_Error(
             'missing_fields',
             __('Required fields missing', 'laundromat'),
+            ['status' => 400]
+        );
+    }
+
+    // Validate name length
+    if (mb_strlen($name) > LAUNDROMAT_CONTACT_NAME_MAX_LENGTH) {
+        return new WP_Error(
+            'name_too_long',
+            sprintf(__('Name must not exceed %d characters', 'laundromat'), LAUNDROMAT_CONTACT_NAME_MAX_LENGTH),
+            ['status' => 400]
+        );
+    }
+
+    // Validate phone format
+    if (!laundromat_validate_phone($phone)) {
+        return new WP_Error(
+            'invalid_phone',
+            __('Please enter a valid phone number (at least 7 digits)', 'laundromat'),
+            ['status' => 400]
+        );
+    }
+
+    // Validate message length
+    if (mb_strlen($message) > LAUNDROMAT_CONTACT_MESSAGE_MAX_LENGTH) {
+        return new WP_Error(
+            'message_too_long',
+            sprintf(__('Message must not exceed %d characters', 'laundromat'), LAUNDROMAT_CONTACT_MESSAGE_MAX_LENGTH),
             ['status' => 400]
         );
     }
